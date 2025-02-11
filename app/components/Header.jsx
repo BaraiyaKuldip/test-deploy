@@ -83,7 +83,7 @@ export function Header({header, isLoggedIn, cart, publicStoreDomain}) {
 
       <header className={`h-16 text-white w-full flex items-center justify-between fixed_padding_page bg-transparent `}>
 
-        <div className={`container`}>
+        <div className={`container`}> 
         
         {/* Mobile logo 550px and below */}
 
