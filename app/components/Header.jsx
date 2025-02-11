@@ -1,26 +1,188 @@
-import {Suspense} from 'react';
+import {Suspense, useEffect, useState} from 'react';
 import {Await, NavLink, useAsyncValue} from '@remix-run/react';
 import {useAnalytics, useOptimisticCart} from '@shopify/hydrogen';
 import {useAside} from '~/components/Aside';
+import { Menu , Search, ShoppingBag, ShoppingCart , User } from 'lucide-react';
+import SiteLogoIcon from '/images/site_logo_mezzo_white.png?url';
 
 /**
  * @param {HeaderProps}
  */
 export function Header({header, isLoggedIn, cart, publicStoreDomain}) {
   const {shop, menu} = header;
+
+  const [isScrolled,setIsSrolled] = useState(false);
+  const [isSrollingUp,setIsSrollinUp] = useState(false);
+  const [lastScrollY,setLastScrollY] = useState(0);
+  const {type : asideType} = useAside();
+
+  useEffect(() => {
+      // const root = document.documentElement;
+
+      // root.style.setProperty('--announcement-height' , isScrolled ? '0px' : '40px');
+      // root.style.setProperty('--header-height', isScrolled ? '64px' : '80px');
+
+    const handleScroll = () => {
+      if(asideType !== 'closed') return;
+
+      const currentSrollY = window.scrollY ;
+
+      setIsSrollinUp(currentSrollY < lastScrollY);
+      setLastScrollY(currentSrollY);
+
+      setIsSrolled(currentSrollY > 50);
+
+    }
+
+    window.addEventListener('scroll' , handleScroll, {passive: true});
+
+    return () => window.removeEventListener('scroll' , handleScroll)
+
+  },[lastScrollY , isScrolled , asideType]);
+ 
   return (
-    <header className="header">
-      <NavLink prefetch="intent" to="/" style={activeLinkStyle} end>
-        <strong>{shop.name}</strong>
-      </NavLink>
-      <HeaderMenu
-        menu={menu}
-        viewport="desktop"
-        primaryDomainUrl={header.shop.primaryDomain.url}
-        publicStoreDomain={publicStoreDomain}
-      />
-      <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} />
-    </header>
+    <>
+
+      {/* Announcement Bar  */}
+
+      <div className={`main_header_top text-white w-full `}>
+          
+          <div className='fixed_padding_page text-center announcebar_border_color scrolling_infinite_animation_strip h-7.5'>
+            <div className='scrolling_infinite_animation_item'>
+              <p>
+                Fall collection is out now 
+              </p>
+              <b>&nbsp; | &nbsp;</b>
+              <a href='#' >
+                Shop our fall collection
+              </a>
+            </div>
+
+            <div className=' scrolling_infinite_animation_item2 ' aria-hidden={true}>
+              <p>
+                Fall collection is out now 
+              </p>
+              <b>&nbsp; | &nbsp;</b>
+              <a href='#'>
+                Shop our fall collection
+              </a>
+            </div>
+             
+            <div className=' scrolling_infinite_animation_item2' aria-hidden={true}>
+              <p>
+                Fall collection is out now 
+              </p>
+              <b>&nbsp; | &nbsp;</b>
+              <a href='#'>
+                Shop our fall collection
+              </a>
+            </div>
+            
+          </div>
+          {/* Main Header */}
+
+      <header className={`h-16 text-white w-full flex items-center justify-between fixed_padding_page bg-transparent `}>
+
+        <div className={`container`}>
+        
+        {/* Mobile logo 550px and below */}
+
+          <div className={`hidden max-[550px]:block text-center `}>
+            
+            <div className='flex justify-between items-center'>
+
+            <div className={`lg:hidden`}>
+              <HeaderMenuMobileToggle />
+            </div>
+
+            <NavLink
+            prefetch='intent'
+            to='/'
+            className={`text-2xl tracking-normal inline-block`}
+            >
+              <h1 className={`font-medium my-0`}>
+                {/* {shop.name} */}
+                <img src={SiteLogoIcon} alt="Logo" style={{height:"28px" , width:"130px"}} />
+              </h1>
+            </NavLink>
+
+            <div className={`lg:hidden p-1`}>
+            <CartToggle/>
+            </div>
+
+            </div>
+
+          </div>
+
+          {/* Header Content  */}
+
+            <div className={`flex items-center justify-between `}>
+
+            {/* Mobile Menu Toggle  */}
+
+              {/* <div className={`lg:hidden`}>
+                <HeaderMenuMobileToggle />
+              </div> */}
+
+              {/* Logo Above 550px  */}
+
+              <NavLink 
+              prefetch='intent'
+              to='/'
+              className={`tracking-wider text-center max-[550px]:hidden absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0 lg:text-left transition-all duration-300 ease-in-out`}
+              >
+                <h1 className='font-medium'>
+                  {/* {shop.name} */}
+                  <img src={SiteLogoIcon} alt="Logo" style={{height:"28px" , width:"130px"}} />
+                </h1>
+              </NavLink>
+
+              {/* Desktop Navigation  */}
+
+              <div className='hidden lg:block flex-1-px-12'>
+                <HeaderMenu
+                  menu={menu}
+                  viewport='desktop'
+                  primaryDomainUrl={header.shop.primaryDomain.url}
+                  publicStoreDomain={publicStoreDomain}
+                />
+
+              </div>
+
+              <div className='hidden lg:block'>
+              <div className='flex justify-between gap-4'>
+                <User className='w-6 h-6'/>
+                <Search className='w-6 h-6'/>
+                <CartToggle/>
+              </div>
+              </div>
+
+          </div>
+
+        </div>
+
+      </header>
+        </div>
+      
+
+      
+
+      {/* <header className="header">  
+
+        <NavLink prefetch="intent" to="/" style={activeLinkStyle} end>
+          <strong>{shop.name}</strong>
+        </NavLink>
+        
+        <HeaderMenu
+          menu={menu}
+          viewport="desktop"
+          primaryDomainUrl={header.shop.primaryDomain.url}
+          publicStoreDomain={publicStoreDomain}
+        />
+        <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} />
+
+      </header> */}
+    </>
   );
 }
 
@@ -41,9 +203,10 @@ export function HeaderMenu({
   const className = `header-menu-${viewport}`;
   const {close} = useAside();
 
+  
   return (
-    <nav className={className} role="navigation">
-      {viewport === 'mobile' && (
+    <nav className={`${className}`} role="navigation">
+      {/* {viewport === 'mobile' && (
         <NavLink
           end
           onClick={close}
@@ -51,9 +214,9 @@ export function HeaderMenu({
           style={activeLinkStyle}
           to="/"
         >
-          Home
+          
         </NavLink>
-      )}
+      )} */}
       {(menu || FALLBACK_HEADER_MENU).items.map((item) => {
         if (!item.url) return null;
 
@@ -66,12 +229,12 @@ export function HeaderMenu({
             : item.url;
         return (
           <NavLink
-            className="header-menu-item"
+            className={`header-menu-item `}
             end
             key={item.id}
             onClick={close}
             prefetch="intent"
-            style={activeLinkStyle}
+            style={viewport === 'desktop' ? activeLinkStyleDesktop : activeLinkStyle}
             to={url}
           >
             {item.title}
@@ -106,10 +269,10 @@ function HeaderMenuMobileToggle() {
   const {open} = useAside();
   return (
     <button
-      className="header-menu-mobile-toggle reset"
+      className="p-2 -ml-2"
       onClick={() => open('mobile')}
     >
-      <h3>☰</h3>
+      <Menu className='w-6 h-6'/>
     </button>
   );
 }
@@ -144,7 +307,8 @@ function CartBadge({count}) {
         });
       }}
     >
-      Cart {count === null ? <span>&nbsp;</span> : count}
+      <ShoppingCart className='w-6 h-6'/> 
+       {/* {count === null ? <span>&nbsp;</span> : count} */}
     </a>
   );
 }
@@ -216,11 +380,18 @@ const FALLBACK_HEADER_MENU = {
  *   isPending: boolean;
  * }}
  */
-function activeLinkStyle({isActive, isPending}) {
+function activeLinkStyle({isActive, isPending}) { 
   return {
     fontWeight: isActive ? 'bold' : undefined,
     color: isPending ? 'grey' : 'black',
   };
+}
+
+function activeLinkStyleDesktop({isActive, isPending}){
+  return{
+    fontWeight : isActive ? 'bold' : undefined,
+    color: isPending ? 'grey' : 'white',
+  }
 }
 
 /** @typedef {'desktop' | 'mobile'} Viewport */

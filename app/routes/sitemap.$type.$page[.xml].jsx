@@ -8,10 +8,11 @@ export async function loader({request, params, context: {storefront}}) {
     storefront,
     request,
     params,
-    locales: ['EN-US', 'EN-CA', 'FR-CA'],
+    // locales: ['EN-US', 'EN-CA', 'FR-CA'],  // kuldip commented
     getLink: ({type, baseUrl, handle, locale}) => {
-      if (!locale) return `${baseUrl}/${type}/${handle}`;
-      return `${baseUrl}/${locale}/${type}/${handle}`;
+      // if (!locale) return `${baseUrl}/${type}/${handle}`; // kuldip commented
+      // return `${baseUrl}/${locale}/${type}/${handle}`; // kuldip commented
+        return `${baseUrl}/${type}/${handle}`; // kuldip new line added
     },
   });
 
