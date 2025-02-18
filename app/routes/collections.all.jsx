@@ -66,6 +66,7 @@ export default function Collection() {
         resourcesClassName="products-grid"
       >
         {({node: product, index}) => (
+          
           <ProductItem
             key={product.id}
             product={product}

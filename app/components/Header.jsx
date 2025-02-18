@@ -139,7 +139,7 @@ export function Header({header, isLoggedIn, cart, publicStoreDomain}) {
 
               {/* Desktop Navigation  */}
 
-              <div className='hidden lg:block flex-1-px-12'>
+              <div className='hidden lg:block'>
                 <HeaderMenu
                   menu={menu}
                   viewport='desktop'
@@ -149,12 +149,13 @@ export function Header({header, isLoggedIn, cart, publicStoreDomain}) {
 
               </div>
 
+              {/* CTAS  */}
               <div className='hidden lg:block'>
-              <div className='flex justify-between gap-4'>
-                <User className='w-6 h-6'/>
-                <Search className='w-6 h-6'/>
-                <CartToggle/>
-              </div>
+
+                <div className='flex items-center'>
+                  <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} />
+                </div>
+
               </div>
 
           </div>
@@ -203,8 +204,46 @@ export function HeaderMenu({
   const className = `header-menu-${viewport}`;
   const {close} = useAside();
 
+  function myFunction() {
+    // Declare variables
+    var input, filter, ul, li, a, i;
+    input = document.getElementById("mySearch");
+    filter = input.value.toUpperCase();
+    ul = document.getElementById("myMenu");
+    li = ul.getElementsByTagName("li");
+    ul.style.display = "";
+    // Loop through all list items, and hide those who don't match the search query
+    for (i = 0; i < li.length; i++) {
+      a = li[i].getElementsByTagName("a")[0];
+      if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+        li[i].style.display = "";
+      } else {
+        li[i].style.display = "none";
+      }
+    }
+  }
   
   return (
+  <>
+
+  {viewport === 'mobile' && (
+    <div className='search_menu_mobile'>
+    <input type="text" id="mySearch" onKeyUp={myFunction} placeholder="Search..." title="" />
+      <ul id="myMenu" style={{display:"none"}}>
+        <li><a href="#">HTML</a></li>
+        <li><a href="#">CSS</a></li>
+        <li><a href="#">JavaScript</a></li>
+        <li><a href="#">PHP</a></li>
+        <li><a href="#">Python</a></li>
+        <li><a href="#">jQuery</a></li>
+        <li><a href="#">SQL</a></li>
+        <li><a href="#">Bootstrap</a></li>
+        <li><a href="#">Node.js</a></li>
+      </ul>
+    </div>
+  )}
+    
+
     <nav className={`${className}`} role="navigation">
       {/* {viewport === 'mobile' && (
         <NavLink
@@ -217,6 +256,7 @@ export function HeaderMenu({
           
         </NavLink>
       )} */}
+    <div className={`slider_type_menu ${className} `}>      
       {(menu || FALLBACK_HEADER_MENU).items.map((item) => {
         if (!item.url) return null;
 
@@ -228,7 +268,49 @@ export function HeaderMenu({
             ? new URL(item.url).pathname
             : item.url;
         return (
-          <NavLink
+<>
+          {/* <div className='slider_type_menu_wrapper'> */}
+            
+            
+            {/* <button key={item.id} onClick={close} style={viewport === 'desktop' ? activeLinkStyleDesktop : activeLinkStyle} className='header-menu-item'>{item.title}</button> */}
+            {viewport === 'mobile' && (
+              <NavLink
+              className={`header-menu-item `}
+              end
+              id='mobile_header_link'
+              key={item.id}
+              onClick={close}
+              prefetch="intent"
+              style={viewport === 'desktop' ? activeLinkStyleDesktop : activeLinkStyle}
+              to={url}
+            >
+              
+              <span className='slider_type_menu_item'>
+                {item.title}
+              </span>
+              <span className='font-normal'>
+              &#10095;
+              </span>
+
+              </NavLink>
+            )}
+            {viewport !== 'mobile' && (
+              <NavLink
+              className={`header-menu-item `}
+              end
+              key={item.id}
+              onClick={close}
+              prefetch="intent"
+              style={viewport === 'desktop' ? activeLinkStyleDesktop : activeLinkStyle}
+              to={url}
+            >
+                  {item.title}
+              </NavLink>
+            )}
+          {/* </div> */}
+          
+          
+          {/* <NavLink
             className={`header-menu-item `}
             end
             key={item.id}
@@ -237,11 +319,25 @@ export function HeaderMenu({
             style={viewport === 'desktop' ? activeLinkStyleDesktop : activeLinkStyle}
             to={url}
           >
-            {item.title}
-          </NavLink>
+            {viewport === 'mobile' && (
+              <div className='slider_type_menu_wrapper'>
+                
+                {item.title}
+              </div>
+            )}
+            {viewport !== 'mobile' && (
+               <>
+                  {item.title}
+               </> 
+            )}
+          </NavLink> */}
+          
+</>          
         );
       })}
+    </div>
     </nav>
+    </>
   );
 }
 
@@ -251,15 +347,22 @@ export function HeaderMenu({
 function HeaderCtas({isLoggedIn, cart}) {
   return (
     <nav className="header-ctas" role="navigation">
-      <HeaderMenuMobileToggle />
-      <NavLink prefetch="intent" to="/account" style={activeLinkStyle}>
+      
+      <NavLink prefetch="intent" to="/account" style={activeLinkStyleDesktop} className="px-5 py-1.25">
         <Suspense fallback="Sign in">
           <Await resolve={isLoggedIn} errorElement="Sign in">
+            <span className='sr-only'>
             {(isLoggedIn) => (isLoggedIn ? 'Account' : 'Sign in')}
+            </span>
+            <User className='w-6 h-6'/>
           </Await>
         </Suspense>
       </NavLink>
+
+
       <SearchToggle />
+
+
       <CartToggle cart={cart} />
     </nav>
   );
@@ -280,8 +383,8 @@ function HeaderMenuMobileToggle() {
 function SearchToggle() {
   const {open} = useAside();
   return (
-    <button className="reset" onClick={() => open('search')}>
-      Search
+    <button className="reset px-5 py-1.25" onClick={() => open('search')}>
+      <Search className='w-6 h-6'/>
     </button>
   );
 }
@@ -295,6 +398,7 @@ function CartBadge({count}) {
 
   return (
     <a
+      className='relative px-5 py-1.25'
       href="/cart"
       onClick={(e) => {
         e.preventDefault();
@@ -308,7 +412,11 @@ function CartBadge({count}) {
       }}
     >
       <ShoppingCart className='w-6 h-6'/> 
-       {/* {count === null ? <span>&nbsp;</span> : count} */}
+       {/* {count !== null && count > 0 && (
+        <span className='absolute top-0 right-6 bg-orange-400 text-black text-[12px] font-medium rounded-full w-3 h-3 flex justify-center items-center'>
+          {count > 9 ? '9+' : count}
+        </span>
+       )} */}
     </a>
   );
 }

@@ -1,4 +1,13 @@
+import { User, X } from 'lucide-react';
 import {createContext, useContext, useEffect, useState} from 'react';
+
+
+// type AsideType = 'search' | 'cart' | 'mobile' | 'closed' ;
+// type AsideContextValue = {
+//   type : AsideType;
+//   open: (mode:AsideType) => void; 
+//   close: () => void;
+// }
 
 /**
  * A side bar component with Overlay
@@ -18,6 +27,41 @@ import {createContext, useContext, useEffect, useState} from 'react';
 export function Aside({children, heading, type}) {
   const {type: activeType, close} = useAside();
   const expanded = type === activeType;
+
+  useEffect(() => {
+    if(!expanded){
+      return;
+    }
+    
+    const scrollY = window.scrollY;
+
+    const originalStyles = {
+      overflow: document.body.style.overflow,
+      height: document.body.style.height,
+      position: document.body.style.position,
+      width: document.body.style.width,
+      top: document.body.style.top,
+    };
+
+    document.body.style.overflow = 'hidden';
+    document.body.style.height = '100vh';
+    document.body.style.position = 'fixed';
+    document.body.style.width = '100%';
+    document.body.style.top = `-${scrollY}px`;
+
+    return () => {
+      
+    document.body.style.overflow = originalStyles.overflow;
+    document.body.style.height = originalStyles.height;
+    document.body.style.position = originalStyles.position;
+    document.body.style.width = originalStyles.width;
+    document.body.style.top = originalStyles.top;
+
+    window.scrollTo(0,scrollY);
+    }
+
+  },[expanded])
+
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -45,9 +89,38 @@ export function Aside({children, heading, type}) {
       <button className="close-outside" onClick={close} />
       <aside>
         <header>
-          <h3>{heading}</h3>
-          <button className="close reset" onClick={close} aria-label="Close">
-            &times;
+  
+          {/* {CART ASIDE} */}
+          {heading === 'CART' && (
+            <>{heading}</>
+          )}
+
+          {/* {MENU ASIDE} */}
+          {heading === 'MENU' && (
+          <div className='flex h-full w-full items-center'>
+          <div className=' flex h-full items-center me-5 pe-1 border-e border_color_light'>
+
+            <select name="country" id="country">
+              <option defaultValue="canada" > CANADA (CA $) </option>
+              <option value="uk">UNITED KINGDOM (GB £)</option>
+              <option value="us">UNITED STATES (US $)</option>
+              <option value="india" >INDIA (INR ₹)</option>
+            </select>
+
+          </div> 
+          <User className='w-5 h-5'/>
+          </div>
+          )}
+
+          {/* {SEARCH ASIDE} */}
+          {heading === 'SEARCH' && (
+            <>
+            </>
+          )}
+          
+
+          <button className="close  reset" onClick={close} aria-label="Close">
+            <X className='close_menu_icon aside_close_btn_effect'/>
           </button>
         </header>
         <main>{children}</main>

@@ -10,9 +10,20 @@ import {
 } from '~/components/SearchFormPredictive';
 import {SearchResultsPredictive} from '~/components/SearchResultsPredictive';
 import GirlImage from '/images/girl-1134567_1280.jpg?url';
-import GirlImage1Portrait from '/images/white-london-having-womans-female-new.jpg?url';
-import GirlImage1Landscape from '/images/york-work-portrait-london-outdoors-person.jpg?url';
-import { use } from 'react';
+import GirlImage1Portrait from '/images/GirlImage1Portrait.png?url';
+// import GirlImage1Portrait from '/images/white-london-having-womans-female-new.jpg?url';
+// import GirlImage1Landscape from '/images/york-work-portrait-london-outdoors-person.jpg?url';
+import GirlImage1Landscape from '/images/GirlImage1Landscape.png?url';
+
+// srolling logo images 
+import LouisVittonLogo from '/images/louis-vuitton-logo.png?url';
+import RolexLogo from '/images/rolex-logo.png?url';
+import PradaLogo from '/images/prada-logo.png?url';
+import GucciLogo from '/images/gucci-logo.png?url';
+import CalvinKleinLogo from '/images/calvin-klein-logo.png?url';
+
+
+import {use} from 'react';
 
 /**
  * @param {PageLayoutProps}
@@ -27,22 +38,21 @@ export function PageLayout({
 }) {
   const [current_height, setCurrent_height] = useState(0);
   const [current_width, setCurrent_width] = useState(0);
-  const [divBgImage,setDivBgImage] = useState("");
+  const [divBgImage, setDivBgImage] = useState('');
   useEffect(() => {
     if (typeof window !== 'undefined') {
       // Access the document object here
 
       setCurrent_height(document.documentElement.clientHeight);
       setCurrent_width(document.documentElement.clientWidth);
-      if(document.documentElement.clientWidth > 768){
+      if (document.documentElement.clientWidth > 768) {
         setDivBgImage(GirlImage1Landscape);
-      }
-      else{
+      } else {
         setDivBgImage(GirlImage1Portrait);
       }
       // ... do something with the element
     }
-  }, [current_height,current_width]);
+  }, [current_height, current_width]);
 
   return (
     <Aside.Provider>
@@ -58,65 +68,119 @@ export function PageLayout({
         />
       )}
       <main>
-        {/* <div>
-
-           {current_width < 768 &&(
-            <img src={GirlImage1Portrait} alt="img" style={{width:"100%" , height:"500px" , objectFit:'fill'}} />
-          )} 
-
-          {current_width > 768 &&(
-            <img src={GirlImage1Landscape} alt="img" style={{width:"100%" , height:"600px" , objectFit:'fill'}}/>
-          )}
-          
-        </div> */}
+        <span
+          className={`z-1 hidden transition-opacity duration-300 ease-in fixed top-0 left-0 h-full w-full`}
+        >
+          <span className="bg-white opacity-60 transition-all duration-300 ease-in block absolute top-0 left-0 h-full w-full pointer-events-none "></span>
+          <span className="backdrop-blur-md transition-all block absolute top-0 left-0 h-full w-full pointer-events-none "></span>
+        </span>
 
         <div
           style={{backgroundImage: `url(${divBgImage})`}}
-          className='div_bg_image'
+          className="div_bg_image"
         >
-          <div className='mx-6 mt-20 p-12.5'>
-           <div style={{zIndex: 1}}>
-            <p className='font-semibold'>A CONSCIOUS WARDROBE</p>
-            <p className='alegreya-font-style'>Timeless Style <br /> Sustainable Design </p> 
-            {/* <p className='alegreya-font-style'></p> */}
-            <div className='flex justify-around items-center py-5 '>
-              <button
-                style={{
-                  fontSize:"13px",
-                  fontWeight:"bold",
-                  width:"200px",
-                  height:"50px",
-                  padding: '10px 20px',
-                  backgroundColor: 'white',
-                  color: 'black',
-                  border: 'none',
-                  borderRadius: '1px',
-                  cursor: 'pointer',
-                  margin: '5px',
-                }}
-              >
-                VIEW PRODUCTS 
-              </button>
-              <a
-                style={{
-                  fontWeight:"bold",
-                  color: 'white',
-                  border: 'none',
-                  fontSize:"13px",
-                  cursor: 'pointer',
-                  margin: '5px',
-                }}
-                href='#'
-              >
-                LEARN MORE
-              </a>
+          <div className="mx-6 mt-20 p-12.5">
+            <div style={{zIndex: 1}}>
+              <p className="font-semibold normal-font-style ">
+                A CONSCIOUS WARDROBE
+              </p>
+              <p className="alegreya-font-style">
+                Timeless Style <br /> Sustainable Design{' '}
+              </p>
+              {/* <p className='alegreya-font-style'></p> */}
+              <div className="div_bg_hero_div">
+                <button
+                  style={{
+                    fontSize: '13px',
+                    fontWeight: 'bold',
+                    width: '200px',
+                    height: '50px',
+                    padding: '10px 20px',
+                    backgroundColor: 'white',
+                    color: 'black',
+                    border: 'none',
+                    borderRadius: '1px',
+                    cursor: 'pointer',
+                    margin: '5px',
+                  }}
+                >
+                  VIEW PRODUCTS
+                </button>
+                <a href="#" className="div_bg_hero_a">
+                  LEARN MORE
+                </a>
+              </div>
             </div>
-           </div>
           </div>
-          
+        </div>
+        <div className="fixed_padding_page">{children}</div>
+
+        {/* scrolling logos */}
+
+        <div class="logo-container">
+          <div class="logo-scroll">
+            <div class="logo-scroll__wrapper">
+              <img class="logo-item" src={GucciLogo} alt="Gucci Logo" />
+              <img class="logo-item" src={PradaLogo} alt="Prada Logo" />
+
+              <img class="logo-item" src={GucciLogo} alt="Gucci Logo" />
+              <img class="logo-item" src={PradaLogo} alt="Prada Logo" />
+
+              <img class="logo-item" src={GucciLogo} alt="Gucci Logo" />
+              <img class="logo-item" src={PradaLogo} alt="Prada Logo" />
+
+              <img class="logo-item" src={GucciLogo} alt="Gucci Logo" />
+              <img class="logo-item" src={PradaLogo} alt="Prada Logo" />
+
+              <img class="logo-item" src={GucciLogo} alt="Gucci Logo" />
+              <img class="logo-item" src={PradaLogo} alt="Prada Logo" />
+
+              <img class="logo-item" src={GucciLogo} alt="Gucci Logo" />
+              <img class="logo-item" src={PradaLogo} alt="Prada Logo" />
+            </div>
+
+            <div class="logo-scroll__wrapper">
+              <img class="logo-item" src={GucciLogo} alt="Gucci Logo" />
+              <img class="logo-item" src={PradaLogo} alt="Prada Logo" />
+
+              <img class="logo-item" src={GucciLogo} alt="Gucci Logo" />
+              <img class="logo-item" src={PradaLogo} alt="Prada Logo" />
+
+              <img class="logo-item" src={GucciLogo} alt="Gucci Logo" />
+              <img class="logo-item" src={PradaLogo} alt="Prada Logo" />
+
+              <img class="logo-item" src={GucciLogo} alt="Gucci Logo" />
+              <img class="logo-item" src={PradaLogo} alt="Prada Logo" />
+
+              <img class="logo-item" src={GucciLogo} alt="Gucci Logo" />
+              <img class="logo-item" src={PradaLogo} alt="Prada Logo" />
+
+              <img class="logo-item" src={GucciLogo} alt="Gucci Logo" />
+              <img class="logo-item" src={PradaLogo} alt="Prada Logo" />
+            </div>
+
+            <div class="logo-scroll__wrapper">
+              <img class="logo-item" src={GucciLogo} alt="Gucci Logo" />
+              <img class="logo-item" src={PradaLogo} alt="Prada Logo" />
+
+              <img class="logo-item" src={GucciLogo} alt="Gucci Logo" />
+              <img class="logo-item" src={PradaLogo} alt="Prada Logo" />
+
+              <img class="logo-item" src={GucciLogo} alt="Gucci Logo" />
+              <img class="logo-item" src={PradaLogo} alt="Prada Logo" />
+
+              <img class="logo-item" src={GucciLogo} alt="Gucci Logo" />
+              <img class="logo-item" src={PradaLogo} alt="Prada Logo" />
+
+              <img class="logo-item" src={GucciLogo} alt="Gucci Logo" />
+              <img class="logo-item" src={PradaLogo} alt="Prada Logo" />
+
+              <img class="logo-item" src={GucciLogo} alt="Gucci Logo" />
+              <img class="logo-item" src={PradaLogo} alt="Prada Logo" />
+            </div>
+          </div>
         </div>
 
-        <div className="fixed_padding_page">{children}</div>
       </main>
       <Footer
         footer={footer}
