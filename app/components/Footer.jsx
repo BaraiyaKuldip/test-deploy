@@ -6,46 +6,6 @@ import SiteLogoIcon from '/images/site_logo_mezzo_white.png?url';
 import SiteFooterLogoIcon from '/images/site_footer_logo_mezzo_white.png?url';
 
 /**
- * @param {LoaderFunctionArgs} args
- */
-export async function loader(args) {
-  // Start fetching non-critical data without blocking time to first byte
-  const deferredData = loadDeferredData(args);
-
-  // Await the critical data required to render initial state of the page
-  const criticalData = await loadCriticalData(args);
-
-  return defer({...deferredData, ...criticalData});
-}
-
-/**
- * Load data necessary for rendering content above the fold. This is the critical data
- * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
- * @param {LoaderFunctionArgs}
- */
-async function loadCriticalData({context, param}) {
-  const {storefront} = context;
-  const {handle} = param;
-  const {footerSubMenu} = await Promise.all([
-    storefront.query(FOOTER_SUB_MENU_QUERY, {
-      variables: {handle},
-    }),
-    // Add other queries here, so that they are loaded in parallel
-  ]);
-  return {footerSubMenu};
-}
-
-/**
- * Load data for rendering content below the fold. This data is deferred and will be
- * fetched after the initial page load. If it's unavailable, the page should still 200.
- * Make sure to not throw any errors here, as it will cause the page to 500.
- * @param {LoaderFunctionArgs}
- */
-function loadDeferredData({context}) {
-  return {};
-}
-
-/**
  * @param {FooterProps}
  */
 export function Footer({
@@ -253,7 +213,7 @@ function FooterMenu({menu, subMenu, primaryDomainUrl, publicStoreDomain}) {
   // const {footerSubMenu} = useLoaderData();
   return (
     <>
-      {console.log(menu)}
+      {console.log("menu2 ",menu)}
 
       <>
         {/* {console.log(menu)} */}
@@ -317,15 +277,12 @@ function FooterSubMenu({subMenu, primaryDomainUrl, publicStoreDomain}) {
           {(subMenuItems) => (
             <>
               
-              
+              {/* {console.log(subMenuItems.menu.item.map((item)=>{return item}))} */}
 
-              {console.log("subMenuItems ",subMenuItems)}
+              {console.log("subMenuItems ",subMenuItems.menu.items)}
               {/* {console.log(header)} */}
-            </>
-          )}
-        </Await>
-        {/* {console.log(menu)} */}
-        {/* {subMenu.items.map((item) => {
+
+              {subMenuItems.menu.items.map((item) => {
           // console.log(item)
           if (!item.url) return null;
           // if the url is internal, we strip the domain
@@ -356,7 +313,12 @@ function FooterSubMenu({subMenu, primaryDomainUrl, publicStoreDomain}) {
             </li>
               
             );
-        })} */}
+        })}
+            </>
+          )}
+        </Await>
+        {/* {console.log(menu)} */}
+        
       </>
     </>
   );
