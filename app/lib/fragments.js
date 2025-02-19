@@ -231,3 +231,16 @@ export const FOOTER_QUERY = `#graphql
   }
   ${MENU_FRAGMENT}
 `;
+
+export const FOOTER_SUB_MENU_QUERY = `#graphql
+  query FooterSubMenu(
+    $country: CountryCode
+    $footerSubMenuHandle: String!
+    $language: LanguageCode
+  ) @inContext(language: $language, country: $country) {
+    menu(handle: $footerSubMenuHandle) {
+      ...Menu
+    }
+  }
+  ${MENU_FRAGMENT}
+`;

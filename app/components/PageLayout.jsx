@@ -32,6 +32,7 @@ export function PageLayout({
   cart,
   children = null,
   footer,
+  footerSubMenu,
   header,
   isLoggedIn,
   publicStoreDomain,
@@ -53,6 +54,7 @@ export function PageLayout({
       // ... do something with the element
     }
   }, [current_height, current_width]);
+
 
   return (
     <Aside.Provider>
@@ -117,66 +119,66 @@ export function PageLayout({
 
         {/* scrolling logos */}
 
-        <div class="logo-container">
-          <div class="logo-scroll">
-            <div class="logo-scroll__wrapper">
-              <img class="logo-item" src={GucciLogo} alt="Gucci Logo" />
-              <img class="logo-item" src={PradaLogo} alt="Prada Logo" />
+        <div className="logo-container">
+          <div className="logo-scroll">
+            <div className="logo-scroll__wrapper">
+              <img className="logo-item" src={GucciLogo} alt="Gucci Logo" />
+              <img className="logo-item" src={PradaLogo} alt="Prada Logo" />
 
-              <img class="logo-item" src={GucciLogo} alt="Gucci Logo" />
-              <img class="logo-item" src={PradaLogo} alt="Prada Logo" />
+              <img className="logo-item" src={GucciLogo} alt="Gucci Logo" />
+              <img className="logo-item" src={PradaLogo} alt="Prada Logo" />
 
-              <img class="logo-item" src={GucciLogo} alt="Gucci Logo" />
-              <img class="logo-item" src={PradaLogo} alt="Prada Logo" />
+              <img className="logo-item" src={GucciLogo} alt="Gucci Logo" />
+              <img className="logo-item" src={PradaLogo} alt="Prada Logo" />
 
-              <img class="logo-item" src={GucciLogo} alt="Gucci Logo" />
-              <img class="logo-item" src={PradaLogo} alt="Prada Logo" />
+              <img className="logo-item" src={GucciLogo} alt="Gucci Logo" />
+              <img className="logo-item" src={PradaLogo} alt="Prada Logo" />
 
-              <img class="logo-item" src={GucciLogo} alt="Gucci Logo" />
-              <img class="logo-item" src={PradaLogo} alt="Prada Logo" />
+              <img className="logo-item" src={GucciLogo} alt="Gucci Logo" />
+              <img className="logo-item" src={PradaLogo} alt="Prada Logo" />
 
-              <img class="logo-item" src={GucciLogo} alt="Gucci Logo" />
-              <img class="logo-item" src={PradaLogo} alt="Prada Logo" />
+              <img className="logo-item" src={GucciLogo} alt="Gucci Logo" />
+              <img className="logo-item" src={PradaLogo} alt="Prada Logo" />
             </div>
 
-            <div class="logo-scroll__wrapper">
-              <img class="logo-item" src={GucciLogo} alt="Gucci Logo" />
-              <img class="logo-item" src={PradaLogo} alt="Prada Logo" />
+            <div className="logo-scroll__wrapper">
+              <img className="logo-item" src={GucciLogo} alt="Gucci Logo" />
+              <img className="logo-item" src={PradaLogo} alt="Prada Logo" />
 
-              <img class="logo-item" src={GucciLogo} alt="Gucci Logo" />
-              <img class="logo-item" src={PradaLogo} alt="Prada Logo" />
+              <img className="logo-item" src={GucciLogo} alt="Gucci Logo" />
+              <img className="logo-item" src={PradaLogo} alt="Prada Logo" />
 
-              <img class="logo-item" src={GucciLogo} alt="Gucci Logo" />
-              <img class="logo-item" src={PradaLogo} alt="Prada Logo" />
+              <img className="logo-item" src={GucciLogo} alt="Gucci Logo" />
+              <img className="logo-item" src={PradaLogo} alt="Prada Logo" />
 
-              <img class="logo-item" src={GucciLogo} alt="Gucci Logo" />
-              <img class="logo-item" src={PradaLogo} alt="Prada Logo" />
+              <img className="logo-item" src={GucciLogo} alt="Gucci Logo" />
+              <img className="logo-item" src={PradaLogo} alt="Prada Logo" />
 
-              <img class="logo-item" src={GucciLogo} alt="Gucci Logo" />
-              <img class="logo-item" src={PradaLogo} alt="Prada Logo" />
+              <img className="logo-item" src={GucciLogo} alt="Gucci Logo" />
+              <img className="logo-item" src={PradaLogo} alt="Prada Logo" />
 
-              <img class="logo-item" src={GucciLogo} alt="Gucci Logo" />
-              <img class="logo-item" src={PradaLogo} alt="Prada Logo" />
+              <img className="logo-item" src={GucciLogo} alt="Gucci Logo" />
+              <img className="logo-item" src={PradaLogo} alt="Prada Logo" />
             </div>
 
-            <div class="logo-scroll__wrapper">
-              <img class="logo-item" src={GucciLogo} alt="Gucci Logo" />
-              <img class="logo-item" src={PradaLogo} alt="Prada Logo" />
+            <div className="logo-scroll__wrapper">
+              <img className="logo-item" src={GucciLogo} alt="Gucci Logo" />
+              <img className="logo-item" src={PradaLogo} alt="Prada Logo" />
 
-              <img class="logo-item" src={GucciLogo} alt="Gucci Logo" />
-              <img class="logo-item" src={PradaLogo} alt="Prada Logo" />
+              <img className="logo-item" src={GucciLogo} alt="Gucci Logo" />
+              <img className="logo-item" src={PradaLogo} alt="Prada Logo" />
 
-              <img class="logo-item" src={GucciLogo} alt="Gucci Logo" />
-              <img class="logo-item" src={PradaLogo} alt="Prada Logo" />
+              <img className="logo-item" src={GucciLogo} alt="Gucci Logo" />
+              <img className="logo-item" src={PradaLogo} alt="Prada Logo" />
 
-              <img class="logo-item" src={GucciLogo} alt="Gucci Logo" />
-              <img class="logo-item" src={PradaLogo} alt="Prada Logo" />
+              <img className="logo-item" src={GucciLogo} alt="Gucci Logo" />
+              <img className="logo-item" src={PradaLogo} alt="Prada Logo" />
 
-              <img class="logo-item" src={GucciLogo} alt="Gucci Logo" />
-              <img class="logo-item" src={PradaLogo} alt="Prada Logo" />
+              <img className="logo-item" src={GucciLogo} alt="Gucci Logo" />
+              <img className="logo-item" src={PradaLogo} alt="Prada Logo" />
 
-              <img class="logo-item" src={GucciLogo} alt="Gucci Logo" />
-              <img class="logo-item" src={PradaLogo} alt="Prada Logo" />
+              <img className="logo-item" src={GucciLogo} alt="Gucci Logo" />
+              <img className="logo-item" src={PradaLogo} alt="Prada Logo" />
             </div>
           </div>
         </div>
@@ -184,6 +186,7 @@ export function PageLayout({
       </main>
       <Footer
         footer={footer}
+        footerSubMenu={footerSubMenu}
         header={header}
         publicStoreDomain={publicStoreDomain}
       />
@@ -316,6 +319,7 @@ function MobileMenuAside({header, publicStoreDomain}) {
  * @typedef {Object} PageLayoutProps
  * @property {Promise<CartApiQueryFragment|null>} cart
  * @property {Promise<FooterQuery|null>} footer
+ * @property {Promise<FooterSubMenuQuery|null>} footerSubMenu
  * @property {HeaderQuery} header
  * @property {Promise<boolean>} isLoggedIn
  * @property {string} publicStoreDomain
@@ -324,4 +328,5 @@ function MobileMenuAside({header, publicStoreDomain}) {
 
 /** @typedef {import('storefrontapi.generated').CartApiQueryFragment} CartApiQueryFragment */
 /** @typedef {import('storefrontapi.generated').FooterQuery} FooterQuery */
+/** @typedef {import('storefrontapi.generated').FooterSubMenuQuery} FooterSubMenuQuery */
 /** @typedef {import('storefrontapi.generated').HeaderQuery} HeaderQuery */

@@ -15,7 +15,7 @@ import resetStyles from '~/styles/reset.css?url';
 import appStyles from '~/styles/app.css?url';
 import tailwindCss from './styles/tailwind.css?url';
 import {PageLayout} from '~/components/PageLayout';
-import {FOOTER_QUERY, HEADER_QUERY} from '~/lib/fragments';
+import {FOOTER_QUERY, FOOTER_SUB_MENU_QUERY, HEADER_QUERY} from '~/lib/fragments';
 
 /**
  * This is important to avoid re-fetching root queries on sub-navigations
@@ -133,11 +133,27 @@ function loadDeferredData({context}) {
       // Log query errors, but don't throw them so the page can still render
       console.error(error);
       return null;
+    }); 
+    
+  // defer the footer sub menu query (below the fold)
+  const footerSubMenu = storefront
+    .query(FOOTER_SUB_MENU_QUERY, {
+      cache: storefront.CacheLong(),
+      variables: {
+        footerSubMenuHandle: 'footer-sub-menu', // Adjust to your footer sub menu handle
+      },
+    })
+    .catch((error) => {
+      // Log query errors, but don't throw them so the page can still render
+      console.error(error);
+      return null;
     });
+
   return {
     cart: cart.get(),
     isLoggedIn: customerAccount.isLoggedIn(),
     footer,
+    footerSubMenu,
   };
 }
 
@@ -163,10 +179,11 @@ export function Layout({children}) {
       <body>
         {data ? (
           <Analytics.Provider
-            cart={data.cart}
-            shop={data.shop}
-            consent={data.consent}
+          cart={data.cart}
+          shop={data.shop}
+          consent={data.consent}
           >
+            {console.log(data)}
             <PageLayout {...data}>{children}</PageLayout>
           </Analytics.Provider>
         ) : (

@@ -227,7 +227,7 @@ export function HeaderMenu({
   <>
 
   {viewport === 'mobile' && (
-    <div className='search_menu_mobile'>
+    <div className='search_menu_mobile' >
     <input type="text" id="mySearch" onKeyUp={myFunction} placeholder="Search..." title="" />
       <ul id="myMenu" style={{display:"none"}}>
         <li><a href="#">HTML</a></li>
