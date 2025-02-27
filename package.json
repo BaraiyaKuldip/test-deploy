@@ -13,6 +13,7 @@
   },
   "prettier": "@shopify/prettier-config",
   "dependencies": {
+    "@headlessui/react": "^2.2.0",
     "@remix-run/react": "^2.15.2",
     "@remix-run/server-runtime": "^2.15.2",
     "@shopify/hydrogen": "2025.1.0",

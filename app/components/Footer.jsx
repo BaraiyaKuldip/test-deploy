@@ -4,6 +4,8 @@ import {Suspense} from 'react';
 import FooterGirlImage from '/images/girl-image-footer.jpg?url';
 import SiteLogoIcon from '/images/site_logo_mezzo_white.png?url';
 import SiteFooterLogoIcon from '/images/site_footer_logo_mezzo_white.png?url';
+import {Disclosure, DisclosureButton, DisclosurePanel , Select} from '@headlessui/react';
+import {ChevronDown, ChevronRight, ChevronUp} from 'lucide-react';
 
 /**
  * @param {FooterProps}
@@ -15,188 +17,211 @@ export function Footer({
   publicStoreDomain,
 }) {
   return (
-    <Suspense>
-      {console.log('footer sub menu', footerPromise)}
-      {/* {console.log(footerSubMenu)} */}
-      <footer className="footer">
-        <div className="footer-holder">
-          <div className="footer-wrapper-full footer-padding-custom ">
-            <div className="footer-container ftr-con-rev">
-              <div className="footer-aside">
-                <div className="footer-newsletter">
-                  <div className="footer-newsletter-image">
-                    <div className="footer-newsletter-image-div relative block w-full h-full overflow-hidden aspect-[2] ">
-                      <img
-                        src={FooterGirlImage}
-                        className="block object-center overflow-hidden w-full h-full object-cover transition-opacity duration-300 ease-linear"
-                        alt="newsletterimage"
-                        style={{objectPosition: 'center center'}}
-                      />
-                    </div>
-                  </div>
-                  <div className="footer-newsletter-body">
-                    <p className="footer-newsletter-title">
-                      OUR WEEKLY NEWSLETTER
-                    </p>
-                    <h3>SKIP TO THE DETAILS</h3>
-                    <div className="fnt footer-text-4">
-                      <p>
-                        {' '}
-                        join to get special offers, free giveaways, and
-                        once-in-a-lifetime deals.
-                      </p>
-                    </div>
-
-                    <form>
-                      <p>
-                        <em>Thank you for joining our mailing list!</em>
-                      </p>
-                      <div>
-                        <label htmlFor=""></label>
-                        <input type="email" />
-                        <span>
-                          <button></button>
-                        </span>
+    <>
+      <Suspense>
+        {console.log('footer sub menu', footerPromise)}
+        {/* {console.log(footerSubMenu)} */}
+        <footer className="footer">
+          <div className="footer-holder">
+            <div className="footer-wrapper-full footer-padding-custom ">
+              <div className="footer-container ftr-con-rev">
+                <div className="footer-aside">
+                  <div className="footer-newsletter">
+                    <div className="footer-newsletter-image">
+                      <div className="footer-newsletter-image-div relative block w-full h-full overflow-hidden aspect-[2] ">
+                        <img
+                          src={FooterGirlImage}
+                          className="block object-center overflow-hidden w-full h-full object-cover transition-opacity duration-300 ease-linear"
+                          alt="newsletterimage"
+                          style={{objectPosition: 'center center'}}
+                        />
                       </div>
-                    </form>
+                    </div>
+                    <div className="footer-newsletter-body">
+                      <p className="footer-newsletter-title">
+                        OUR WEEKLY NEWSLETTER
+                      </p>
+                      <h3>SKIP TO THE DETAILS</h3>
+                      <div className="fnt footer-text-4">
+                        <p>
+                          {' '}
+                          join to get special offers, free giveaways, and
+                          once-in-a-lifetime deals.
+                        </p>
+                      </div>
+
+                      <form>
+                        <p>
+                          <em>Thank you for joining our mailing list!</em>
+                        </p>
+                        <div>
+                          <label htmlFor=""></label>
+                          <input type="email" />
+                          <span>
+                            <button></button>
+                          </span>
+                        </div>
+                      </form>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="footer-content">
-                <div className="footer-content-inner">
-                  <div className="footer-logo-div">
-                    <a href="/">
-                      <img
-                        src={SiteFooterLogoIcon}
-                        alt="Logo"
-                        style={{height: '49px', width: '230px'}}
-                      />
-                    </a>
+                <div className="footer-content">
+                  <div className="footer-content-inner">
+                    <div className="footer-logo-div">
+                      <a href="/">
+                        <img
+                          src={SiteFooterLogoIcon}
+                          alt="Logo"
+                          style={{height: '49px', width: '230px'}}
+                        />
+                      </a>
+                    </div>
+                    <div className="float-grid-box ">
+                      <Await resolve={footerPromise}>
+                        {(footer) => (
+                          <>
+                            {console.log(footer)}
+                            {footer?.menu && header.shop.primaryDomain?.url && (
+                              <>
+                                <FooterMenu
+                                  menu={footer.menu}
+                                  subMenu={footerSubMenuPromise}
+                                  primaryDomainUrl={
+                                    header.shop.primaryDomain.url
+                                  }
+                                  publicStoreDomain={publicStoreDomain}
+                                />
+                              </>
+                            )}
+
+                            {/* {console.log(footerSubMenuPromise)} */}
+                            {/* {console.log(header)} */}
+                          </>
+                        )}
+                      </Await>
+                    </div>
                   </div>
-                  <div className="float-grid-box">
-                    <Await resolve={footerPromise}>
-                      {(footer) => (
-                        <>
-                          {console.log(footer)}
-                          {footer?.menu && header.shop.primaryDomain?.url && (
-                            <>
-                              <FooterMenu
-                                menu={footer.menu}
-                                subMenu={footerSubMenuPromise}
-                                primaryDomainUrl={header.shop.primaryDomain.url}
-                                publicStoreDomain={publicStoreDomain}
-                              />
-                            </>
-                          )}
-
-                          {/* {console.log(footerSubMenuPromise)} */}
-                          {/* {console.log(header)} */}
-                        </>
-                      )}
-                    </Await>
-                  </div>
-                </div>
-                <div className="footer-social">
-                  <h3 className="footer-heading-8">Stay in touch.</h3>
-                  <div className="footer-social-inner">
-                    <a
-                      href="https://www.facebook.com/shopify"
-                      target="_blank"
-                      className="footer-social-icon"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        x="0px"
-                        y="0px"
-                        viewBox="0 0 50 50"
-                        style={{fill: '#FFFFFF'}}
+                  <div className="footer-social">
+                    <h3 className="footer-heading-8">Stay in touch.</h3>
+                    <div className="footer-social-inner">
+                      <a
+                        href="https://www.facebook.com/shopify"
+                        target="_blank"
+                        className="footer-social-icon"
                       >
-                        <path d="M25,3C12.85,3,3,12.85,3,25c0,11.03,8.125,20.137,18.712,21.728V30.831h-5.443v-5.783h5.443v-3.848 c0-6.371,3.104-9.168,8.399-9.168c2.536,0,3.877,0.188,4.512,0.274v5.048h-3.612c-2.248,0-3.033,2.131-3.033,4.533v3.161h6.588 l-0.894,5.783h-5.694v15.944C38.716,45.318,47,36.137,47,25C47,12.85,37.15,3,25,3z"></path>
-                      </svg>
-                      <span className="sr-only">Facebook</span>
-                    </a>
-
-                    <a
-                      href="https://twitter.com/shopify"
-                      target="_blank"
-                      className="footer-social-icon"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        x="0px"
-                        y="0px"
-                        viewBox="0,0,256,256"
-                        style={{fill: '#FFFFFF'}}
-                      >
-                        <g
-                          fill="#ffffff"
-                          fillRule="nonzero"
-                          stroke="none"
-                          strokeWidth="1"
-                          strokeLinecap="butt"
-                          strokeLinejoin="miter"
-                          strokeMiterlimit="10"
-                          strokeDasharray=""
-                          strokedashoffsetfset="0"
-                          fontFamily="none"
-                          fontWeight="none"
-                          fontSize="none"
-                          textAnchor="none"
-                          style={{mixBlendMode: 'normal'}}
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          x="0px"
+                          y="0px"
+                          viewBox="0 0 50 50"
+                          style={{fill: '#FFFFFF'}}
                         >
-                          <g transform="scale(4,4)">
-                            <path d="M61.932,15.439c-2.099,0.93 -4.356,1.55 -6.737,1.843c2.421,-1.437 4.283,-3.729 5.157,-6.437c-2.265,1.328 -4.774,2.303 -7.444,2.817c-2.132,-2.26 -5.173,-3.662 -8.542,-3.662c-6.472,0 -11.717,5.2 -11.717,11.611c0,0.907 0.106,1.791 0.306,2.649c-9.736,-0.489 -18.371,-5.117 -24.148,-12.141c-1.015,1.716 -1.586,3.726 -1.586,5.847c0,4.031 2.064,7.579 5.211,9.67c-1.921,-0.059 -3.729,-0.593 -5.312,-1.45c0,0.035 0,0.087 0,0.136c0,5.633 4.04,10.323 9.395,11.391c-0.979,0.268 -2.013,0.417 -3.079,0.417c-0.757,0 -1.494,-0.086 -2.208,-0.214c1.491,4.603 5.817,7.968 10.942,8.067c-4.01,3.109 -9.06,4.971 -14.552,4.971c-0.949,0 -1.876,-0.054 -2.793,-0.165c5.187,3.285 11.348,5.211 17.961,5.211c21.549,0 33.337,-17.696 33.337,-33.047c0,-0.503 -0.016,-1.004 -0.04,-1.499c2.301,-1.624 4.283,-3.674 5.849,-6.015"></path>
-                          </g>
-                        </g>
-                      </svg>
-                      <span className="sr-only">Twitter</span>
-                    </a>
+                          <path d="M25,3C12.85,3,3,12.85,3,25c0,11.03,8.125,20.137,18.712,21.728V30.831h-5.443v-5.783h5.443v-3.848 c0-6.371,3.104-9.168,8.399-9.168c2.536,0,3.877,0.188,4.512,0.274v5.048h-3.612c-2.248,0-3.033,2.131-3.033,4.533v3.161h6.588 l-0.894,5.783h-5.694v15.944C38.716,45.318,47,36.137,47,25C47,12.85,37.15,3,25,3z"></path>
+                        </svg>
+                        <span className="sr-only">Facebook</span>
+                      </a>
 
-                    <a
-                      href="https://instagram.com/shopify"
-                      target="_blank"
-                      className="footer-social-icon"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        x="0px"
-                        y="0px"
-                        width="100"
-                        height="100"
-                        viewBox="0,0,256,256"
-                        style={{fill: '#FFFFFF'}}
+                      <a
+                        href="https://twitter.com/shopify"
+                        target="_blank"
+                        className="footer-social-icon"
                       >
-                        <g
-                          fill="#ffffff"
-                          fillRule="nonzero"
-                          stroke="none"
-                          strokeWidth="1"
-                          strokeLinecap="butt"
-                          strokeLinejoin="miter"
-                          strokeMiterlimit="10"
-                          strokeDasharray=""
-                          strokedashoffsetfset="0"
-                          fontFamily="none"
-                          fontWeight="none"
-                          fontSize="none"
-                          textAnchor="none"
-                          style={{mixBlendMode: 'normal'}}
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          x="0px"
+                          y="0px"
+                          viewBox="0,0,256,256"
+                          style={{fill: '#FFFFFF'}}
                         >
-                          <g transform="scale(9.84615,9.84615)">
-                            <path d="M7.54688,0c-4.15625,0 -7.54687,3.39063 -7.54687,7.54688v10.90625c0,4.15625 3.39063,7.54688 7.54688,7.54688h10.90625c4.15625,0 7.54688,-3.39062 7.54688,-7.54687v-10.90625c0,-4.15625 -3.39062,-7.54687 -7.54687,-7.54687zM7.54688,2h10.90625c3.07422,0 5.54688,2.46875 5.54688,5.54688v10.90625c0,3.07422 -2.46875,5.54688 -5.54687,5.54688h-10.90625c-3.07422,0 -5.54687,-2.46875 -5.54687,-5.54687v-10.90625c0,-3.07422 2.46875,-5.54687 5.54688,-5.54687zM20.5,4c-0.82812,0 -1.5,0.67188 -1.5,1.5c0,0.82813 0.67188,1.5 1.5,1.5c0.82813,0 1.5,-0.67187 1.5,-1.5c0,-0.82812 -0.67187,-1.5 -1.5,-1.5zM13,6c-3.85547,0 -7,3.14453 -7,7c0,3.85547 3.14453,7 7,7c3.85547,0 7,-3.14453 7,-7c0,-3.85547 -3.14453,-7 -7,-7zM13,8c2.77344,0 5,2.22656 5,5c0,2.77344 -2.22656,5 -5,5c-2.77344,0 -5,-2.22656 -5,-5c0,-2.77344 2.22656,-5 5,-5z"></path>
+                          <g
+                            fill="#ffffff"
+                            fillRule="nonzero"
+                            stroke="none"
+                            strokeWidth="1"
+                            strokeLinecap="butt"
+                            strokeLinejoin="miter"
+                            strokeMiterlimit="10"
+                            strokeDasharray=""
+                            strokedashoffsetfset="0"
+                            fontFamily="none"
+                            fontWeight="none"
+                            fontSize="none"
+                            textAnchor="none"
+                            style={{mixBlendMode: 'normal'}}
+                          >
+                            <g transform="scale(4,4)">
+                              <path d="M61.932,15.439c-2.099,0.93 -4.356,1.55 -6.737,1.843c2.421,-1.437 4.283,-3.729 5.157,-6.437c-2.265,1.328 -4.774,2.303 -7.444,2.817c-2.132,-2.26 -5.173,-3.662 -8.542,-3.662c-6.472,0 -11.717,5.2 -11.717,11.611c0,0.907 0.106,1.791 0.306,2.649c-9.736,-0.489 -18.371,-5.117 -24.148,-12.141c-1.015,1.716 -1.586,3.726 -1.586,5.847c0,4.031 2.064,7.579 5.211,9.67c-1.921,-0.059 -3.729,-0.593 -5.312,-1.45c0,0.035 0,0.087 0,0.136c0,5.633 4.04,10.323 9.395,11.391c-0.979,0.268 -2.013,0.417 -3.079,0.417c-0.757,0 -1.494,-0.086 -2.208,-0.214c1.491,4.603 5.817,7.968 10.942,8.067c-4.01,3.109 -9.06,4.971 -14.552,4.971c-0.949,0 -1.876,-0.054 -2.793,-0.165c5.187,3.285 11.348,5.211 17.961,5.211c21.549,0 33.337,-17.696 33.337,-33.047c0,-0.503 -0.016,-1.004 -0.04,-1.499c2.301,-1.624 4.283,-3.674 5.849,-6.015"></path>
+                            </g>
                           </g>
-                        </g>
-                      </svg>
-                      <span className="sr-only">Instagram</span>
-                    </a>
+                        </svg>
+                        <span className="sr-only">Twitter</span>
+                      </a>
+
+                      <a
+                        href="https://instagram.com/shopify"
+                        target="_blank"
+                        className="footer-social-icon"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          x="0px"
+                          y="0px"
+                          width="100"
+                          height="100"
+                          viewBox="0,0,256,256"
+                          style={{fill: '#FFFFFF'}}
+                        >
+                          <g
+                            fill="#ffffff"
+                            fillRule="nonzero"
+                            stroke="none"
+                            strokeWidth="1"
+                            strokeLinecap="butt"
+                            strokeLinejoin="miter"
+                            strokeMiterlimit="10"
+                            strokeDasharray=""
+                            strokedashoffsetfset="0"
+                            fontFamily="none"
+                            fontWeight="none"
+                            fontSize="none"
+                            textAnchor="none"
+                            style={{mixBlendMode: 'normal'}}
+                          >
+                            <g transform="scale(9.84615,9.84615)">
+                              <path d="M7.54688,0c-4.15625,0 -7.54687,3.39063 -7.54687,7.54688v10.90625c0,4.15625 3.39063,7.54688 7.54688,7.54688h10.90625c4.15625,0 7.54688,-3.39062 7.54688,-7.54687v-10.90625c0,-4.15625 -3.39062,-7.54687 -7.54687,-7.54687zM7.54688,2h10.90625c3.07422,0 5.54688,2.46875 5.54688,5.54688v10.90625c0,3.07422 -2.46875,5.54688 -5.54687,5.54688h-10.90625c-3.07422,0 -5.54687,-2.46875 -5.54687,-5.54687v-10.90625c0,-3.07422 2.46875,-5.54687 5.54688,-5.54687zM20.5,4c-0.82812,0 -1.5,0.67188 -1.5,1.5c0,0.82813 0.67188,1.5 1.5,1.5c0.82813,0 1.5,-0.67187 1.5,-1.5c0,-0.82812 -0.67187,-1.5 -1.5,-1.5zM13,6c-3.85547,0 -7,3.14453 -7,7c0,3.85547 3.14453,7 7,7c3.85547,0 7,-3.14453 7,-7c0,-3.85547 -3.14453,-7 -7,-7zM13,8c2.77344,0 5,2.22656 5,5c0,2.77344 -2.22656,5 -5,5c-2.77344,0 -5,-2.22656 -5,-5c0,-2.77344 2.22656,-5 5,-5z"></path>
+                            </g>
+                          </g>
+                        </svg>
+                        <span className="sr-only">Instagram</span>
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
+        </footer>
+      </Suspense>
+      <section className="sub-footer">
+        <div className='sub-footer-wrapper footer-wrapper-full'>
+          <div>
+            <div>
+              <Select
+                name="status"
+                className="border rounded-sm border-[rgba(223,223,233,0.15)] data-[hover]:shadow data-[hover]:bg-[#1d1d1d] px-2 py-4"
+                aria-label="Country status"
+              >
+                <option className='country-select-option' value="united_kingdom">UNITED KINGDOM (GB £)</option>
+                <option className='country-select-option' value="united_state">UNITED STATE (US $)</option>
+                <option className='country-select-option' value="canada">CANADA (CA $)</option>
+                <option className='country-select-option' value="india">INDIA (INR ₹)</option>
+              </Select>
+            </div>
+            <div></div>
+          </div>
         </div>
-      </footer>
-    </Suspense>
+      </section>
+    </>
   );
 }
 
@@ -213,7 +238,7 @@ function FooterMenu({menu, subMenu, primaryDomainUrl, publicStoreDomain}) {
   // const {footerSubMenu} = useLoaderData();
   return (
     <>
-      {console.log("menu2 ",menu)}
+      {console.log('menu2 ', menu)}
 
       <>
         {/* {console.log(menu)} */}
@@ -241,17 +266,79 @@ function FooterMenu({menu, subMenu, primaryDomainUrl, publicStoreDomain}) {
           //   <>{item.title}</>
           // );
           return (
-            <div className="float-grid-box-item">
-              <p>{item.title}</p>
-              <input type="text" name="" id="" />
-              <label htmlFor=""></label>
-              <ul>
-                <FooterSubMenu
-                  subMenu={subMenu}
-                  primaryDomainUrl={primaryDomainUrl}
-                  publicStoreDomain={publicStoreDomain}
-                />
-              </ul>
+            <div key={item.id} className="float-grid-box-item">
+              <Disclosure>
+                {({open}) => (
+                  <>
+                    <Disclosure.Button className="text-left md:cursor-default flex justify-between items-center w-full ">
+                      <h3 className="flex justify-between footer-nav-title">
+                        {item.title}
+                      </h3>
+                      <span className="md:hidden footer-nav-caret">
+                        {open ? (
+                          <ChevronDown className="w-5 h-5" />
+                        ) : (
+                          <ChevronRight className="w-5 h-5" />
+                        )}
+                      </span>
+                    </Disclosure.Button>
+                    {/* {item?.items?.length > 0 ? ( */}
+                    <div
+                      className={`${
+                        open ? `max-h-48 h-fit` : `max-h-0 md:max-h-fit`
+                      } overflow-hidden transition-all duration-300`}
+                    >
+                      <Disclosure.Panel static>
+                        <ul className="footer-nav-ul">
+                          <Await resolve={subMenu}>
+                            {(subMenuItems) => (
+                              <>
+                                {console.log(
+                                  'subMenuItems ',
+                                  subMenuItems.menu.items,
+                                )}
+
+                                {subMenuItems.menu.items.map((subItem) => {
+                                  if (
+                                    (item.type === 'COLLECTIONS' &&
+                                      subItem.type === 'COLLECTION') ||
+                                    subItem.type === item.type
+                                  ) {
+                                    if (!subItem.url) return null;
+                                    // if the url is internal, we strip the domain
+                                    const url =
+                                      subItem.url.includes('myshopify.com') ||
+                                      subItem.url.includes(publicStoreDomain) ||
+                                      subItem.url.includes(primaryDomainUrl)
+                                        ? new URL(subItem.url).pathname
+                                        : subItem.url;
+
+                                    return (
+                                      <li
+                                        key={subItem.id}
+                                        className="footer-nav-li"
+                                      >
+                                        <a
+                                          href={subItem.url}
+                                          target="_blank"
+                                          rel="noopener noreferrer"
+                                        >
+                                          {subItem.title}
+                                        </a>
+                                      </li>
+                                    );
+                                  }
+                                })}
+                              </>
+                            )}
+                          </Await>
+                        </ul>
+                      </Disclosure.Panel>
+                    </div>
+                    {/* ) : null} */}
+                  </>
+                )}
+              </Disclosure>
             </div>
           );
         })}
@@ -260,69 +347,53 @@ function FooterMenu({menu, subMenu, primaryDomainUrl, publicStoreDomain}) {
   );
 }
 
-/**
- * @param {{
- *   subMenu: FooterSubMenuQuery['subMenu'];
- *   primaryDomainUrl: FooterProps['header']['shop']['primaryDomain']['url'];
- *   publicStoreDomain: string;
- * }}
- */
+// /**
+//  * @param {{
+//  *   subMenu: FooterSubMenuQuery['subMenu'];
+//  *   primaryDomainUrl: FooterProps['header']['shop']['primaryDomain']['url'];
+//  *   publicStoreDomain: string;
+//  * }}
+//  */
 
-function FooterSubMenu({subMenu, primaryDomainUrl, publicStoreDomain}) {
-  return (
-    <>
-      {console.log('subMenu sub menu ', subMenu)}
-      <>
-        <Await resolve={subMenu}>
-          {(subMenuItems) => (
-            <>
-              
-              {/* {console.log(subMenuItems.menu.item.map((item)=>{return item}))} */}
+// function FooterSubMenu({subMenu, primaryDomainUrl, publicStoreDomain}) {
+//   return (
+//     <>
+//       {console.log('subMenu sub menu ', subMenu)}
+//       <>
+//         <Await resolve={subMenu}>
+//           {(subMenuItems) => (
+//             <>
+//               {/* {console.log(subMenuItems.menu.item.map((item)=>{return item}))} */}
 
-              {console.log("subMenuItems ",subMenuItems.menu.items)}
-              {/* {console.log(header)} */}
+//               {console.log('subMenuItems ', subMenuItems.menu.items)}
+//               {/* {console.log(header)} */}
 
-              {subMenuItems.menu.items.map((item) => {
-          // console.log(item)
-          if (!item.url) return null;
-          // if the url is internal, we strip the domain
-          const url =
-            item.url.includes('myshopify.com') ||
-            item.url.includes(publicStoreDomain) ||
-            item.url.includes(primaryDomainUrl)
-              ? new URL(item.url).pathname
-              : item.url;
-          const isExternal = !url.startsWith('/');
-          // return isExternal ? (
-          //   <a
-          //     href={url}
-          //     key={item.id}
-          //     rel="noopener noreferrer"
-          //     target="_blank"
-          //   >
-          //     {item.title}
-          //   </a>
-          // ) : (
-          //   <>{item.title}</>
-          // );
-            return(
-            <li>
-              <p>
-                {item.title}
-              </p>
-            </li>
-              
-            );
-        })}
-            </>
-          )}
-        </Await>
-        {/* {console.log(menu)} */}
-        
-      </>
-    </>
-  );
-}
+//               {subMenuItems.menu.items.map((item) => {
+
+//                 if (!item.url) return null;
+//                 // if the url is internal, we strip the domain
+//                 const url =
+//                   item.url.includes('myshopify.com') ||
+//                   item.url.includes(publicStoreDomain) ||
+//                   item.url.includes(primaryDomainUrl)
+//                     ? new URL(item.url).pathname
+//                     : item.url;
+//                 const isExternal = !url.startsWith('/');
+
+//                 return (
+//                   <li key={item.id}>
+//                     <p>{item.title}</p>
+//                   </li>
+//                 );
+//               })}
+//             </>
+//           )}
+//         </Await>
+//         {/* {console.log(menu)} */}
+//       </>
+//     </>
+//   );
+// }
 
 const FALLBACK_FOOTER_MENU = {
   id: 'gid://shopify/Menu/199655620664',
