@@ -1,11 +1,10 @@
-import { User, X } from 'lucide-react';
+import {User, X} from 'lucide-react';
 import {createContext, useContext, useEffect, useState} from 'react';
-
 
 // type AsideType = 'search' | 'cart' | 'mobile' | 'closed' ;
 // type AsideContextValue = {
 //   type : AsideType;
-//   open: (mode:AsideType) => void; 
+//   open: (mode:AsideType) => void;
 //   close: () => void;
 // }
 
@@ -29,10 +28,10 @@ export function Aside({children, heading, type}) {
   const expanded = type === activeType;
 
   useEffect(() => {
-    if(!expanded){
+    if (!expanded) {
       return;
     }
-    
+
     const scrollY = window.scrollY;
 
     const originalStyles = {
@@ -43,6 +42,7 @@ export function Aside({children, heading, type}) {
       top: document.body.style.top,
     };
 
+    
     document.body.style.overflow = 'hidden';
     document.body.style.height = '100vh';
     document.body.style.position = 'fixed';
@@ -50,18 +50,15 @@ export function Aside({children, heading, type}) {
     document.body.style.top = `-${scrollY}px`;
 
     return () => {
-      
-    document.body.style.overflow = originalStyles.overflow;
-    document.body.style.height = originalStyles.height;
-    document.body.style.position = originalStyles.position;
-    document.body.style.width = originalStyles.width;
-    document.body.style.top = originalStyles.top;
+      document.body.style.overflow = originalStyles.overflow;
+      document.body.style.height = originalStyles.height;
+      document.body.style.position = originalStyles.position;
+      document.body.style.width = originalStyles.width;
+      document.body.style.top = originalStyles.top;
 
-    window.scrollTo(0,scrollY);
-    }
-
-  },[expanded])
-
+      window.scrollTo(0, scrollY);
+    };
+  }, [expanded]);
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -83,46 +80,43 @@ export function Aside({children, heading, type}) {
   return (
     <div
       aria-modal
-      className={`overlay ${expanded ? 'expanded' : ''}`}
+      className={`overlay ${expanded ? 'expanded' : ''} ${
+        heading === 'SEARCH' ? 'searchAsideComponent' : ''
+      }`}
       role="dialog"
     >
-      <button className="close-outside" onClick={close} />
-      <aside>
-        <header>
-  
-          {/* {CART ASIDE} */}
-          {heading === 'CART' && (
-            <>{heading}</>
-          )}
+      {heading !== 'SEARCH' && (
+        <button className="close-outside" onClick={close} />
+      )}
+      <aside className="aside-tag">
+        {heading !== 'SEARCH' && (
+          <header>
+            {/* {CART ASIDE} */}
+            {heading === 'CART' && <>{heading}</>}
 
-          {/* {MENU ASIDE} */}
-          {heading === 'MENU' && (
-          <div className='flex h-full w-full items-center'>
-          <div className=' flex h-full items-center me-5 pe-1 border-e border_color_light'>
+            {/* {MENU ASIDE} */}
+            {heading === 'MENU' && (
+              <div className="flex h-full w-full items-center">
+                <div className=" flex h-full items-center me-5 pe-1 border-e border_color_light">
+                  <select name="country" id="country">
+                    <option defaultValue="canada"> CANADA (CA $) </option>
+                    <option value="uk">UNITED KINGDOM (GB £)</option>
+                    <option value="us">UNITED STATES (US $)</option>
+                    <option value="india">INDIA (INR ₹)</option>
+                  </select>
+                </div>
+                <User className="w-5 h-5" />
+              </div>
+            )}
 
-            <select name="country" id="country">
-              <option defaultValue="canada" > CANADA (CA $) </option>
-              <option value="uk">UNITED KINGDOM (GB £)</option>
-              <option value="us">UNITED STATES (US $)</option>
-              <option value="india" >INDIA (INR ₹)</option>
-            </select>
+            {/* {SEARCH ASIDE} */}
+            {heading === 'SEARCH' && <></>}
 
-          </div> 
-          <User className='w-5 h-5'/>
-          </div>
-          )}
-
-          {/* {SEARCH ASIDE} */}
-          {heading === 'SEARCH' && (
-            <>
-            </>
-          )}
-          
-
-          <button className="close  reset" onClick={close} aria-label="Close">
-            <X className='close_menu_icon aside_close_btn_effect'/>
-          </button>
-        </header>
+            <button className="close  reset" onClick={close} aria-label="Close">
+              <X className="close_menu_icon aside_close_btn_effect" />
+            </button>
+          </header>
+        )}
         <main>{children}</main>
       </aside>
     </div>

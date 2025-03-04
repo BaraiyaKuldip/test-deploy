@@ -4,8 +4,13 @@ import {Suspense} from 'react';
 import FooterGirlImage from '/images/girl-image-footer.jpg?url';
 import SiteLogoIcon from '/images/site_logo_mezzo_white.png?url';
 import SiteFooterLogoIcon from '/images/site_footer_logo_mezzo_white.png?url';
-import {Disclosure, DisclosureButton, DisclosurePanel , Select} from '@headlessui/react';
-import {ChevronDown, ChevronRight, ChevronUp} from 'lucide-react';
+import {
+  Disclosure,
+  DisclosureButton,
+  DisclosurePanel,
+  Select,
+} from '@headlessui/react';
+import {ChevronDown, ChevronRight, ChevronUp, MoveRight} from 'lucide-react';
 
 /**
  * @param {FooterProps}
@@ -19,7 +24,7 @@ export function Footer({
   return (
     <>
       <Suspense>
-        {console.log('footer sub menu', footerPromise)}
+        {/* {console.log('footer sub menu', footerPromise)} */}
         {/* {console.log(footerSubMenu)} */}
         <footer className="footer">
           <div className="footer-holder">
@@ -37,7 +42,7 @@ export function Footer({
                         />
                       </div>
                     </div>
-                    <div className="footer-newsletter-body">
+                    <div className="footer-newsletter-body fixed_padding_page">
                       <p className="footer-newsletter-title">
                         OUR WEEKLY NEWSLETTER
                       </p>
@@ -52,13 +57,15 @@ export function Footer({
 
                       <form>
                         <p>
-                          <em>Thank you for joining our mailing list!</em>
+                          {/* <em>Thank you for joining our mailing list!</em> */}
                         </p>
-                        <div>
+                        <div className='footer-input-group'>
                           <label htmlFor=""></label>
-                          <input type="email" />
+                          <input className='footer-newsletter-mail' type="email" placeholder='your-email@example.com' id='footer-newsletter-mail' autoCorrect="off" />
                           <span>
-                            <button></button>
+                            <button className='flex' type='submit'>
+                              <MoveRight strokeWidth={1} className='w-5 h-5 text-[rgba(255,255,255,0.9)]' />
+                            </button>
                           </span>
                         </div>
                       </form>
@@ -80,7 +87,7 @@ export function Footer({
                       <Await resolve={footerPromise}>
                         {(footer) => (
                           <>
-                            {console.log(footer)}
+                            {/* {console.log(footer)} */}
                             {footer?.menu && header.shop.primaryDomain?.url && (
                               <>
                                 <FooterMenu
@@ -200,27 +207,45 @@ export function Footer({
               </div>
             </div>
           </div>
+          <section className="sub-footer">
+            <div className="sub-footer-wrapper footer-wrapper-full">
+              <div className='sub-footer-div'>
+                <div className='sub-footer-item-select'>
+                  <Select
+                    name="status"
+                    className=" my-2.5 mx-0 px-4 py-2.25 border rounded-sm border-[rgba(223,223,233,0.15)] data-[hover]:shadow data-[hover]:bg-[#1d1d1d]"
+                    aria-label="Country status"
+                  >
+                    <option
+                      className="country-select-option link-hover-effect"
+                      value="united_kingdom"
+                    >
+                      UNITED KINGDOM (GB £)
+                    </option>
+                    <option
+                      className="country-select-option link-hover-effect"
+                      value="united_state"
+                    >
+                      UNITED STATE (US $)
+                    </option>
+                    <option className="country-select-option link-hover-effect" value="canada">
+                      CANADA (CA $)
+                    </option>
+                    <option className="country-select-option link-hover-effect" value="india">
+                      INDIA (INR ₹)
+                    </option>
+                  </Select>
+                </div>
+                <div className='sub-footer-item-copyright'>
+                  <span> © </span>
+                    <a className='link-hover-effect' href="#">MEETANSHI</a>
+                  <span> 2025 </span>
+                </div>
+              </div>
+            </div>
+          </section>
         </footer>
       </Suspense>
-      <section className="sub-footer">
-        <div className='sub-footer-wrapper footer-wrapper-full'>
-          <div>
-            <div>
-              <Select
-                name="status"
-                className="border rounded-sm border-[rgba(223,223,233,0.15)] data-[hover]:shadow data-[hover]:bg-[#1d1d1d] px-2 py-4"
-                aria-label="Country status"
-              >
-                <option className='country-select-option' value="united_kingdom">UNITED KINGDOM (GB £)</option>
-                <option className='country-select-option' value="united_state">UNITED STATE (US $)</option>
-                <option className='country-select-option' value="canada">CANADA (CA $)</option>
-                <option className='country-select-option' value="india">INDIA (INR ₹)</option>
-              </Select>
-            </div>
-            <div></div>
-          </div>
-        </div>
-      </section>
     </>
   );
 }
@@ -238,7 +263,7 @@ function FooterMenu({menu, subMenu, primaryDomainUrl, publicStoreDomain}) {
   // const {footerSubMenu} = useLoaderData();
   return (
     <>
-      {console.log('menu2 ', menu)}
+      {/* {console.log('menu2 ', menu)} */}
 
       <>
         {/* {console.log(menu)} */}
@@ -270,7 +295,7 @@ function FooterMenu({menu, subMenu, primaryDomainUrl, publicStoreDomain}) {
               <Disclosure>
                 {({open}) => (
                   <>
-                    <Disclosure.Button className="text-left md:cursor-default flex justify-between items-center w-full ">
+                    <Disclosure.Button className="text-left md:cursor-default flex justify-between items-center w-full footer-nav-button ">
                       <h3 className="flex justify-between footer-nav-title">
                         {item.title}
                       </h3>
@@ -293,10 +318,10 @@ function FooterMenu({menu, subMenu, primaryDomainUrl, publicStoreDomain}) {
                           <Await resolve={subMenu}>
                             {(subMenuItems) => (
                               <>
-                                {console.log(
+                                {/* {console.log(
                                   'subMenuItems ',
                                   subMenuItems.menu.items,
-                                )}
+                                )} */}
 
                                 {subMenuItems.menu.items.map((subItem) => {
                                   if (
@@ -321,7 +346,8 @@ function FooterMenu({menu, subMenu, primaryDomainUrl, publicStoreDomain}) {
                                         <a
                                           href={subItem.url}
                                           target="_blank"
-                                          rel="noopener noreferrer"
+                                          rel="noopener noreferrer "
+                                          className='link-hover-effect'
                                         >
                                           {subItem.title}
                                         </a>

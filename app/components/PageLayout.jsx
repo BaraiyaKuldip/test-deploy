@@ -1,4 +1,4 @@
-import {Await, Link} from '@remix-run/react';
+import {Await, Link, Navigate} from '@remix-run/react';
 import {Suspense, useId, useEffect, useState} from 'react';
 import {Aside} from '~/components/Aside';
 import {Footer} from '~/components/Footer';
@@ -15,15 +15,17 @@ import GirlImage1Portrait from '/images/GirlImage1Portrait.png?url';
 // import GirlImage1Landscape from '/images/york-work-portrait-london-outdoors-person.jpg?url';
 import GirlImage1Landscape from '/images/GirlImage1Landscape.png?url';
 
-// srolling logo images 
+// srolling logo images
 import LouisVittonLogo from '/images/louis-vuitton-logo.png?url';
 import RolexLogo from '/images/rolex-logo.png?url';
 import PradaLogo from '/images/prada-logo.png?url';
 import GucciLogo from '/images/gucci-logo.png?url';
 import CalvinKleinLogo from '/images/calvin-klein-logo.png?url';
 
-
 import {use} from 'react';
+import {ChevronRight, X} from 'lucide-react';
+import {useAside} from '~/components/Aside';
+import { validate } from 'graphql';
 
 /**
  * @param {PageLayoutProps}
@@ -53,8 +55,7 @@ export function PageLayout({
       }
       // ... do something with the element
     }
-  }, [current_height, current_width]);
-
+  });
 
   return (
     <Aside.Provider>
@@ -77,7 +78,7 @@ export function PageLayout({
           <span className="backdrop-blur-md transition-all block absolute top-0 left-0 h-full w-full pointer-events-none "></span>
         </span>
 
-        <div
+        {/* <div
           style={{backgroundImage: `url(${divBgImage})`}}
           className="div_bg_image"
         >
@@ -89,7 +90,7 @@ export function PageLayout({
               <p className="alegreya-font-style">
                 Timeless Style <br /> Sustainable Design{' '}
               </p>
-              {/* <p className='alegreya-font-style'></p> */}
+              
               <div className="div_bg_hero_div">
                 <button
                   style={{
@@ -114,7 +115,8 @@ export function PageLayout({
               </div>
             </div>
           </div>
-        </div>
+        </div> */}
+
         <div className="fixed_padding_page">{children}</div>
 
         {/* scrolling logos */}
@@ -182,7 +184,6 @@ export function PageLayout({
             </div>
           </div>
         </div>
-
       </main>
       <Footer
         footer={footer}
@@ -213,82 +214,143 @@ function CartAside({cart}) {
 
 function SearchAside() {
   const queriesDatalistId = useId();
+  const {type: activeType, close} = useAside();
+
+
   return (
     <Aside type="search" heading="SEARCH">
-      <div className="predictive-search">
-        <br />
+      <div className="predictive-search fixed_padding_page">
         <SearchFormPredictive>
           {({fetchResults, goToSearch, inputRef}) => (
             <>
               <input
                 name="q"
+                id='search-input'
                 onChange={fetchResults}
                 onFocus={fetchResults}
                 placeholder="Search"
                 ref={inputRef}
                 type="search"
                 list={queriesDatalistId}
+                enterKeyHint='search'
+                onKeyDown={function (e) {
+                  if(e.code === 'Enter'){
+                    // goToSearch
+                    // <Link to={"/search"}></Link>
+                  }
+                }}
               />
+              
               &nbsp;
-              <button onClick={goToSearch}>Search</button>
+              {/* <button onClick={goToSearch}>Search</button> */}
+              {/* {console.log(inputRef.current , "saa")} */}
+              {inputRef.current !== null &&
+                inputRef.current.value.length > 0 && (
+                  // console.log(inputRef.current.value , "saa")
+                  <div>
+                    <button
+                      className="clear-btn-search"
+                      type="reset"
+                      aria-label="Reset"
+                    >
+                      Clear
+                    </button>
+                  </div>
+                )}
+              <div className="text-left w-22.5 h-full ">
+                <button
+                  className="close  reset"
+                  onClick={close}
+                  aria-label="Close"
+                >
+                  <X className="close_menu_icon " />
+                </button>
+              </div>
             </>
           )}
         </SearchFormPredictive>
+      </div>
 
-        <SearchResultsPredictive>
-          {({items, total, term, state, closeSearch}) => {
-            const {articles, collections, pages, products, queries} = items;
+      <SearchResultsPredictive>
+        {({items, total, term, state, closeSearch}) => {
+          const {articles, collections, pages, products, queries} = items;
 
-            if (state === 'loading' && term.current) {
-              return <div>Loading...</div>;
-            }
+          // console.log(items, 'itemss');
+          // if (state === 'loading' && term.current) {
+          //   return <div className='bg-white text-center'>Loading...</div>;
+          // }
 
-            if (!total) {
-              return <SearchResultsPredictive.Empty term={term} />;
-            }
-
+          if (!total) {
             return (
               <>
-                <SearchResultsPredictive.Queries
-                  queries={queries}
-                  queriesDatalistId={queriesDatalistId}
-                />
-                <SearchResultsPredictive.Products
-                  products={products}
-                  closeSearch={closeSearch}
-                  term={term}
-                />
-                <SearchResultsPredictive.Collections
-                  collections={collections}
-                  closeSearch={closeSearch}
-                  term={term}
-                />
-                <SearchResultsPredictive.Pages
-                  pages={pages}
-                  closeSearch={closeSearch}
-                  term={term}
-                />
-                <SearchResultsPredictive.Articles
-                  articles={articles}
-                  closeSearch={closeSearch}
-                  term={term}
-                />
-                {term.current && total ? (
-                  <Link
-                    onClick={closeSearch}
-                    to={`${SEARCH_ENDPOINT}?q=${term.current}`}
-                  >
-                    <p>
-                      View all results for <q>{term.current}</q>
-                      &nbsp; →
-                    </p>
-                  </Link>
-                ) : null}
+                {/* {term.current.length > 0 && ( */}
+                  <SearchResultsPredictive.Empty term={term} />
+                 {/* )} */}
               </>
             );
-          }}
-        </SearchResultsPredictive>
-      </div>
+          }
+
+          return (
+            <>
+              
+                <div className={`fixed_padding_page predictive-search-result-main-div ${
+                  term.current.length > 0
+                    ? 'oppen'
+                    : 'closee'
+                } bg-white h-screen`}>
+                  <div
+                    className={`predictive-search-result-wrapper ${
+                      term.current.length > 0
+                        ? 'predictive-search-result-open'
+                        : ''
+                    }`}
+                  >
+                    
+                    <SearchResultsPredictive.Queries
+                      queries={queries}
+                      queriesDatalistId={queriesDatalistId}
+                      closeSearch={closeSearch}
+                    />
+                    <SearchResultsPredictive.Products
+                      products={products}
+                      closeSearch={closeSearch}
+                      term={term}
+                    />
+                    <SearchResultsPredictive.Collections
+                      collections={collections}
+                      closeSearch={closeSearch}
+                      term={term}
+                    />
+                    <SearchResultsPredictive.Pages
+                      pages={pages}
+                      closeSearch={closeSearch}
+                      term={term}
+                    />
+                    <SearchResultsPredictive.Articles
+                      articles={articles}
+                      closeSearch={closeSearch}
+                      term={term}
+                    />
+                    {term.current && total ? (
+                      <div>
+                        <button className="predictive-search-go-btn">
+                          <div className="flex items-center justify-between">
+                            <span>search for &ldquo;{term.current}&rdquo;</span>
+                            <span className="ml-1">
+                              <ChevronRight className="w-4 h-4" />
+                            </span>
+                          </div>
+                        </button>
+                      </div>
+                    ) : null}
+                  </div>
+                </div>
+              
+            </>
+          );
+        }}
+      </SearchResultsPredictive>
+
     </Aside>
   );
 }

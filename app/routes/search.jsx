@@ -52,7 +52,7 @@ export default function SearchPage() {
               type="search"
             />
             &nbsp;
-            <button type="submit">Search</button>
+            {/* <button type="submit">Search</button> */}
           </>
         )}
       </SearchForm>

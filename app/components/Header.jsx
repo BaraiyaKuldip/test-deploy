@@ -2,7 +2,8 @@ import {Suspense, useEffect, useState} from 'react';
 import {Await, NavLink, useAsyncValue} from '@remix-run/react';
 import {useAnalytics, useOptimisticCart} from '@shopify/hydrogen';
 import {useAside} from '~/components/Aside';
-import { Menu , Search, ShoppingBag, ShoppingCart , User } from 'lucide-react';
+import { TopSide, useTopSide } from './topside';
+import {Menu, Search, ShoppingBag, ShoppingCart, User} from 'lucide-react';
 import SiteLogoIcon from '/images/site_logo_mezzo_white.png?url';
 
 /**
@@ -11,114 +12,104 @@ import SiteLogoIcon from '/images/site_logo_mezzo_white.png?url';
 export function Header({header, isLoggedIn, cart, publicStoreDomain}) {
   const {shop, menu} = header;
 
-  const [isScrolled,setIsSrolled] = useState(false);
-  const [isSrollingUp,setIsSrollinUp] = useState(false);
-  const [lastScrollY,setLastScrollY] = useState(0);
-  const {type : asideType} = useAside();
+  const [isScrolled, setIsSrolled] = useState(false);
+  const [isSrollingUp, setIsSrollinUp] = useState(false);
+  const [lastScrollY, setLastScrollY] = useState(0);
+  const {type: asideType} = useAside();
 
   useEffect(() => {
-      // const root = document.documentElement;
+    // const root = document.documentElement;
 
-      // root.style.setProperty('--announcement-height' , isScrolled ? '0px' : '40px');
-      // root.style.setProperty('--header-height', isScrolled ? '64px' : '80px');
+    // root.style.setProperty('--announcement-height' , isScrolled ? '0px' : '40px');
+    // root.style.setProperty('--header-height', isScrolled ? '64px' : '80px');
 
     const handleScroll = () => {
-      if(asideType !== 'closed') return;
+      if (asideType !== 'closed') return;
 
-      const currentSrollY = window.scrollY ;
+      const currentSrollY = window.scrollY;
 
       setIsSrollinUp(currentSrollY < lastScrollY);
       setLastScrollY(currentSrollY);
 
       setIsSrolled(currentSrollY > 50);
+    };
 
-    }
+    window.addEventListener('scroll', handleScroll, {passive: true});
 
-    window.addEventListener('scroll' , handleScroll, {passive: true});
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [lastScrollY, isScrolled, asideType]);
 
-    return () => window.removeEventListener('scroll' , handleScroll)
-
-  },[lastScrollY , isScrolled , asideType]);
- 
   return (
     <>
-
       {/* Announcement Bar  */}
 
-      <div className={`main_header_top text-white w-full `}>
-          
-          <div className='fixed_padding_page text-center announcebar_border_color scrolling_infinite_animation_strip h-7.5'>
-            <div className='scrolling_infinite_animation_item'>
-              <p>
-                Fall collection is out now 
-              </p>
+      <div className={`main_header_top text-white w-full fixed_padding_page`}>
+        <div className="scrolling_infinite_animation_wrapper">
+          <div className=" text-center announcebar_border_color scrolling_infinite_animation_strip h-7.5">
+            <div className="scrolling_infinite_animation_item">
+              <p>Fall collection is out now</p>
               <b>&nbsp; | &nbsp;</b>
-              <a href='#' >
-                Shop our fall collection
-              </a>
+              <a href="#">Shop our fall collection</a>
             </div>
 
-            <div className=' scrolling_infinite_animation_item2 ' aria-hidden={true}>
-              <p>
-                Fall collection is out now 
-              </p>
-              <b>&nbsp; | &nbsp;</b>
-              <a href='#'>
-                Shop our fall collection
-              </a>
-            </div>
-             
-            <div className=' scrolling_infinite_animation_item2' aria-hidden={true}>
-              <p>
-                Fall collection is out now 
-              </p>
-              <b>&nbsp; | &nbsp;</b>
-              <a href='#'>
-                Shop our fall collection
-              </a>
-            </div>
-            
-          </div>
-          {/* Main Header */}
-
-      <header className={`h-16 text-white w-full flex items-center justify-between fixed_padding_page bg-transparent `}>
-
-        <div className={`container`}> 
-        
-        {/* Mobile logo 550px and below */}
-
-          <div className={`hidden max-[550px]:block text-center `}>
-            
-            <div className='flex justify-between items-center'>
-
-            <div className={`lg:hidden`}>
-              <HeaderMenuMobileToggle />
-            </div>
-
-            <NavLink
-            prefetch='intent'
-            to='/'
-            className={`text-2xl tracking-normal inline-block`}
+            <div
+              className=" scrolling_infinite_animation_item2 "
+              aria-hidden={true}
             >
-              <h1 className={`font-medium my-0`}>
-                {/* {shop.name} */}
-                <img src={SiteLogoIcon} alt="Logo" style={{height:"28px" , width:"130px"}} />
-              </h1>
-            </NavLink>
-
-            <div className={`lg:hidden p-1`}>
-            <CartToggle/>
+              <p>Fall collection is out now</p>
+              <b>&nbsp; | &nbsp;</b>
+              <a href="#">Shop our fall collection</a>
             </div>
 
+            <div
+              className=" scrolling_infinite_animation_item2"
+              aria-hidden={true}
+            >
+              <p>Fall collection is out now</p>
+              <b>&nbsp; | &nbsp;</b>
+              <a href="#">Shop our fall collection</a>
             </div>
-
           </div>
+        </div>
+        {/* Main Header */}
 
-          {/* Header Content  */}
+        <header
+          className={`h-16 text-white w-full flex items-center justify-between bg-transparent `}
+        >
+          <div className={`container`}>
+            {/* Mobile logo 550px and below */}
+
+            <div className={`hidden max-[550px]:block text-center `}>
+              <div className="flex justify-between items-center">
+                <div className={`lg:hidden`}>
+                  <HeaderMenuMobileToggle />
+                </div>
+
+                <NavLink
+                  prefetch="intent"
+                  to="/"
+                  className={`text-2xl tracking-normal inline-block`}
+                >
+                  <h1 className={`font-medium my-0`}>
+                    {/* {shop.name} */}
+                    <img
+                      src={SiteLogoIcon}
+                      alt="Logo"
+                      style={{height: '28px', width: '130px'}}
+                    />
+                  </h1>
+                </NavLink>
+
+                <div className={`lg:hidden p-1`}>
+                  <CartToggle />
+                </div>
+              </div>
+            </div>
+
+            {/* Header Content  */}
 
             <div className={`flex items-center justify-between `}>
-
-            {/* Mobile Menu Toggle  */}
+              {/* Mobile Menu Toggle  */}
 
               {/* <div className={`lg:hidden`}>
                 <HeaderMenuMobileToggle />
@@ -126,47 +117,42 @@ export function Header({header, isLoggedIn, cart, publicStoreDomain}) {
 
               {/* Logo Above 550px  */}
 
-              <NavLink 
-              prefetch='intent'
-              to='/'
-              className={`tracking-wider text-center max-[550px]:hidden absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0 lg:text-left transition-all duration-300 ease-in-out`}
+              <NavLink
+                prefetch="intent"
+                to="/"
+                className={`tracking-wider text-center max-[550px]:hidden absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0 lg:text-left transition-all duration-300 ease-in-out`}
               >
-                <h1 className='font-medium'>
+                <h1 className="font-medium">
                   {/* {shop.name} */}
-                  <img src={SiteLogoIcon} alt="Logo" style={{height:"28px" , width:"130px"}} />
+                  <img
+                    src={SiteLogoIcon}
+                    alt="Logo"
+                    style={{height: '28px', width: '130px'}}
+                  />
                 </h1>
               </NavLink>
 
               {/* Desktop Navigation  */}
 
-              <div className='hidden lg:block'>
+              <div className="hidden lg:block">
                 <HeaderMenu
                   menu={menu}
-                  viewport='desktop'
+                  viewport="desktop"
                   primaryDomainUrl={header.shop.primaryDomain.url}
                   publicStoreDomain={publicStoreDomain}
                 />
-
               </div>
 
               {/* CTAS  */}
-              <div className='hidden lg:block'>
-
-                <div className='flex items-center'>
+              <div className="hidden lg:block">
+                <div className="flex items-center">
                   <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} />
                 </div>
-
               </div>
-
+            </div>
           </div>
-
-        </div>
-
-      </header>
-        </div>
-      
-
-      
+        </header>
+      </div>
 
       {/* <header className="header">  
 
@@ -207,45 +193,67 @@ export function HeaderMenu({
   function myFunction() {
     // Declare variables
     var input, filter, ul, li, a, i;
-    input = document.getElementById("mySearch");
+    input = document.getElementById('mySearch');
     filter = input.value.toUpperCase();
-    ul = document.getElementById("myMenu");
-    li = ul.getElementsByTagName("li");
-    ul.style.display = "";
+    ul = document.getElementById('myMenu');
+    li = ul.getElementsByTagName('li');
+    ul.style.display = '';
     // Loop through all list items, and hide those who don't match the search query
     for (i = 0; i < li.length; i++) {
-      a = li[i].getElementsByTagName("a")[0];
+      a = li[i].getElementsByTagName('a')[0];
       if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
-        li[i].style.display = "";
+        li[i].style.display = '';
       } else {
-        li[i].style.display = "none";
+        li[i].style.display = 'none';
       }
     }
   }
-  
+
   return (
-  <>
+    <>
+      {viewport === 'mobile' && (
+        <div className="search_menu_mobile">
+          <input
+            type="text"
+            id="mySearch"
+            onKeyUp={myFunction}
+            placeholder="Search..."
+            title=""
+          />
+          <ul id="myMenu" style={{display: 'none'}}>
+            <li>
+              <a href="#">HTML</a>
+            </li>
+            <li>
+              <a href="#">CSS</a>
+            </li>
+            <li>
+              <a href="#">JavaScript</a>
+            </li>
+            <li>
+              <a href="#">PHP</a>
+            </li>
+            <li>
+              <a href="#">Python</a>
+            </li>
+            <li>
+              <a href="#">jQuery</a>
+            </li>
+            <li>
+              <a href="#">SQL</a>
+            </li>
+            <li>
+              <a href="#">Bootstrap</a>
+            </li>
+            <li>
+              <a href="#">Node.js</a>
+            </li>
+          </ul>
+        </div>
+      )}
 
-  {viewport === 'mobile' && (
-    <div className='search_menu_mobile' >
-    <input type="text" id="mySearch" onKeyUp={myFunction} placeholder="Search..." title="" />
-      <ul id="myMenu" style={{display:"none"}}>
-        <li><a href="#">HTML</a></li>
-        <li><a href="#">CSS</a></li>
-        <li><a href="#">JavaScript</a></li>
-        <li><a href="#">PHP</a></li>
-        <li><a href="#">Python</a></li>
-        <li><a href="#">jQuery</a></li>
-        <li><a href="#">SQL</a></li>
-        <li><a href="#">Bootstrap</a></li>
-        <li><a href="#">Node.js</a></li>
-      </ul>
-    </div>
-  )}
-    
-
-    <nav className={`${className}`} role="navigation">
-      {/* {viewport === 'mobile' && (
+      <nav className={`${className}`} role="navigation">
+        {/* {viewport === 'mobile' && (
         <NavLink
           end
           onClick={close}
@@ -256,61 +264,61 @@ export function HeaderMenu({
           
         </NavLink>
       )} */}
-    <div className={`slider_type_menu ${className} `}>      
-      {(menu || FALLBACK_HEADER_MENU).items.map((item) => {
-        if (!item.url) return null;
+        <div className={`slider_type_menu ${className} `}>
+          {(menu || FALLBACK_HEADER_MENU).items.map((item) => {
+            if (!item.url) return null;
 
-        // if the url is internal, we strip the domain
-        const url =
-          item.url.includes('myshopify.com') ||
-          item.url.includes(publicStoreDomain) ||
-          item.url.includes(primaryDomainUrl)
-            ? new URL(item.url).pathname
-            : item.url;
-        return (
-<>
-          {/* <div className='slider_type_menu_wrapper'> */}
-            
-            
-            {/* <button key={item.id} onClick={close} style={viewport === 'desktop' ? activeLinkStyleDesktop : activeLinkStyle} className='header-menu-item'>{item.title}</button> */}
-            {viewport === 'mobile' && (
-              <NavLink
-              className={`header-menu-item `}
-              end
-              id='mobile_header_link'
-              key={item.id}
-              onClick={close}
-              prefetch="intent"
-              style={viewport === 'desktop' ? activeLinkStyleDesktop : activeLinkStyle}
-              to={url}
-            >
-              
-              <span className='slider_type_menu_item'>
-                {item.title}
-              </span>
-              <span className='font-normal'>
-              &#10095;
-              </span>
+            // if the url is internal, we strip the domain
+            const url =
+              item.url.includes('myshopify.com') ||
+              item.url.includes(publicStoreDomain) ||
+              item.url.includes(primaryDomainUrl)
+                ? new URL(item.url).pathname
+                : item.url;
+            return (
+              <>
+                {/* <div className='slider_type_menu_wrapper'> */}
 
-              </NavLink>
-            )}
-            {viewport !== 'mobile' && (
-              <NavLink
-              className={`header-menu-item `}
-              end
-              key={item.id}
-              onClick={close}
-              prefetch="intent"
-              style={viewport === 'desktop' ? activeLinkStyleDesktop : activeLinkStyle}
-              to={url}
-            >
-                  {item.title}
-              </NavLink>
-            )}
-          {/* </div> */}
-          
-          
-          {/* <NavLink
+                {/* <button key={item.id} onClick={close} style={viewport === 'desktop' ? activeLinkStyleDesktop : activeLinkStyle} className='header-menu-item'>{item.title}</button> */}
+                {viewport === 'mobile' && (
+                  <NavLink
+                    className={`header-menu-item `}
+                    end
+                    id="mobile_header_link"
+                    key={item.id}
+                    onClick={close}
+                    prefetch="intent"
+                    style={
+                      viewport === 'desktop'
+                        ? activeLinkStyleDesktop
+                        : activeLinkStyle
+                    }
+                    to={url}
+                  >
+                    <span className="slider_type_menu_item">{item.title}</span>
+                    <span className="font-normal">&#10095;</span>
+                  </NavLink>
+                )}
+                {viewport !== 'mobile' && (
+                  <NavLink
+                    className={`header-menu-item `}
+                    end
+                    key={item.id}
+                    onClick={close}
+                    prefetch="intent"
+                    style={
+                      viewport === 'desktop'
+                        ? activeLinkStyleDesktop
+                        : activeLinkStyle
+                    }
+                    to={url}
+                  >
+                    {item.title}
+                  </NavLink>
+                )}
+                {/* </div> */}
+
+                {/* <NavLink
             className={`header-menu-item `}
             end
             key={item.id}
@@ -331,12 +339,11 @@ export function HeaderMenu({
                </> 
             )}
           </NavLink> */}
-          
-</>          
-        );
-      })}
-    </div>
-    </nav>
+              </>
+            );
+          })}
+        </div>
+      </nav>
     </>
   );
 }
@@ -347,21 +354,25 @@ export function HeaderMenu({
 function HeaderCtas({isLoggedIn, cart}) {
   return (
     <nav className="header-ctas" role="navigation">
-      
-      <NavLink prefetch="intent" to="/account" style={activeLinkStyleDesktop} className="px-5 py-1.25">
+      <NavLink
+        prefetch="intent"
+        to="/account"
+        style={activeLinkStyleDesktop}
+        className="px-5 py-1.25"
+      >
         <Suspense fallback="Sign in">
           <Await resolve={isLoggedIn} errorElement="Sign in">
-            <span className='sr-only'>
-            {(isLoggedIn) => (isLoggedIn ? 'Account' : 'Sign in')}
+            <span className="sr-only">
+              {(isLoggedIn) => (isLoggedIn ? 'Account' : 'Sign in')}
             </span>
-            <User className='w-6 h-6'/>
+            <User className="w-6 h-6" />
           </Await>
         </Suspense>
       </NavLink>
 
-
+      <TopSide.Provider>
       <SearchToggle />
-
+      </TopSide.Provider>
 
       <CartToggle cart={cart} />
     </nav>
@@ -371,11 +382,8 @@ function HeaderCtas({isLoggedIn, cart}) {
 function HeaderMenuMobileToggle() {
   const {open} = useAside();
   return (
-    <button
-      className="p-2 -ml-2"
-      onClick={() => open('mobile')}
-    >
-      <Menu className='w-6 h-6'/>
+    <button className="p-2 -ml-2" onClick={() => open('mobile')}>
+      <Menu className="w-6 h-6" />
     </button>
   );
 }
@@ -383,8 +391,8 @@ function HeaderMenuMobileToggle() {
 function SearchToggle() {
   const {open} = useAside();
   return (
-    <button className="reset px-5 py-1.25" onClick={() => open('search')}>
-      <Search className='w-6 h-6'/>
+    <button className="reset hover:cursor-pointer px-5 py-1.25" onClick={() => open('search')}>
+      <Search className="w-6 h-6" />
     </button>
   );
 }
@@ -398,7 +406,7 @@ function CartBadge({count}) {
 
   return (
     <a
-      className='relative px-5 py-1.25'
+      className="relative px-5 py-1.25"
       href="/cart"
       onClick={(e) => {
         e.preventDefault();
@@ -411,8 +419,8 @@ function CartBadge({count}) {
         });
       }}
     >
-      <ShoppingCart className='w-6 h-6'/> 
-       {/* {count !== null && count > 0 && (
+      <ShoppingCart className="w-6 h-6" />
+      {/* {count !== null && count > 0 && (
         <span className='absolute top-0 right-6 bg-orange-400 text-black text-[12px] font-medium rounded-full w-3 h-3 flex justify-center items-center'>
           {count > 9 ? '9+' : count}
         </span>
@@ -488,18 +496,18 @@ const FALLBACK_HEADER_MENU = {
  *   isPending: boolean;
  * }}
  */
-function activeLinkStyle({isActive, isPending}) { 
+function activeLinkStyle({isActive, isPending}) {
   return {
     fontWeight: isActive ? 'bold' : undefined,
     color: isPending ? 'grey' : 'black',
   };
 }
 
-function activeLinkStyleDesktop({isActive, isPending}){
-  return{
-    fontWeight : isActive ? 'bold' : undefined,
+function activeLinkStyleDesktop({isActive, isPending}) {
+  return {
+    fontWeight: isActive ? 'bold' : undefined,
     color: isPending ? 'grey' : 'white',
-  }
+  };
 }
 
 /** @typedef {'desktop' | 'mobile'} Viewport */

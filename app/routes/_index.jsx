@@ -2,6 +2,7 @@ import {defer} from '@shopify/remix-oxygen';
 import {Await, useLoaderData, Link} from '@remix-run/react';
 import {Suspense} from 'react';
 import {Image, Money} from '@shopify/hydrogen';
+import GirlImage1Landscape from '/images/GirlImage1Landscape.png?url';
 
 /**
  * @type {MetaFunction}
@@ -64,6 +65,45 @@ export default function Homepage() {
   const data = useLoaderData();
   return (
     <div className="home">
+      
+      <div
+          style={{backgroundImage: `url(${GirlImage1Landscape})`}}
+          className="div_bg_image"
+        >
+          <div className="mx-6 mt-20 p-12.5">
+            <div style={{zIndex: 1}}>
+              <p className="font-semibold normal-font-style ">
+                A CONSCIOUS WARDROBE
+              </p>
+              <p className="alegreya-font-style">
+                Timeless Style <br /> Sustainable Design{' '}
+              </p>
+              {/* <p className='alegreya-font-style'></p> */}
+              <div className="div_bg_hero_div">
+                <button
+                  style={{
+                    fontSize: '13px',
+                    fontWeight: 'bold',
+                    width: '200px',
+                    height: '50px',
+                    padding: '10px 20px',
+                    backgroundColor: 'white',
+                    color: 'black',
+                    border: 'none',
+                    borderRadius: '1px',
+                    cursor: 'pointer',
+                    margin: '5px',
+                  }}
+                >
+                  VIEW PRODUCTS
+                </button>
+                <a href="#" className="div_bg_hero_a">
+                  LEARN MORE
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
       <FeaturedCollection collection={data.featuredCollection} />
       <RecommendedProducts products={data.recommendedProducts} />
     </div>
