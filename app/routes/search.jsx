@@ -1,9 +1,12 @@
+import React from 'react';
 import {json} from '@shopify/remix-oxygen';
 import {useLoaderData} from '@remix-run/react';
 import {getPaginationVariables, Analytics} from '@shopify/hydrogen';
 import {SearchForm} from '~/components/SearchForm';
 import {SearchResults} from '~/components/SearchResults';
 import {getEmptyPredictiveSearchResult} from '~/lib/search';
+import {useState} from 'react';
+import {ChevronRight, X} from 'lucide-react';
 
 /**
  * @type {MetaFunction}
@@ -30,6 +33,222 @@ export async function loader({request, context}) {
   return json(await searchPromise);
 }
 
+function SearchPageContent() {
+  const [searchQuery, setSearchQuery] = useState('sad');
+  const [filtersVisible, setFiltersVisible] = useState(true);
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    // Handle search submission
+    console.log('Search submitted:', searchQuery);
+  };
+
+  const toggleFilters = () => {
+    setFiltersVisible(!filtersVisible);
+  };
+
+  const FilterGroup = ({title, options}) => {
+    const [isOpen, setIsOpen] = useState(true);
+
+    const toggleAccordion = () => {
+      setIsOpen(!isOpen);
+      
+    };
+
+    return (
+      <div className="filter-group">
+        <button
+          className={`filter-group-heading ${isOpen ? 'open' : 'closed'}`}
+          onClick={toggleAccordion}
+          type='button'
+          aria-expanded={isOpen}
+        >
+          <span>{title}</span>
+          <span className="filter-group-chevron">
+            <ChevronRight />
+          </span>
+        </button>
+
+        <ul className={`filter-group-list ${isOpen ? 'open' : 'closed'}`}>
+          {options.map((option, index) => (
+            <li key={index} className="filter-group-item">
+              <input
+                type="checkbox"
+                id={`filter-${title}-${index}`}
+                name={`filter-${title}`}
+              />
+              <label
+                htmlFor={`filter-${title}-${index}`}
+                className="filter-label"
+              >
+                {option}
+              </label>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  };
+
+  const SearchResults = () => {
+    const results = [
+      {
+        title: 'The Marfa Suede Ankle Boot',
+        price: '£396.00',
+        image:
+          '//pipeline-theme-fashion.myshopify.com/cdn/shop/products/MarfaSuedeAnkleBoot_CHAU001_Saddle-Brown_1.jpg?v=1639855981&width=70',
+        link: '/products/marfa-suede-ankle-boot-brown',
+      },
+      {
+        title: 'The Marfa Suede Ankle Boot',
+        price: '£396.00',
+        image:
+          '//pipeline-theme-fashion.myshopify.com/cdn/shop/products/MarfaSuedeAnkleBoot_CHAU001_Antler_1.jpg?v=1639855989&width=70',
+        link: '/products/marfa-suede-ankle-boot-tan',
+      },
+      // Add more results as needed
+    ];
+
+    return (
+      <div className="search-results">
+        {results.map((result, index) => (
+          <div key={index} className="search-result-item">
+            <div className="search-result-image">
+              <a href={result.link} title={result.title}>
+                <img src={result.image} alt={result.title} />
+              </a>
+            </div>
+            <div className="search-result-text">
+              <p className="search-result-title">
+                <a href={result.link}>{result.title}</a>
+              </p>
+              <p className="search-result-price">{result.price}</p>
+            </div>
+          </div>
+        ))}
+      </div>
+    );
+  };
+
+  return (
+    <section
+      className="search-page-wrapper"
+      style={{paddingTop: '36px', paddingBottom: '36px'}}
+    >
+      <div className="search-page-heading">
+        <form onSubmit={handleSearchSubmit} className="search-bar">
+          <div className="search-input-group">
+            <input
+              type="search"
+              name="q"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search our store"
+              aria-label="Search our store"
+              className="search-input"
+            />
+            <div className="search-input-buttons">
+              <button type="reset" className="p-2.5" aria-label="Reset">
+                <X className="w-6 h-6" />
+              </button>
+              <button type="submit" className="search-submit-button">
+                Search
+              </button>
+            </div>
+          </div>
+        </form>
+
+        <div className="search-query-note">
+          <p>
+            Results for <span className="search-query-text">{searchQuery}</span>
+          </p>
+        </div>
+      </div>
+
+      <nav className="collection-navigation">
+        <div className="collection-navigation-buttons">
+          <button
+            className="collection-filters-toggle"
+            onClick={toggleFilters}
+            aria-expanded={filtersVisible}
+          >
+            <span>
+            {filtersVisible ? 'Hide filters' : 'Filter'}
+            </span>
+            <span className='filter_count_badge'>1</span>
+            <svg className='svg-search-stroke' width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" strokeWidth={2}><path d="M21 7H3M18 12H6M15 17H9" /></svg>
+          </button>
+        </div>
+      </nav>
+
+      <div className="collection-content">
+        <div
+          className={`collection-filters-wrapper ${
+            filtersVisible ? 'visible' : 'hidden'
+          }`}
+        >
+          <div className="collection-filters-outer">
+            {/* <div className="filters-drawer-top">
+              <div className="filters-drawer-top-left">
+                <p className="filters-drawer-title">Filter</p>
+              </div>
+              <button
+                className="filters-drawer-close"
+                onClick={toggleFilters}
+                aria-label="Close"
+                aria-expanded={filtersVisible}
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  strokeLinecap="square"
+                  strokeLinejoin="arcs"
+                  aria-hidden="true"
+                  className="close-icon"
+                  viewBox="0 0 24 24"
+                >
+                  <path d="M18 6 6 18M6 6l12 12" />
+                </svg>
+              </button>
+            </div> */}
+
+            <div className="collection-filters-inner">
+              <form className="filters-form">
+                <FilterGroup
+                  title="Product type"
+                  options={['Boots', 'Bottoms', 'Sweaters']}
+                />
+                <FilterGroup
+                  title="Color"
+                  options={['brown', 'green', 'grey', 'stripe', 'white']}
+                />
+                <FilterGroup
+                  title="Size"
+                  options={['XS', 'S', 'M', 'L', '6', '7', '8', '9', '10']}
+                />
+                <FilterGroup
+                  title="Fabric"
+                  options={['cashmere', 'cotton', 'sued', 'vegan leather']}
+                />
+                <FilterGroup title="Fit" options={['boxy', 'original']} />
+                <FilterGroup
+                  title="Availability"
+                  options={['In stock', 'Out of stock']}
+                />
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div className="collection-products">
+          <SearchResults />
+        </div>
+      </div>
+    </section>
+
+    // <div>hello</div>
+  );
+}
+
 /**
  * Renders the /search route
  */
@@ -39,7 +258,8 @@ export default function SearchPage() {
   if (type === 'predictive') return null;
 
   return (
-    <div className="search">
+    <>
+      {/* <div className="search">
       <h1>Search</h1>
       <SearchForm>
         {({inputRef}) => (
@@ -52,7 +272,7 @@ export default function SearchPage() {
               type="search"
             />
             &nbsp;
-            {/* <button type="submit">Search</button> */}
+            <button type="submit">Search</button>
           </>
         )}
       </SearchForm>
@@ -71,7 +291,10 @@ export default function SearchPage() {
         </SearchResults>
       )}
       <Analytics.SearchView data={{searchTerm: term, searchResults: result}} />
-    </div>
+    </div> */}
+
+      <SearchPageContent />
+    </>
   );
 }
 

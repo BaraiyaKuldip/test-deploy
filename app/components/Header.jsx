@@ -4,7 +4,8 @@ import {useAnalytics, useOptimisticCart} from '@shopify/hydrogen';
 import {useAside} from '~/components/Aside';
 import { TopSide, useTopSide } from './topside';
 import {Menu, Search, ShoppingBag, ShoppingCart, User} from 'lucide-react';
-import SiteLogoIcon from '/images/site_logo_mezzo_white.png?url';
+import SiteLogoIconWhite from '/images/site_logo_mezzo_white.png?url';
+import SiteLogoIconBlack from '/images/site_logo_mezzo_black.png?url';
 
 /**
  * @param {HeaderProps}
@@ -16,12 +17,31 @@ export function Header({header, isLoggedIn, cart, publicStoreDomain}) {
   const [isSrollingUp, setIsSrollinUp] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
   const {type: asideType} = useAside();
+  const [siteLogo , setSiteLogo] = useState('');
+
+  useEffect(()=>{
+    if(window !== undefined){
+      let currentLocation = window.location;
+    if(currentLocation.pathname === '/'){
+      setSiteLogo(SiteLogoIconWhite);
+      // console.log("logo changed.. white")
+    }
+    else{
+      setSiteLogo(SiteLogoIconBlack);
+      // console.log("logo changed.. black")
+    }
+  }
+  
+})
+// console.log(siteLogo);
 
   useEffect(() => {
     // const root = document.documentElement;
 
     // root.style.setProperty('--announcement-height' , isScrolled ? '0px' : '40px');
     // root.style.setProperty('--header-height', isScrolled ? '64px' : '80px');
+
+    
 
     const handleScroll = () => {
       if (asideType !== 'closed') return;
@@ -93,7 +113,7 @@ export function Header({header, isLoggedIn, cart, publicStoreDomain}) {
                   <h1 className={`font-medium my-0`}>
                     {/* {shop.name} */}
                     <img
-                      src={SiteLogoIcon}
+                      src={siteLogo}
                       alt="Logo"
                       style={{height: '28px', width: '130px'}}
                     />
@@ -125,7 +145,7 @@ export function Header({header, isLoggedIn, cart, publicStoreDomain}) {
                 <h1 className="font-medium">
                   {/* {shop.name} */}
                   <img
-                    src={SiteLogoIcon}
+                    src={siteLogo}
                     alt="Logo"
                     style={{height: '28px', width: '130px'}}
                   />
@@ -383,7 +403,7 @@ function HeaderMenuMobileToggle() {
   const {open} = useAside();
   return (
     <button className="p-2 -ml-2" onClick={() => open('mobile')}>
-      <Menu className="w-6 h-6" />
+      <Menu className="w-6 h-6 lucide-icon-h" />
     </button>
   );
 }
@@ -419,7 +439,7 @@ function CartBadge({count}) {
         });
       }}
     >
-      <ShoppingCart className="w-6 h-6" />
+      <ShoppingCart className="w-6 h-6 lucide-icon-h" />
       {/* {count !== null && count > 0 && (
         <span className='absolute top-0 right-6 bg-orange-400 text-black text-[12px] font-medium rounded-full w-3 h-3 flex justify-center items-center'>
           {count > 9 ? '9+' : count}
@@ -499,14 +519,14 @@ const FALLBACK_HEADER_MENU = {
 function activeLinkStyle({isActive, isPending}) {
   return {
     fontWeight: isActive ? 'bold' : undefined,
-    color: isPending ? 'grey' : 'black',
+    // color: isPending ? 'grey' : 'black',
   };
 }
 
 function activeLinkStyleDesktop({isActive, isPending}) {
   return {
     fontWeight: isActive ? 'bold' : undefined,
-    color: isPending ? 'grey' : 'white',
+    // color: isPending ? 'grey' : 'white',
   };
 }
 

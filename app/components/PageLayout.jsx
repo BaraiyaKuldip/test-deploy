@@ -1,4 +1,4 @@
-import {Await, Link, Navigate} from '@remix-run/react';
+import {Await, Link, Navigate, useNavigate} from '@remix-run/react';
 import {Suspense, useId, useEffect, useState} from 'react';
 import {Aside} from '~/components/Aside';
 import {Footer} from '~/components/Footer';
@@ -25,7 +25,7 @@ import CalvinKleinLogo from '/images/calvin-klein-logo.png?url';
 import {use} from 'react';
 import {ChevronRight, X} from 'lucide-react';
 import {useAside} from '~/components/Aside';
-import { validate } from 'graphql';
+import {validate} from 'graphql';
 
 /**
  * @param {PageLayoutProps}
@@ -53,7 +53,22 @@ export function PageLayout({
       } else {
         setDivBgImage(GirlImage1Portrait);
       }
-      // ... do something with the element
+
+      let currentLocation = window.location;
+      // console.log(currentLocation.pathname , "cc");
+      if (currentLocation.pathname === '/') {
+        document.documentElement.style.setProperty('--text-color', '#fff');
+        document.documentElement.style.setProperty(
+          '--toolbar-top-bg',
+          'transparent',
+        );
+      } else {
+        document.documentElement.style.setProperty('--text-color', '#000');
+        document.documentElement.style.setProperty(
+          '--toolbar-top-bg',
+          '#f7f5f4',
+        );
+      }
     }
   });
 
@@ -213,9 +228,9 @@ function CartAside({cart}) {
 }
 
 function SearchAside() {
+  const navigate = useNavigate();
   const queriesDatalistId = useId();
   const {type: activeType, close} = useAside();
-
 
   return (
     <Aside type="search" heading="SEARCH">
@@ -225,22 +240,33 @@ function SearchAside() {
             <>
               <input
                 name="q"
-                id='search-input'
+                id="search-input"
                 onChange={fetchResults}
                 onFocus={fetchResults}
                 placeholder="Search"
                 ref={inputRef}
                 type="search"
                 list={queriesDatalistId}
-                enterKeyHint='search'
-                onKeyDown={function (e) {
-                  if(e.code === 'Enter'){
-                    // goToSearch
-                    // <Link to={"/search"}></Link>
+                enterKeyHint="search"
+                onKeyPress={function (e) {
+                  if (
+                    e.code === 'Enter' &&
+                    inputRef.current.value.length === 0
+                  ) {
+                    e.preventDefault();
+                  
+                  }
+                  if (inputRef.current.value.length > 0) {
+                    if (e.code === 'Enter') {
+                      // goToSearch
+                      // <Link to={"/search"}></Link>
+                      navigate('/search');
+                      
+                    }
                   }
                 }}
+
               />
-              
               &nbsp;
               {/* <button onClick={goToSearch}>Search</button> */}
               {/* {console.log(inputRef.current , "saa")} */}
@@ -284,73 +310,72 @@ function SearchAside() {
             return (
               <>
                 {/* {term.current.length > 0 && ( */}
-                  <SearchResultsPredictive.Empty term={term} />
-                 {/* )} */}
+                <SearchResultsPredictive.Empty
+                  term={term}
+                  closeSearch={closeSearch}
+                />
+                {/* )} */}
               </>
             );
           }
 
           return (
             <>
-              
-                <div className={`fixed_padding_page predictive-search-result-main-div ${
-                  term.current.length > 0
-                    ? 'oppen'
-                    : 'closee'
-                } bg-white h-screen`}>
-                  <div
-                    className={`predictive-search-result-wrapper ${
-                      term.current.length > 0
-                        ? 'predictive-search-result-open'
-                        : ''
-                    }`}
-                  >
-                    
-                    <SearchResultsPredictive.Queries
-                      queries={queries}
-                      queriesDatalistId={queriesDatalistId}
-                      closeSearch={closeSearch}
-                    />
-                    <SearchResultsPredictive.Products
-                      products={products}
-                      closeSearch={closeSearch}
-                      term={term}
-                    />
-                    <SearchResultsPredictive.Collections
-                      collections={collections}
-                      closeSearch={closeSearch}
-                      term={term}
-                    />
-                    <SearchResultsPredictive.Pages
-                      pages={pages}
-                      closeSearch={closeSearch}
-                      term={term}
-                    />
-                    <SearchResultsPredictive.Articles
-                      articles={articles}
-                      closeSearch={closeSearch}
-                      term={term}
-                    />
-                    {term.current && total ? (
-                      <div>
-                        <button className="predictive-search-go-btn">
-                          <div className="flex items-center justify-between">
-                            <span>search for &ldquo;{term.current}&rdquo;</span>
-                            <span className="ml-1">
-                              <ChevronRight className="w-4 h-4" />
-                            </span>
-                          </div>
-                        </button>
-                      </div>
-                    ) : null}
-                  </div>
+              <div
+                className={`fixed_padding_page predictive-search-result-main-div ${
+                  term.current.length > 0 ? 'oppen' : 'closee'
+                } bg-white h-screen`}
+              >
+                <div
+                  className={`predictive-search-result-wrapper ${
+                    term.current.length > 0
+                      ? 'predictive-search-result-open'
+                      : ''
+                  }`}
+                >
+                  <SearchResultsPredictive.Queries
+                    queries={queries}
+                    queriesDatalistId={queriesDatalistId}
+                    closeSearch={closeSearch}
+                  />
+                  <SearchResultsPredictive.Products
+                    products={products}
+                    closeSearch={closeSearch}
+                    term={term}
+                  />
+                  <SearchResultsPredictive.Collections
+                    collections={collections}
+                    closeSearch={closeSearch}
+                    term={term}
+                  />
+                  <SearchResultsPredictive.Pages
+                    pages={pages}
+                    closeSearch={closeSearch}
+                    term={term}
+                  />
+                  <SearchResultsPredictive.Articles
+                    articles={articles}
+                    closeSearch={closeSearch}
+                    term={term}
+                  />
+                  {term.current && total ? (
+                    <div>
+                      <button className="predictive-search-go-btn">
+                        <div className="flex items-center justify-between">
+                          <span>search for &ldquo;{term.current}&rdquo;</span>
+                          <span className="ml-1">
+                            <ChevronRight className="w-4 h-4" />
+                          </span>
+                        </div>
+                      </button>
+                    </div>
+                  ) : null}
                 </div>
-              
+              </div>
             </>
           );
         }}
       </SearchResultsPredictive>
-
     </Aside>
   );
 }

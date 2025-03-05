@@ -293,7 +293,7 @@ function SearchResultsPredictiveQueries({
  *   term: React.MutableRefObject<string>;
  * }}
  */
-function SearchResultsPredictiveEmpty({term}) {
+function SearchResultsPredictiveEmpty({term , closeSearch}) {
   if (!term.current) {
     return null;
   }
@@ -307,12 +307,14 @@ function SearchResultsPredictiveEmpty({term}) {
 
         <div>
           <button className="predictive-search-go-btn">
+            <Link to={'/search'} onClick={closeSearch}>
             <div className="flex items-center justify-between">
               <span>search for &ldquo;{term.current}&rdquo;</span>
               <span className="ml-1">
                 <ChevronRight className="w-4 h-4" />
               </span>
             </div>
+            </Link>
           </button>
         </div>
       </div>

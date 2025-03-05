@@ -198,7 +198,7 @@ export function Layout({children}) {
             shop={data.shop}
             consent={data.consent}
           >
-            {console.log(data)}
+            {/* {console.log(data)} */}
             <PageLayout {...data}>{children}</PageLayout>
           </Analytics.Provider>
         ) : (
