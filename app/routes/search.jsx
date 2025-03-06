@@ -1,12 +1,11 @@
-import React from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {json} from '@shopify/remix-oxygen';
 import {useLoaderData} from '@remix-run/react';
 import {getPaginationVariables, Analytics} from '@shopify/hydrogen';
 import {SearchForm} from '~/components/SearchForm';
 import {SearchResults} from '~/components/SearchResults';
 import {getEmptyPredictiveSearchResult} from '~/lib/search';
-import {useState} from 'react';
-import {ChevronRight, X} from 'lucide-react';
+import {ChevronRight, RotateCcw, X} from 'lucide-react';
 
 /**
  * @type {MetaFunction}
@@ -33,7 +32,32 @@ export async function loader({request, context}) {
   return json(await searchPromise);
 }
 
+/**
+ * Search form component that sends search requests to the `/search` route.
+ * @example
+ * ```tsx
+ * <SearchForm>
+ *  {({inputRef}) => (
+ *    <>
+ *      <input
+ *        ref={inputRef}
+ *        type="search"
+ *        defaultValue={term}
+ *        name="q"
+ *        placeholder="Search…"
+ *      />
+ *      <button type="submit">Search</button>
+ *   </>
+ *  )}
+ *  </SearchForm>
+ @param {SearchFormProps}* 
+ */
+
 function SearchPageContent() {
+  /** @type {LoaderReturnData} */
+  const {type, term, result, error} = useLoaderData();
+  if (type === 'predictive') return null;
+
   const [searchQuery, setSearchQuery] = useState('sad');
   const [filtersVisible, setFiltersVisible] = useState(true);
 
@@ -49,18 +73,30 @@ function SearchPageContent() {
 
   const FilterGroup = ({title, options}) => {
     const [isOpen, setIsOpen] = useState(true);
+    const [height, setHeight] = useState('auto');
+    const listRef = useRef(null); // Ref to get the DOM element
 
     const toggleAccordion = () => {
       setIsOpen(!isOpen);
-      
     };
+
+    useEffect(() => {
+      const listElement = listRef.current;
+      if (listElement) {
+        if (isOpen) {
+          setHeight(`${listElement.scrollHeight}px`);
+        } else {
+          setHeight('0px');
+        }
+      }
+    }, [isOpen]);
 
     return (
       <div className="filter-group">
         <button
           className={`filter-group-heading ${isOpen ? 'open' : 'closed'}`}
           onClick={toggleAccordion}
-          type='button'
+          type="button"
           aria-expanded={isOpen}
         >
           <span>{title}</span>
@@ -69,19 +105,56 @@ function SearchPageContent() {
           </span>
         </button>
 
-        <ul className={`filter-group-list ${isOpen ? 'open' : 'closed'}`}>
+        <ul
+          ref={listRef} // Attach the ref to the ul element
+          className={`filter-group-list filter-group-list-${title} ${
+            isOpen ? 'open' : 'closed'
+          }`}
+          style={{
+            height: height,
+            overflow: 'hidden',
+          }}
+        >
           {options.map((option, index) => (
             <li key={index} className="filter-group-item">
               <input
                 type="checkbox"
                 id={`filter-${title}-${index}`}
                 name={`filter-${title}`}
+                value={option}
+                className="filter-input"
               />
               <label
                 htmlFor={`filter-${title}-${index}`}
                 className="filter-label"
+                aria-label={option}
               >
                 {option}
+
+                <svg
+                  aria-hidden="true"
+                  focusable="false"
+                  role="presentation"
+                  className="svg-filter-icon"
+                  viewBox="0 0 20 20"
+                >
+                  <path
+                    className="filter-checkbox-border"
+                    stroke="currentColor"
+                    d="M.5.5h19v19H.5z"
+                  ></path>
+                  <path
+                    className="filter-checkbox-inner"
+                    fill="#000"
+                    d="M5 5h10v10H5z"
+                  ></path>
+                </svg>
+
+                <RotateCcw
+                  size={12}
+                  strokeWidth={2.25}
+                  className="filter-rotate-icon"
+                />
               </label>
             </li>
           ))}
@@ -110,23 +183,35 @@ function SearchPageContent() {
     ];
 
     return (
-      <div className="search-results">
+      <>
+        {/* // <div className="search-results"> */}
         {results.map((result, index) => (
-          <div key={index} className="search-result-item">
-            <div className="search-result-image">
-              <a href={result.link} title={result.title}>
-                <img src={result.image} alt={result.title} />
-              </a>
+          <>
+            <div key={index} className="search-result-item">
+              <div className="search-result-image">
+                <a href={result.link} title={result.title}>
+                  <div className="relative block w-full h-full overflow-hidden aspect-[0.75]">
+                    <img
+                      src={result.image}
+                      alt={result.title}
+                      className="block overflow-hidden w-full h-full object-cover transition-opacity duration-300 ease-linear"
+                      style={{objectPosition: 'center center'}}
+                    />
+                  </div>
+                </a>
+              </div>
+              <div className="search-result-text">
+                <p className="search-result-title">
+                  <a href={result.link}>{result.title}</a>
+                </p>
+                <p className="search-result-price">{result.price}</p>
+              </div>
             </div>
-            <div className="search-result-text">
-              <p className="search-result-title">
-                <a href={result.link}>{result.title}</a>
-              </p>
-              <p className="search-result-price">{result.price}</p>
-            </div>
-          </div>
+            <hr />
+          </>
         ))}
-      </div>
+        {/* </div> */}
+      </>
     );
   };
 
@@ -136,31 +221,36 @@ function SearchPageContent() {
       style={{paddingTop: '36px', paddingBottom: '36px'}}
     >
       <div className="search-page-heading">
-        <form onSubmit={handleSearchSubmit} className="search-bar">
-          <div className="search-input-group">
-            <input
-              type="search"
-              name="q"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search our store"
-              aria-label="Search our store"
-              className="search-input"
-            />
-            <div className="search-input-buttons">
-              <button type="reset" className="p-2.5" aria-label="Reset">
-                <X className="w-6 h-6" />
-              </button>
-              <button type="submit" className="search-submit-button">
-                Search
-              </button>
+        <SearchForm className="search-bar">
+          {({inputRef}) => (
+            <div className="search-input-group">
+              <input
+                defaultValue={term}
+                ref={inputRef}
+                type="search"
+                name="q"
+                // value={searchQuery}
+                // onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search our store"
+                aria-label="Search our store"
+                className="search-input"
+              />
+
+              <div className="search-input-buttons">
+                <button type="reset" className="p-2.5" aria-label="Reset">
+                  <X className="w-6 h-6" />
+                </button>
+                <button type="submit" className="search-submit-button">
+                  Search
+                </button>
+              </div>
             </div>
-          </div>
-        </form>
+          )}
+        </SearchForm>
 
         <div className="search-query-note">
-          <p>
-            Results for <span className="search-query-text">{searchQuery}</span>
+          <p className="search-query-text">
+            Results for <strong>{searchQuery}</strong>
           </p>
         </div>
       </div>
@@ -172,11 +262,19 @@ function SearchPageContent() {
             onClick={toggleFilters}
             aria-expanded={filtersVisible}
           >
-            <span>
-            {filtersVisible ? 'Hide filters' : 'Filter'}
-            </span>
-            <span className='filter_count_badge'>1</span>
-            <svg className='svg-search-stroke' width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" strokeWidth={2}><path d="M21 7H3M18 12H6M15 17H9" /></svg>
+            <span>{filtersVisible ? 'Hide filters' : 'Filter'}</span>
+            {/* <span className='filter_count_badge'>1</span> */}
+            <svg
+              className="svg-search-stroke"
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+              strokeWidth={2}
+            >
+              <path d="M21 7H3M18 12H6M15 17H9" />
+            </svg>
           </button>
         </div>
       </nav>
@@ -259,39 +357,41 @@ export default function SearchPage() {
 
   return (
     <>
-      {/* <div className="search">
-      <h1>Search</h1>
-      <SearchForm>
-        {({inputRef}) => (
-          <>
-            <input
-              defaultValue={term}
-              name="q"
-              placeholder="Search…"
-              ref={inputRef}
-              type="search"
-            />
-            &nbsp;
-            <button type="submit">Search</button>
-          </>
-        )}
-      </SearchForm>
-      {error && <p style={{color: 'red'}}>{error}</p>}
-      {!term || !result?.total ? (
-        <SearchResults.Empty />
-      ) : (
-        <SearchResults result={result} term={term}>
-          {({articles, pages, products, term}) => (
-            <div>
-              <SearchResults.Products products={products} term={term} />
-              <SearchResults.Pages pages={pages} term={term} />
-              <SearchResults.Articles articles={articles} term={term} />
-            </div>
+      <div className="search">
+        <h1>Search</h1>
+        <SearchForm>
+          {({inputRef}) => (
+            <>
+              <input
+                defaultValue={term}
+                name="q"
+                placeholder="Search…"
+                ref={inputRef}
+                type="search"
+              />
+              &nbsp;
+              <button type="submit">Search</button>
+            </>
           )}
-        </SearchResults>
-      )}
-      <Analytics.SearchView data={{searchTerm: term, searchResults: result}} />
-    </div> */}
+        </SearchForm>
+        {error && <p style={{color: 'red'}}>{error}</p>}
+        {!term || !result?.total ? (
+          <SearchResults.Empty />
+        ) : (
+          <SearchResults result={result} term={term}>
+            {({articles, pages, products, term}) => (
+              <div>
+                <SearchResults.Products products={products} term={term} />
+                <SearchResults.Pages pages={pages} term={term} />
+                <SearchResults.Articles articles={articles} term={term} />
+              </div>
+            )}
+          </SearchResults>
+        )}
+        <Analytics.SearchView
+          data={{searchTerm: term, searchResults: result}}
+        />
+      </div>
 
       <SearchPageContent />
     </>

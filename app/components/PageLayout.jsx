@@ -239,6 +239,7 @@ function SearchAside() {
           {({fetchResults, goToSearch, inputRef}) => (
             <>
               <input
+                autoFocus={true}
                 name="q"
                 id="search-input"
                 onChange={fetchResults}
@@ -260,8 +261,8 @@ function SearchAside() {
                     if (e.code === 'Enter') {
                       // goToSearch
                       // <Link to={"/search"}></Link>
-                      navigate('/search');
-                      
+                      // navigate(`/search`);
+                      goToSearch()
                     }
                   }
                 }}
