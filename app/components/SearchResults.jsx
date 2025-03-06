@@ -97,7 +97,9 @@ function SearchResultsProducts({term, products}) {
       <h2>Products</h2>
       <Pagination connection={products}>
         {({nodes, isLoading, NextLink, PreviousLink}) => {
+
           const ItemsMarkup = nodes.map((product) => {
+             console.log(product,'pppp')
             const productUrl = urlWithTrackingParams({
               baseUrl: `/products/${product.handle}`,
               trackingParams: product.trackingParameters,

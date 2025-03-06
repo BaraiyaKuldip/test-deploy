@@ -1,4 +1,4 @@
-import {Link, useFetcher} from '@remix-run/react';
+import {Link, useFetcher , useNavigate} from '@remix-run/react';
 import {Image, Money} from '@shopify/hydrogen';
 import React, {useRef, useEffect} from 'react';
 import {
@@ -7,6 +7,7 @@ import {
 } from '~/lib/search';
 import {useAside} from './Aside';
 import {ChevronRight} from 'lucide-react';
+export const SEARCH_ENDPOINT = '/search';
 
 /**
  * Component that renders predictive search results
@@ -31,6 +32,15 @@ export function SearchResultsPredictive({children}) {
       // console.log(elements.length);
     }
   });
+    const navigate = useNavigate();
+    
+  
+
+  function goToSearch() {
+      const term = inputRef?.current?.value;
+      navigate(SEARCH_ENDPOINT + (term ? `?q=${term}` : ''));
+      aside.close();
+    }
 
   /*
    * Utility that resets the search input
@@ -52,6 +62,7 @@ export function SearchResultsPredictive({children}) {
 
   return children({
     items,
+    goToSearch,
     closeSearch,
     inputRef,
     state: fetcher.state,
@@ -293,7 +304,7 @@ function SearchResultsPredictiveQueries({
  *   term: React.MutableRefObject<string>;
  * }}
  */
-function SearchResultsPredictiveEmpty({term , closeSearch}) {
+function SearchResultsPredictiveEmpty({term , closeSearch , goToSearch}) {
   if (!term.current) {
     return null;
   }
@@ -307,7 +318,7 @@ function SearchResultsPredictiveEmpty({term , closeSearch}) {
 
         <div>
           <button className="predictive-search-go-btn">
-            <Link to={'/search'} onClick={closeSearch}>
+            <Link to={`${SEARCH_ENDPOINT}` + `?q=${term.current}`}>
             <div className="flex items-center justify-between">
               <span>search for &ldquo;{term.current}&rdquo;</span>
               <span className="ml-1">
@@ -369,6 +380,7 @@ function usePredictiveSearch() {
  * > & {
  *   state: Fetcher['state'];
  *   closeSearch: () => void;
+ *   goToSearch: () => void;
  * }} SearchResultsPredictiveArgs
  */
 /**

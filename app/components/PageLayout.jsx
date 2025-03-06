@@ -299,7 +299,7 @@ function SearchAside() {
       </div>
 
       <SearchResultsPredictive>
-        {({items, total, term, state, closeSearch}) => {
+        {({items, total, term, state, closeSearch , goToSearch}) => {
           const {articles, collections, pages, products, queries} = items;
 
           // console.log(items, 'itemss');
@@ -314,6 +314,7 @@ function SearchAside() {
                 <SearchResultsPredictive.Empty
                   term={term}
                   closeSearch={closeSearch}
+                  goToSearch={goToSearch}
                 />
                 {/* )} */}
               </>
@@ -361,7 +362,7 @@ function SearchAside() {
                   />
                   {term.current && total ? (
                     <div>
-                      <button className="predictive-search-go-btn">
+                      <button className="predictive-search-go-btn" onClick={goToSearch}>
                         <div className="flex items-center justify-between">
                           <span>search for &ldquo;{term.current}&rdquo;</span>
                           <span className="ml-1">
