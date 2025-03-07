@@ -1926,12 +1926,14 @@ Search Page CSS
 
   @media only screen and (min-width : 768px) {
     .collection-filters-wrapper {
-      transition: width .8s cubic-bezier(.215, .61, .355, 1) .2s;
+
+      transition: width .8s cubic-bezier(.215,.61,.355,1) .2s;
+
       min-width: 250px;
       max-width: 250px;
       width: 250px;
       margin-left: -250px;
-      transition: width .2s cubic-bezier(.215, .61, .355, 1) .01s, margin .2s cubic-bezier(.215, .61, .355, 1) .01s;
+      transition: width .2s cubic-bezier(.215,.61,.355,1) .01s, margin .2s cubic-bezier(.215,.61,.355,1) .01s;
     }
   }
 

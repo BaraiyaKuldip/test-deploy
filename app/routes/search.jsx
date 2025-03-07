@@ -64,7 +64,7 @@ function SearchPageContent() {
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     // Handle search submission
-    console.log('Search submitted:', searchQuery);
+    // console.log('Search submitted:', searchQuery);
   };
 
   const toggleFilters = () => {
@@ -289,6 +289,17 @@ function SearchPageContent() {
             </div>
           </nav>
 
+          {/* <div className='collection-filter-active-wrapper'>
+            <div className='collection-filter-active'>
+              
+              <span>X</span>
+            </div>
+            <div className='collection-filter-active-count'>
+              <strong></strong>
+              result
+            </div>
+          </div> */}
+
           <div className="collection-content">
             <div
               className={`collection-filters-wrapper ${
@@ -300,7 +311,7 @@ function SearchPageContent() {
                   <form className="filters-form">
                     <FilterGroup
                       title="Product type"
-                      options={['Boots', 'Bottoms', 'Sweaters']}
+                      options={['Dresses', 'Tops', 'Bottoms', 'Outerwear']}
                     />
                     <FilterGroup
                       title="Color"
@@ -329,8 +340,9 @@ function SearchPageContent() {
                 {({articles, pages, products, term}) => (
                   <div>
                     <SearchResults.Products products={products} term={term} />
-                    <SearchResults.Pages pages={pages} term={term} />
-                    <SearchResults.Articles articles={articles} term={term} />
+                    
+                    {/* <SearchResults.Pages pages={pages} term={term} /> */}
+                    {/* <SearchResults.Articles articles={articles} term={term} /> */}
                   </div>
                 )}
               </SearchResults>
@@ -342,7 +354,6 @@ function SearchPageContent() {
         </>
         )}
         
-     
     </section>
   );
 }
