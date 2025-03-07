@@ -273,7 +273,7 @@ function SearchResultsPredictiveQueries({
       <ul>
         {queries.map((suggestion) => {
           if (!suggestion) return null;
-          console.log(suggestion, 'sugg');
+          // console.log(suggestion, 'sugg');
           return (
             <div
               className="predictive-search-result-item animation-item"

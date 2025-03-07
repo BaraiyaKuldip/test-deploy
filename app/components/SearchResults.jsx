@@ -93,64 +93,92 @@ function SearchResultsProducts({term, products}) {
   }
 
   return (
-    <div className="search-result">
-      <h2>Products</h2>
-      <Pagination connection={products}>
-        {({nodes, isLoading, NextLink, PreviousLink}) => {
-
-          const ItemsMarkup = nodes.map((product) => {
-             console.log(product,'pppp')
-            const productUrl = urlWithTrackingParams({
-              baseUrl: `/products/${product.handle}`,
-              trackingParams: product.trackingParameters,
-              term,
-            });
-
-            const price = product?.selectedOrFirstAvailableVariant?.price;
-            const image = product?.selectedOrFirstAvailableVariant?.image;
-
-            return (
-              <div className="search-results-item" key={product.id}>
-                <Link prefetch="intent" to={productUrl}>
-                  {image && (
-                    <Image data={image} alt={product.title} width={50} />
-                  )}
-                  <div>
-                    <p>{product.title}</p>
-                    <small>{price && <Money data={price} />}</small>
-                  </div>
-                </Link>
-              </div>
-            );
+    <Pagination connection={products}>
+      {({nodes, isLoading, NextLink, PreviousLink}) => {
+        const ItemsMarkup = nodes.map((product) => {
+          // console.log(product, 'pppp');
+          const productUrl = urlWithTrackingParams({
+            baseUrl: `/products/${product.handle}`,
+            trackingParams: product.trackingParameters,
+            term,
           });
 
+          const price = product?.selectedOrFirstAvailableVariant?.price;
+          const image = product?.selectedOrFirstAvailableVariant?.image;
+
           return (
-            <div>
-              <div>
-                <PreviousLink>
-                  {isLoading ? 'Loading...' : <span>↑ Load previous</span>}
-                </PreviousLink>
+            <>
+            <div className="search-result-item" key={product.id}>
+              {image && (
+                <div className="search-result-image">
+                  <Link prefetch="intent" to={productUrl}>
+                    <Image
+                      data={image}
+                      alt={product.title}
+                      width={70}
+                      height={93}
+                      className="block overflow-hidden w-full h-full object-cover transition-opacity duration-300 ease-linear"
+                      style={{objectPosition: 'center center'}}
+                    />
+                  </Link>
+                </div>
+              )}
+              {price && (
+                <div className="search-result-text">
+                <p className="search-result-title">
+                  <Link prefetch='intent' to={productUrl}>
+                  {product.title}
+                  </Link>
+                </p>
+                <p className="search-result-price"><Money data={price} /></p>
               </div>
-              <div>
-                {ItemsMarkup}
-                <br />
-              </div>
-              <div>
-                <NextLink>
-                  {isLoading ? 'Loading...' : <span>Load more ↓</span>}
-                </NextLink>
-              </div>
+              )}
+              
+              {/* <Link prefetch="intent" to={productUrl}>
+                {image && <Image data={image} alt={product.title} width={50} />}
+                <div>
+                  <p>{product.title}</p>
+                  <small>{price && <Money data={price} />}</small>
+                </div>
+              </Link> */}
             </div>
+            <hr />
+            </>
           );
-        }}
-      </Pagination>
-      <br />
-    </div>
+        });
+
+        return (
+          <div>
+            <div>
+              <PreviousLink>
+                {isLoading ? 'Loading...' : <span>↑ Load previous</span>}
+              </PreviousLink>
+            </div>
+            <div>
+              {ItemsMarkup}
+              <br />
+            </div>
+            <div>
+              <NextLink>
+                {isLoading ? 'Loading...' : <span>Load more ↓</span>}
+              </NextLink>
+            </div>
+          </div>
+        );
+      }}
+    </Pagination>
   );
 }
 
+
 function SearchResultsEmpty() {
-  return <p>No results, try a different search.</p>;
+  return (
+    <div className="search-query-note">
+      <p className="search-query-text">
+        Results for <strong></strong>
+      </p>
+    </div>
+  );
 }
 
 /** @typedef {RegularSearchReturn['result']['items']} SearchItems */
