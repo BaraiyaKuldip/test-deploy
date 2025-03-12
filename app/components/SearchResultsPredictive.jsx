@@ -260,6 +260,7 @@ function SearchResultsPredictiveQueries({
   queries,
   queriesDatalistId,
   closeSearch,
+  goToSearch
 }) {
   if (!queries.length) return null;
 
@@ -280,8 +281,8 @@ function SearchResultsPredictiveQueries({
               key={queriesDatalistId}
             >
               <p className="search-result-other-title">
-                <Link to={'/search'} onClick={closeSearch}>
-                  {suggestion.text}
+                <Link to={"/search" + "?q=" + `${suggestion.text}`.replaceAll(" ","+")} onClick={goToSearch}>
+                {suggestion.text}
                 </Link>
               </p>
             </div>
@@ -316,9 +317,9 @@ function SearchResultsPredictiveEmpty({term , closeSearch , goToSearch}) {
           <p className=" text-center pb-2.5">No results for {term.current}</p>
         </div>
 
-        <div>
-          <button className="predictive-search-go-btn">
-            <Link to={`${SEARCH_ENDPOINT}` + `?q=${term.current}`}>
+        <div className='pb-7.5' >
+          <button className="predictive-search-go-btn" onClick={goToSearch}>
+            <Link to={`${SEARCH_ENDPOINT}` + `?q=${term.current}`  }>
             <div className="flex items-center justify-between">
               <span>search for &ldquo;{term.current}&rdquo;</span>
               <span className="ml-1">

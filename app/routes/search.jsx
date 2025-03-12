@@ -20,6 +20,7 @@ export const meta = () => {
 export async function loader({request, context}) {
   const url = new URL(request.url);
   const isPredictive = url.searchParams.has('predictive');
+  console.log(isPredictive, 'isss');
   const searchPromise = isPredictive
     ? predictiveSearch({request, context})
     : regularSearch({request, context});
@@ -57,14 +58,14 @@ function SearchPageContent() {
   /** @type {LoaderReturnData} */
   const {type, term, result, error} = useLoaderData();
   if (type === 'predictive') return null;
-
-  const [searchQuery, setSearchQuery] = useState('sad');
+  console.log(type, 'ttt');
+  
   const [filtersVisible, setFiltersVisible] = useState(true);
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     // Handle search submission
-    // console.log('Search submitted:', searchQuery);
+   
   };
 
   const toggleFilters = () => {
@@ -225,19 +226,18 @@ function SearchPageContent() {
           {({inputRef}) => (
             <div className="search-input-group">
               <input
-                defaultValue={term}
+                name="q"
+                id="search-input"
+                placeholder="Search our store"
                 ref={inputRef}
                 type="search"
-                name="q"
-                // value={searchQuery}
-                // onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search our store"
-                aria-label="Search our store"
                 className="search-input"
               />
+              {/* {console.log(inputRef.current.value.length , "newww")}    */}
+              {console.log(inputRef , "newww")}   
 
               <div className="search-input-buttons">
-                <button type="reset" className="p-2.5" aria-label="Reset">
+                <button type='reset' className="px-5 h-12 hover:cursor-pointer" aria-label="Reset">
                   <X className="w-6 h-6" />
                 </button>
                 <button type="submit" className="search-submit-button">
@@ -248,48 +248,48 @@ function SearchPageContent() {
           )}
         </SearchForm>
       </div>
-{console.log(result)}
-        {term.length !== 0 && (
-          <>
-         <div className="search-query-note">
-        {result.items.products.nodes.length !== 0 ? (
-          <p className="search-query-text">
-            Results for <strong>{term}</strong>
-          </p>
-        ) : (
-          <p className="search-query-text">
-            No results for <strong>{term}</strong>
-          </p>
-        )}
-      </div>
-
-      {result.items.products.nodes.length > 0 && (
+      {console.log(result)}
+      {term.length !== 0 && (
         <>
-          <nav className="collection-navigation">
-            <div className="collection-navigation-buttons">
-              <button
-                className="collection-filters-toggle"
-                onClick={toggleFilters}
-                aria-expanded={filtersVisible}
-              >
-                <span>{filtersVisible ? 'Hide filters' : 'Filter'}</span>
-                {/* <span className='filter_count_badge'>1</span> */}
-                <svg
-                  className="svg-search-stroke"
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                  strokeWidth={2}
-                >
-                  <path d="M21 7H3M18 12H6M15 17H9" />
-                </svg>
-              </button>
-            </div>
-          </nav>
+          <div className="search-query-note">
+            {result.items.products.nodes.length !== 0 ? (
+              <p className="search-query-text">
+                Results for <strong>{term}</strong>
+              </p>
+            ) : (
+              <p className="search-query-text">
+                No results for <strong>{term}</strong>
+              </p>
+            )}
+          </div>
 
-          {/* <div className='collection-filter-active-wrapper'>
+          {result.items.products.nodes.length > 0 && (
+            <>
+              <nav className="collection-navigation">
+                <div className="collection-navigation-buttons">
+                  <button
+                    className="collection-filters-toggle"
+                    onClick={toggleFilters}
+                    aria-expanded={filtersVisible}
+                  >
+                    <span>{filtersVisible ? 'Hide filters' : 'Filter'}</span>
+                    {/* <span className='filter_count_badge'>1</span> */}
+                    <svg
+                      className="svg-search-stroke"
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      xmlns="http://www.w3.org/2000/svg"
+                      strokeWidth={2}
+                    >
+                      <path d="M21 7H3M18 12H6M15 17H9" />
+                    </svg>
+                  </button>
+                </div>
+              </nav>
+
+              {/* <div className='collection-filter-active-wrapper'>
             <div className='collection-filter-active'>
               
               <span>X</span>
@@ -300,60 +300,93 @@ function SearchPageContent() {
             </div>
           </div> */}
 
-          <div className="collection-content">
-            <div
-              className={`collection-filters-wrapper ${
-                filtersVisible ? 'visible' : 'hidden'
-              }`}
-            >
-              <div className="collection-filters-outer">
-                <div className="collection-filters-inner">
-                  <form className="filters-form">
-                    <FilterGroup
-                      title="Product type"
-                      options={['Dresses', 'Tops', 'Bottoms', 'Outerwear']}
-                    />
-                    <FilterGroup
-                      title="Color"
-                      options={['brown', 'green', 'grey', 'stripe', 'white']}
-                    />
-                    <FilterGroup
-                      title="Size"
-                      options={['XS', 'S', 'M', 'L', '6', '7', '8', '9', '10']}
-                    />
-                    <FilterGroup
-                      title="Fabric"
-                      options={['cashmere', 'cotton', 'sued', 'vegan leather']}
-                    />
-                    <FilterGroup title="Fit" options={['boxy', 'original']} />
-                    <FilterGroup
-                      title="Availability"
-                      options={['In stock', 'Out of stock']}
-                    />
-                  </form>
+              <div className="collection-content">
+                <div
+                  className={`collection-filters-wrapper ${
+                    filtersVisible ? 'visible' : 'hidden'
+                  }`}
+                >
+                  <div className="collection-filters-outer">
+                    <div className="collection-filters-header">
+                      <div className="collection-filters-title-div">
+                        <p className='collection-filters-title'>Filter</p>
+                      </div>
+                      <button className='filters-close-btn' onClick={toggleFilters}>
+                        <X className="w-5 h-5 aside_close_btn_effect" />
+                      </button>
+                    </div>
+                    <div className="collection-filters-inner">
+                      <form className="filters-form">
+                        <FilterGroup
+                          title="Product type"
+                          options={['Dresses', 'Tops', 'Bottoms', 'Outerwear']}
+                        />
+                        <FilterGroup
+                          title="Color"
+                          options={[
+                            'brown',
+                            'green',
+                            'grey',
+                            'stripe',
+                            'white',
+                          ]}
+                        />
+                        <FilterGroup
+                          title="Size"
+                          options={[
+                            'XS',
+                            'S',
+                            'M',
+                            'L',
+                            '6',
+                            '7',
+                            '8',
+                            '9',
+                            '10',
+                          ]}
+                        />
+                        <FilterGroup
+                          title="Fabric"
+                          options={[
+                            'cashmere',
+                            'cotton',
+                            'sued',
+                            'vegan leather',
+                          ]}
+                        />
+                        <FilterGroup
+                          title="Fit"
+                          options={['boxy', 'original']}
+                        />
+                        <FilterGroup
+                          title="Availability"
+                          options={['In stock', 'Out of stock']}
+                        />
+                      </form>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="collection-products">
+                  <SearchResults result={result} term={term}>
+                    {({articles, pages, products, term}) => (
+                      <div className='search-results-product-container'>  
+                        <SearchResults.Products
+                          products={products}
+                          term={term}
+                        />
+
+                        {/* <SearchResults.Pages pages={pages} term={term} /> */}
+                        {/* <SearchResults.Articles articles={articles} term={term} /> */}
+                      </div>
+                    )}
+                  </SearchResults>
                 </div>
               </div>
-            </div>
-
-            <div className="collection-products">
-              <SearchResults result={result} term={term}>
-                {({articles, pages, products, term}) => (
-                  <div>
-                    <SearchResults.Products products={products} term={term} />
-                    
-                    {/* <SearchResults.Pages pages={pages} term={term} /> */}
-                    {/* <SearchResults.Articles articles={articles} term={term} /> */}
-                  </div>
-                )}
-              </SearchResults>
-            </div>
-          </div>
+            </>
+          )}
         </>
       )}
-
-        </>
-        )}
-        
     </section>
   );
 }
@@ -413,6 +446,35 @@ export default function SearchPage() {
  * Regular search query and fragments
  * (adjust as needed)
  */
+
+// const SEARCH_PRODUCT_FRAGMENT = `#graphql
+//   fragment SearchProduct on Product {
+//     # ... existing fields
+//     productType
+//     options {
+//       name
+//       values
+//     }
+//     adjacentVariants{
+//       selectedOptions{
+//         name
+//         value
+//       }
+//       }
+//     priceRange {
+//       minVariantPrice {
+//         amount
+//         currencyCode
+//       }
+//       maxVariantPrice {
+//         amount
+//         currencyCode
+//       }
+//     }
+//     # ... rest of existing fragment
+//   }
+// `;
+
 const SEARCH_PRODUCT_FRAGMENT = `#graphql
   fragment SearchProduct on Product {
     __typename
@@ -551,6 +613,7 @@ export const SEARCH_QUERY = `#graphql
  * @return {Promise<RegularSearchReturn>}
  */
 async function regularSearch({request, context}) {
+  console.log(context, 'cccc');
   const {storefront} = context;
   const url = new URL(request.url);
   const variables = getPaginationVariables(request, {pageBy: 8});

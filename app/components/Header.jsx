@@ -1,11 +1,14 @@
-import {Suspense, useEffect, useState} from 'react';
+import {Suspense, useEffect, useId, useState} from 'react';
 import {Await, NavLink, useAsyncValue} from '@remix-run/react';
 import {useAnalytics, useOptimisticCart} from '@shopify/hydrogen';
 import {useAside} from '~/components/Aside';
-import { TopSide, useTopSide } from './topside';
-import {Menu, Search, ShoppingBag, ShoppingCart, User} from 'lucide-react';
+import {TopSide, useTopSide} from './topside';
+import {ChevronRight, Menu, Search, ShoppingBag, ShoppingCart, User, X} from 'lucide-react';
 import SiteLogoIconWhite from '/images/site_logo_mezzo_white.png?url';
 import SiteLogoIconBlack from '/images/site_logo_mezzo_black.png?url';
+import {SearchForm} from './SearchForm';
+import {SearchFormPredictive} from './SearchFormPredictive';
+import { SearchResultsPredictive } from './SearchResultsPredictive';
 
 /**
  * @param {HeaderProps}
@@ -17,31 +20,27 @@ export function Header({header, isLoggedIn, cart, publicStoreDomain}) {
   const [isSrollingUp, setIsSrollinUp] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
   const {type: asideType} = useAside();
-  const [siteLogo , setSiteLogo] = useState('');
+  const [siteLogo, setSiteLogo] = useState('');
 
-  useEffect(()=>{
-    if(window !== undefined){
+  useEffect(() => {
+    if (window !== undefined) {
       let currentLocation = window.location;
-    if(currentLocation.pathname === '/'){
-      setSiteLogo(SiteLogoIconWhite);
-      // console.log("logo changed.. white")
+      if (currentLocation.pathname === '/') {
+        setSiteLogo(SiteLogoIconWhite);
+        // console.log("logo changed.. white")
+      } else {
+        setSiteLogo(SiteLogoIconBlack);
+        // console.log("logo changed.. black")
+      }
     }
-    else{
-      setSiteLogo(SiteLogoIconBlack);
-      // console.log("logo changed.. black")
-    }
-  }
-  
-})
-// console.log(siteLogo);
+  });
+  // console.log(siteLogo);
 
   useEffect(() => {
     // const root = document.documentElement;
 
     // root.style.setProperty('--announcement-height' , isScrolled ? '0px' : '40px');
     // root.style.setProperty('--header-height', isScrolled ? '64px' : '80px');
-
-    
 
     const handleScroll = () => {
       if (asideType !== 'closed') return;
@@ -209,6 +208,7 @@ export function HeaderMenu({
 }) {
   const className = `header-menu-${viewport}`;
   const {close} = useAside();
+  const queriesDatalistId = useId();
 
   function myFunction() {
     // Declare variables
@@ -233,13 +233,152 @@ export function HeaderMenu({
     <>
       {viewport === 'mobile' && (
         <div className="search_menu_mobile">
-          <input
+          {/* <input
             type="text"
             id="mySearch"
             onKeyUp={myFunction}
             placeholder="Search..."
             title=""
-          />
+          /> */}
+
+          <SearchFormPredictive className="search-bar-mobile">
+            {({fetchResults, goToSearch, inputRef}) => (
+              <div className="flex items-center justify-between">
+                <input
+                  autoFocus={true}
+                  className="search-input-mobile"
+                  name="q"
+                  id="search-input"
+                  onChange={fetchResults}
+                  onFocus={fetchResults}
+                  placeholder="Search..."
+                  ref={inputRef}
+                  type="search"
+                  list={queriesDatalistId}
+                  enterKeyHint="search"
+                  onKeyPress={function (e) {
+                    if (
+                      e.code === 'Enter' &&
+                      inputRef.current.value.length === 0
+                    ) {
+                      e.preventDefault();
+                    }
+                    if (inputRef.current.value.length > 0) {
+                      if (e.code === 'Enter') {
+                        // goToSearch
+                        // <Link to={"/search"}></Link>
+                        // navigate(`/search`);
+                        goToSearch();
+                      }
+                    }
+                  }}
+                />
+
+                <div>
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true"
+                    class="search-mobile-svg"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M18.316 9.825c0 3.368-2.05 6.404-5.194 7.692a8.47 8.47 0 0 1-9.164-1.81A8.265 8.265 0 0 1 2.144 6.63C3.45 3.52 6.519 1.495 9.921 1.5c4.638.007 8.395 3.732 8.395 8.325ZM22.5 22.5l-6.558-6.87L22.5 22.5Z"
+                    ></path>
+                  </svg>
+                </div>
+              </div>
+            )}
+          </SearchFormPredictive>
+
+          <SearchResultsPredictive>
+            {({items, total, term, state, closeSearch, goToSearch}) => {
+              const {articles, collections, pages, products, queries} = items;
+
+              // console.log(items, 'itemss');
+              // if (state === 'loading' && term.current) {
+              //   return <div className='bg-white text-center'>Loading...</div>;
+              // }
+
+              if (!total) {
+                return (
+                  <>
+                    {/* {term.current.length > 0 && ( */}
+                    <SearchResultsPredictive.Empty
+                      term={term}
+                      closeSearch={closeSearch}
+                      goToSearch={goToSearch}
+                    />
+                    {/* )} */}
+                  </>
+                );
+              }
+
+              return (
+                <>
+                  <div
+                    className={`fixed_padding_page predictive-search-result-main-div ${
+                      term.current.length > 0 ? 'oppen' : 'closee'
+                    } bg-white h-screen`}
+                  >
+                    <div
+                      className={`predictive-search-result-wrapper ${
+                        term.current.length > 0
+                          ? 'predictive-search-result-open'
+                          : ''
+                      }`}
+                    >
+                      <SearchResultsPredictive.Queries
+                        queries={queries}
+                        queriesDatalistId={queriesDatalistId}
+                        closeSearch={closeSearch}
+                        goToSearch={goToSearch}
+                      />
+                      <SearchResultsPredictive.Products
+                        products={products}
+                        closeSearch={closeSearch}
+                        term={term}
+                      />
+                      <SearchResultsPredictive.Collections
+                        collections={collections}
+                        closeSearch={closeSearch}
+                        term={term}
+                      />
+                      <SearchResultsPredictive.Pages
+                        pages={pages}
+                        closeSearch={closeSearch}
+                        term={term}
+                      />
+                      <SearchResultsPredictive.Articles
+                        articles={articles}
+                        closeSearch={closeSearch}
+                        term={term}
+                      />
+                      {term.current && total ? (
+                        <div className='pb-7.5' >
+                          <button
+                            className="predictive-search-go-btn"
+                            onClick={goToSearch}
+                          >
+                            <div className="flex items-center justify-between">
+                              <span>
+                                search for &ldquo;{term.current}&rdquo;
+                              </span>
+                              <span className="ml-1">
+                                <ChevronRight className="w-4 h-4" />
+                              </span>
+                            </div>
+                          </button>
+                        </div>
+                      ) : null}
+                    </div>
+                  </div>
+                </>
+              );
+            }}
+          </SearchResultsPredictive>
+
           <ul id="myMenu" style={{display: 'none'}}>
             <li>
               <a href="#">HTML</a>
@@ -391,7 +530,7 @@ function HeaderCtas({isLoggedIn, cart}) {
       </NavLink>
 
       <TopSide.Provider>
-      <SearchToggle />
+        <SearchToggle />
       </TopSide.Provider>
 
       <CartToggle cart={cart} />
@@ -411,7 +550,10 @@ function HeaderMenuMobileToggle() {
 function SearchToggle() {
   const {open} = useAside();
   return (
-    <button className="reset hover:cursor-pointer px-5 py-1.25" onClick={() => open('search')}>
+    <button
+      className="reset hover:cursor-pointer px-5 py-1.25"
+      onClick={() => open('search')}
+    >
       <Search className="w-6 h-6" />
     </button>
   );
@@ -426,7 +568,7 @@ function CartBadge({count}) {
 
   return (
     <a
-      className="relative px-5 py-1.25"
+      className="relative lg:px-5 lg:py-1.25 md:px-5 md:py-1.25"
       href="/cart"
       onClick={(e) => {
         e.preventDefault();

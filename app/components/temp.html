@@ -1,0 +1,127 @@
+<div class="sidebar__filter__group">
+  <button
+    class="sidebar__heading js accordion-is-open"
+    data-accordion-trigger="accordion-price-5"
+    aria-controls="accordion-price-5"
+    aria-haspopup="true"
+    aria-expanded="false"
+  >
+    <span>Price</span
+    ><span class="sidebar__heading-chevron">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        stroke-linecap="square"
+        stroke-linejoin="arcs"
+        aria-hidden="true"
+        class="icon-theme icon-theme-stroke icon-core-chevron-right"
+        viewBox="0 0 24 24"
+      >
+        <path d="m9 18 6-6-6-6"></path>
+      </svg>
+      <span class="a11y__show visually-hidden">Expand menu</span>
+      <span class="a11y__hide visually-hidden">Hide menu</span>
+    </span>
+  </button>
+
+  <input
+    type="checkbox"
+    name="accordion-price"
+    id="accordion-price-checkbox"
+    class="no-js no-js-checkbox"
+    checked=""
+  />
+
+  <label for="accordion-price-checkbox" class="sidebar__heading no-js">
+    <span>Price</span
+    ><span class="sidebar__heading-chevron">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        stroke-linecap="square"
+        stroke-linejoin="arcs"
+        aria-hidden="true"
+        class="icon-theme icon-theme-stroke icon-core-chevron-right"
+        viewBox="0 0 24 24"
+      >
+        <path d="m9 18 6-6-6-6"></path>
+      </svg>
+      <span class="a11y__show visually-hidden">Expand menu</span>
+      <span class="a11y__hide visually-hidden">Hide menu</span>
+    </span>
+  </label>
+  <div
+    class="sidebar__navigation__list filter__price"
+    id="accordion-price-5"
+    data-accordion-body=""
+    data-range-holder=""
+    style="box-sizing: border-box; display: block"
+  >
+    <div
+      class="filter__price__range collection-range-filter is-initialized"
+      data-range-slider=""
+      data-range-filter-update=""
+      data-se-min="0"
+      data-se-step="1"
+      data-se-min-value="0"
+      data-se-max-value="698"
+      data-se-max="698"
+    >
+      <div
+        class="range__dot range__dot--left"
+        data-range-left=""
+        style="left: 0px"
+      >
+        <span>&nbsp;</span>
+      </div>
+      <div
+        class="range__dot range__dot--right"
+        data-range-right=""
+        style="left: 206px"
+      >
+        <span>&nbsp;</span>
+      </div>
+      <div class="range__line">
+        <span data-range-line="" style="margin-left: 0px; width: 206px"
+          >&nbsp;</span
+        >
+      </div>
+    </div>
+
+    <div class="filter__price__fields">
+      <div class="filter__price__field filter__price__from">
+        <span>$</span>
+
+        <input
+          data-field-price-min=""
+          class="filter__price__input"
+          name="filter.v.price.gte"
+          id="filter-price-from-Price-5"
+          type="number"
+          placeholder="0"
+          min="0"
+          max="698"
+        />
+
+        <label for="filter-price-from-Price-5">From</label>
+      </div>
+      <div class="filter__price__spacer">-</div>
+      <div class="filter__price__field filter__price__to">
+        <span>$</span>
+
+        <input
+          data-field-price-max=""
+          class="filter__price__input"
+          name="filter.v.price.lte"
+          id="filter-price-to-Price-5"
+          type="number"
+          placeholder="698"
+          min="0"
+          max="698"
+        />
+
+        <label for="filter-price-to-Price-5">To</label>
+      </div>
+    </div>
+  </div>
+</div>
+
+{/* price filter code */}

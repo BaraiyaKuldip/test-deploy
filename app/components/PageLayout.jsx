@@ -56,22 +56,60 @@ export function PageLayout({
 
       let currentLocation = window.location;
       // console.log(currentLocation.pathname , "cc");
+      
       if (currentLocation.pathname === '/') {
+        
         document.documentElement.style.setProperty('--text-color', '#fff');
         document.documentElement.style.setProperty(
           '--toolbar-top-bg',
           'transparent',
         );
+        
+        document.querySelector(".logo-container").style.display = "block";
+        document.querySelector(".main_header_top").style.borderBottomColor = "transparent";
       } else {
+        document.querySelector(".logo-container").style.display = "none";
+        document.querySelector(".main_header_top").style.borderBottomColor = "#f7f5f4";
+        
         document.documentElement.style.setProperty('--text-color', '#000');
         document.documentElement.style.setProperty(
           '--toolbar-top-bg',
           '#f7f5f4',
         );
       }
+
     }
   });
 
+  if (typeof window !== 'undefined') {
+
+  const [screenSize, setScreenSize] = useState({
+    width: window.innerWidth,
+    height: window.innerHeight,
+  });
+
+  useEffect(() => {
+    const handleResize = () => {
+      setScreenSize({
+        width: window.innerWidth,
+        height: window.innerHeight,
+      });
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    // Clean up the event listener when the component unmounts
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+  
+
+  useEffect(() => {
+    document.documentElement.style.setProperty('--c-screen-height', `${(screenSize.height)- 94}px`)
+    }, [screenSize]);
+    
+  }
   return (
     <Aside.Provider>
       <CartAside cart={cart} />
@@ -227,10 +265,34 @@ function CartAside({cart}) {
   );
 }
 
+/**
+ * @param {{filter: PageLayoutProps['filter']}}
+ */
+function FilterAside({filter}) {
+  return (
+    <Aside type="filter" heading="FILTER">
+      <Suspense fallback={<p>Loading cart ...</p>}>
+        {/* <Await resolve={filter}>
+          {(filter) => {
+            // return <layout="aside" />;
+          }}
+        </Await> */}
+      </Suspense>
+    </Aside>
+  );
+}
+
 function SearchAside() {
   const navigate = useNavigate();
   const queriesDatalistId = useId();
   const {type: activeType, close} = useAside();
+// console.log(activeType , "cccc")
+
+useEffect(() => {
+if(activeType === 'search'){
+  document.getElementById('search-input').focus();
+}
+},[activeType]) ;
 
   return (
     <Aside type="search" heading="SEARCH">
@@ -323,7 +385,7 @@ function SearchAside() {
 
           return (
             <>
-              <div
+              <div id='predictive-search-result-main-div'
                 className={`fixed_padding_page predictive-search-result-main-div ${
                   term.current.length > 0 ? 'oppen' : 'closee'
                 } bg-white h-screen`}
@@ -339,6 +401,7 @@ function SearchAside() {
                     queries={queries}
                     queriesDatalistId={queriesDatalistId}
                     closeSearch={closeSearch}
+                    goToSearch={goToSearch}
                   />
                   <SearchResultsPredictive.Products
                     products={products}
@@ -361,7 +424,7 @@ function SearchAside() {
                     term={term}
                   />
                   {term.current && total ? (
-                    <div>
+                    <div className='pb-7.5' >
                       <button className="predictive-search-go-btn" onClick={goToSearch}>
                         <div className="flex items-center justify-between">
                           <span>search for &ldquo;{term.current}&rdquo;</span>
