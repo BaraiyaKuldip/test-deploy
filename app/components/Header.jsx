@@ -98,7 +98,7 @@ export function Header({header, isLoggedIn, cart, publicStoreDomain}) {
           <div className={`container`}>
             {/* Mobile logo 550px and below */}
 
-            <div className={`hidden max-[550px]:block text-center `}>
+            <div className={`hidden max-[768px]:block text-center `}>
               <div className="flex justify-between items-center">
                 <div className={`lg:hidden`}>
                   <HeaderMenuMobileToggle />
@@ -139,10 +139,10 @@ export function Header({header, isLoggedIn, cart, publicStoreDomain}) {
               <NavLink
                 prefetch="intent"
                 to="/"
-                className={`tracking-wider text-center max-[550px]:hidden absolute left-1/2 -translate-x-1/2 lg:static lg:translate-x-0 lg:text-left transition-all duration-300 ease-in-out`}
+                className={`tracking-wider max-[768px]:hidden`}
               >
                 <h1 className="font-medium">
-                  {/* {shop.name} */}
+                  
                   <img
                     src={siteLogo}
                     alt="Logo"
@@ -153,7 +153,7 @@ export function Header({header, isLoggedIn, cart, publicStoreDomain}) {
 
               {/* Desktop Navigation  */}
 
-              <div className="hidden lg:block">
+              <div className="max-[768px]:hidden">
                 <HeaderMenu
                   menu={menu}
                   viewport="desktop"
@@ -163,7 +163,7 @@ export function Header({header, isLoggedIn, cart, publicStoreDomain}) {
               </div>
 
               {/* CTAS  */}
-              <div className="hidden lg:block">
+              <div className="max-[768px]:hidden">
                 <div className="flex items-center">
                   <HeaderCtas isLoggedIn={isLoggedIn} cart={cart} />
                 </div>
@@ -278,12 +278,12 @@ export function HeaderMenu({
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     aria-hidden="true"
-                    class="search-mobile-svg"
+                    className="search-mobile-svg"
                     viewBox="0 0 24 24"
                   >
                     <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
                       d="M18.316 9.825c0 3.368-2.05 6.404-5.194 7.692a8.47 8.47 0 0 1-9.164-1.81A8.265 8.265 0 0 1 2.144 6.63C3.45 3.52 6.519 1.495 9.921 1.5c4.638.007 8.395 3.732 8.395 8.325ZM22.5 22.5l-6.558-6.87L22.5 22.5Z"
                     ></path>
                   </svg>
@@ -301,16 +301,18 @@ export function HeaderMenu({
               //   return <div className='bg-white text-center'>Loading...</div>;
               // }
 
-              if (!total) {
+              if (!total ) {
                 return (
+                  
                   <>
-                    {/* {term.current.length > 0 && ( */}
+                  {/* {console.log(term.current.length , "term.")} */}
+                    {term.current.length > 0 && (
                     <SearchResultsPredictive.Empty
                       term={term}
                       closeSearch={closeSearch}
                       goToSearch={goToSearch}
                     />
-                    {/* )} */}
+                     )}
                   </>
                 );
               }
@@ -320,7 +322,7 @@ export function HeaderMenu({
                   <div
                     className={`fixed_padding_page predictive-search-result-main-div ${
                       term.current.length > 0 ? 'oppen' : 'closee'
-                    } bg-white h-screen`}
+                    } bg-white`}
                   >
                     <div
                       className={`predictive-search-result-wrapper ${
@@ -438,10 +440,10 @@ export function HeaderMenu({
               <>
                 {/* <div className='slider_type_menu_wrapper'> */}
 
-                {/* <button key={item.id} onClick={close} style={viewport === 'desktop' ? activeLinkStyleDesktop : activeLinkStyle} className='header-menu-item'>{item.title}</button> */}
+                {/* <button key={item.id} onClick={close} style={viewport === 'desktop' ? activeLinkStyleDesktop : activeLinkStyle} className='header-menu-item link-hover-effect-nav'>{item.title}</button> */}
                 {viewport === 'mobile' && (
                   <NavLink
-                    className={`header-menu-item `}
+                    className={`header-menu-item link-hover-effect-nav `}
                     end
                     id="mobile_header_link"
                     key={item.id}
@@ -460,7 +462,7 @@ export function HeaderMenu({
                 )}
                 {viewport !== 'mobile' && (
                   <NavLink
-                    className={`header-menu-item `}
+                    className={`header-menu-item link-hover-effect-nav `}
                     end
                     key={item.id}
                     onClick={close}
@@ -478,7 +480,7 @@ export function HeaderMenu({
                 {/* </div> */}
 
                 {/* <NavLink
-            className={`header-menu-item `}
+            className={`header-menu-item link-hover-effect-nav `}
             end
             key={item.id}
             onClick={close}

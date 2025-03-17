@@ -18,7 +18,7 @@
     --empty-cart-overlay-opacity: 0.05;
 
 
-    --c-screen-height : 0;
+    --c-screen-height: 0;
 
     --text-color: #000;
     --text-color-42: #424242;
@@ -51,6 +51,13 @@
     text-size-adjust: 100%;
     -webkit-font-smoothing: antialiased;
     color: var(--text-color-42);
+  }
+
+  .no-scroll {
+    overflow: hidden;
+    height: 100vh;
+    position: fixed;
+    width: 100%;
   }
 
   /* Container to limit the scroll width */
@@ -317,7 +324,7 @@
     margin-inline: -50px;
     margin-top: -95px;
 
-    @media (max-width: 48em) {
+    @media (max-width: 768px) {
       margin-inline: -16px;
       height: 500px;
     }
@@ -483,15 +490,46 @@
   }
 
   .fixed_padding_page {
-    @media(max-width : 48em) {
+    @media(max-width : 768px) {
       padding-inline: 16px;
     }
 
-    @media(min-width: 48em) {
+    @media(min-width: 768px) {
       padding-inline: 50px;
     }
   }
 
+
+  .link-hover-effect-nav {
+    transition: 0.4s;
+    color: #ffffff;
+    font-size: 20px;
+    text-decoration: none;
+    position: relative;
+  }
+
+  .link-hover-effect-nav::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background-color: #ffffff;
+    bottom: 0;
+    left: 0;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.1s;
+  }
+
+  .link-hover-effect-nav:hover::after {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+
+  .container {
+    width: 100% !important;
+    max-width: 100% !important;
+  }
 
   /* footer css start  */
   footer {
@@ -839,6 +877,7 @@
     }
   }
 
+
   .footer-social-icon {
     max-width: 18px;
     display: inline-block;
@@ -849,7 +888,9 @@
     letter-spacing: 0;
   }
 
-
+  .footer-social-icon svg:hover {
+    opacity: 1;
+  }
 
 
   .footer-social-icon svg {
@@ -857,6 +898,7 @@
     width: 100%;
     height: 100%;
     vertical-align: middle;
+    opacity: 0.9;
   }
 
 
@@ -961,13 +1003,18 @@
 * components/Aside
 * --------------------------------------------------
 */
+
   .aside-tag {
     background: var(--color-light);
     box-shadow: 0 0 50px rgba(0, 0, 0, 0.3);
-    height: 100vh;
+    height: 100%;
     max-width: var(--aside-width);
     min-width: var(--aside-width);
     position: fixed;
+
+    display: flex;
+    flex-direction: column;
+
     right: calc(-1 * var(--aside-width));
     top: 0;
     transition: transform 200ms ease-in-out;
@@ -986,6 +1033,7 @@
     height: var(--header-height);
     justify-content: space-between;
     padding: 0 15px;
+
   }
 
   aside header h3 {
@@ -1063,6 +1111,33 @@
     width: 100%;
   }
 
+  .overlay.menuAsideComponent .aside-tag main {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    height: 100%;
+    /* height: var(--c-screen-height); */
+    width: 100%;
+    overflow-x: hidden;
+    overflow-y: auto;
+    flex: 1 1 0%;
+    overscroll-behavior: contain;
+  }
+
+  .overlay.menuAsideComponent .aside-tag {
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    right: 0;
+    /* left: calc(-1 * var(--aside-width)); */
+    visibility: hidden;
+    content-visibility: hidden;
+    transform: translate3d(-100%, 0, 0);
+    transition: transform .3s ease, visibility 0s linear 1s;
+  }
+
   .overlay.expanded {
     opacity: 1;
     pointer-events: auto;
@@ -1072,6 +1147,14 @@
   /* reveal aside */
   .overlay.expanded aside {
     transform: translateX(calc(var(--aside-width) * -1));
+  }
+
+  .overlay.expanded.menuAsideComponent aside {
+    transform: translateX(calc(var(--aside-width) * -1));
+    visibility: visible;
+    content-visibility: visible;
+    transform: translateZ(0);
+    transition: transform .3s ease
   }
 
   button.reset {
@@ -1121,7 +1204,7 @@
   .header-menu-mobile {
     display: flex;
     flex-direction: column;
-    grid-gap: 1rem;
+    /* grid-gap: 1rem; */
   }
 
   .header-menu-desktop {
@@ -1131,7 +1214,7 @@
 
     @media (min-width: 45em) {
       display: flex;
-      grid-gap: 1rem;
+      grid-gap: 0rem;
       /* margin-left: 3rem; // kuldip commented */
     }
   }
@@ -1158,7 +1241,7 @@
       align-items: center;
       justify-content: space-between;
       padding: 0px 20px;
-      color: #000;
+      color: var(--text-color);
     }
 
   }
@@ -1356,6 +1439,14 @@
   .predictive-search-result {
     margin-bottom: 2rem;
 
+  }
+
+  .predictive-search-result-main-div.oppen.s-open {
+    max-height: 100% !important;
+  }
+
+  .overlay.menuAsideComponent .predictive-search-result-main-div.oppen {
+    max-height: 100% !important;
   }
 
   .predictive-search-result-main-div.oppen {
@@ -1772,8 +1863,9 @@ Search Page CSS
 
   .search-page-wrapper {
     padding: 36px 0 !important;
+
     @media only screen and (max-width: 768px) {
-     padding: 21.6px 0 !important;
+      padding: 21.6px 0 !important;
     }
   }
 
@@ -1786,11 +1878,17 @@ Search Page CSS
     align-items: center;
   }
 
+
+
   .search-bar-mobile {
-    border-bottom: 1px solid var(--border-color-light);
     padding: 0 20px;
     height: 50px;
     width: 100%;
+  }
+
+  .search_menu_mobile {
+    border-bottom: 1px solid var(--border-color-light);
+
   }
 
   .search-input-mobile {
@@ -1900,7 +1998,7 @@ Search Page CSS
     padding: 10.5px 22px;
   }
 
-  .search-query-note{
+  .search-query-note {
     @media only screen and (max-width: 768px) {
       margin-top: 16px !important;
     }
@@ -1928,7 +2026,7 @@ Search Page CSS
   /* Collection Navigation */
 
   .collection-navigation {
-  @media only screen and (max-width: 768px) {
+    @media only screen and (max-width: 768px) {
       margin-bottom: 16px !important;
     }
   }
@@ -2321,7 +2419,7 @@ Search Page CSS
     gap: 24px;
   }
 
-  .search-result-item:last-of-type ~ hr {
+  .search-result-item:last-of-type~hr {
     display: none;
   }
 
@@ -2368,21 +2466,23 @@ Search Page CSS
     /* font-weight: bold; */
   }
 
-.page-nav{
-  height: 40px;
-}
+  .page-nav {
+    height: 40px;
+  }
 
 
-.pagination-left-btn{
-  padding: 10px 15px;
-  height: 100%;
-  border: 1px solid rgba(66,66,66,0.2);
-  border-top-left-radius: 3px; border-bottom-left-radius: 3px;
-}
-
-  .pagination-right-btn{
+  .pagination-left-btn {
     padding: 10px 15px;
     height: 100%;
-    border: 1px solid rgba(66,66,66,0.2);
-    border-top-right-radius: 3px; border-bottom-right-radius: 3px;
+    border: 1px solid rgba(66, 66, 66, 0.2);
+    border-top-left-radius: 3px;
+    border-bottom-left-radius: 3px;
+  }
+
+  .pagination-right-btn {
+    padding: 10px 15px;
+    height: 100%;
+    border: 1px solid rgba(66, 66, 66, 0.2);
+    border-top-right-radius: 3px;
+    border-bottom-right-radius: 3px;
   }

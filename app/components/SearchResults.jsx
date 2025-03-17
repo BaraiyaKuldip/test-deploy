@@ -435,7 +435,7 @@ function SearchResultsProducts({term, products}) {
         });
 
         const PageInfoData = products;
-        console.log(PageInfoData, 'pageInfo');
+        // console.log(PageInfoData, 'pageInfo');
 
         return (
           <div>

@@ -56,60 +56,61 @@ export function PageLayout({
 
       let currentLocation = window.location;
       // console.log(currentLocation.pathname , "cc");
-      
+
       if (currentLocation.pathname === '/') {
-        
         document.documentElement.style.setProperty('--text-color', '#fff');
         document.documentElement.style.setProperty(
           '--toolbar-top-bg',
           'transparent',
         );
-        
-        document.querySelector(".logo-container").style.display = "block";
-        document.querySelector(".main_header_top").style.borderBottomColor = "transparent";
+
+        document.querySelector('.logo-container').style.display = 'block';
+        document.querySelector('.main_header_top').style.borderBottomColor =
+          'transparent';
       } else {
-        document.querySelector(".logo-container").style.display = "none";
-        document.querySelector(".main_header_top").style.borderBottomColor = "#f7f5f4";
-        
+        document.querySelector('.logo-container').style.display = 'none';
+        document.querySelector('.main_header_top').style.borderBottomColor =
+          '#f7f5f4';
+
         document.documentElement.style.setProperty('--text-color', '#000');
         document.documentElement.style.setProperty(
           '--toolbar-top-bg',
           '#f7f5f4',
         );
       }
-
     }
   });
 
-  if (typeof window !== 'undefined') {
+if (typeof window !== 'undefined') {
+    const [screenSize, setScreenSize] = useState({
+      width: window.innerWidth,
+      height: window.innerHeight,
+    });
 
-  const [screenSize, setScreenSize] = useState({
-    width: window.innerWidth,
-    height: window.innerHeight,
-  });
+    useEffect(() => {
+      const handleResize = () => {
+        setScreenSize({
+          width: window.innerWidth,
+          height: window.innerHeight,
+        });
+      };
 
-  useEffect(() => {
-    const handleResize = () => {
-      setScreenSize({
-        width: window.innerWidth,
-        height: window.innerHeight,
-      });
-    };
+      window.addEventListener('resize', handleResize);
 
-    window.addEventListener('resize', handleResize);
+      // Clean up the event listener when the component unmounts
+      return () => {
+        window.removeEventListener('resize', handleResize);
+      };
+    }, []);
 
-    // Clean up the event listener when the component unmounts
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
-  }, []);
-  
-
-  useEffect(() => {
-    document.documentElement.style.setProperty('--c-screen-height', `${(screenSize.height)- 94}px`)
+    useEffect(() => {
+      document.documentElement.style.setProperty(
+        '--c-screen-height',
+        `${screenSize.height - 94}px`,
+      );
     }, [screenSize]);
-    
-  }
+}
+
   return (
     <Aside.Provider>
       <CartAside cart={cart} />
@@ -286,13 +287,13 @@ function SearchAside() {
   const navigate = useNavigate();
   const queriesDatalistId = useId();
   const {type: activeType, close} = useAside();
-// console.log(activeType , "cccc")
+  // console.log(activeType , "cccc")
 
-useEffect(() => {
-if(activeType === 'search'){
-  document.getElementById('search-input').focus();
-}
-},[activeType]) ;
+  useEffect(() => {
+    if (activeType === 'search') {
+      document.getElementById('search-input').focus();
+    }
+  }, [activeType]);
 
   return (
     <Aside type="search" heading="SEARCH">
@@ -317,18 +318,16 @@ if(activeType === 'search'){
                     inputRef.current.value.length === 0
                   ) {
                     e.preventDefault();
-                  
                   }
                   if (inputRef.current.value.length > 0) {
                     if (e.code === 'Enter') {
                       // goToSearch
                       // <Link to={"/search"}></Link>
                       // navigate(`/search`);
-                      goToSearch()
+                      goToSearch();
                     }
                   }
                 }}
-
               />
               &nbsp;
               {/* <button onClick={goToSearch}>Search</button> */}
@@ -361,7 +360,7 @@ if(activeType === 'search'){
       </div>
 
       <SearchResultsPredictive>
-        {({items, total, term, state, closeSearch , goToSearch}) => {
+        {({items, total, term, state, closeSearch, goToSearch}) => {
           const {articles, collections, pages, products, queries} = items;
 
           // console.log(items, 'itemss');
@@ -385,7 +384,8 @@ if(activeType === 'search'){
 
           return (
             <>
-              <div id='predictive-search-result-main-div'
+              <div
+                id="predictive-search-result-main-div"
                 className={`fixed_padding_page predictive-search-result-main-div ${
                   term.current.length > 0 ? 'oppen' : 'closee'
                 } bg-white h-screen`}
@@ -424,8 +424,11 @@ if(activeType === 'search'){
                     term={term}
                   />
                   {term.current && total ? (
-                    <div className='pb-7.5' >
-                      <button className="predictive-search-go-btn" onClick={goToSearch}>
+                    <div className="pb-7.5">
+                      <button
+                        className="predictive-search-go-btn"
+                        onClick={goToSearch}
+                      >
                         <div className="flex items-center justify-between">
                           <span>search for &ldquo;{term.current}&rdquo;</span>
                           <span className="ml-1">

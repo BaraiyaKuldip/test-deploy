@@ -59,13 +59,12 @@ function SearchPageContent() {
   const {type, term, result, error} = useLoaderData();
   if (type === 'predictive') return null;
   console.log(type, 'ttt');
-  
+
   const [filtersVisible, setFiltersVisible] = useState(true);
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     // Handle search submission
-   
   };
 
   const toggleFilters = () => {
@@ -226,6 +225,7 @@ function SearchPageContent() {
           {({inputRef}) => (
             <div className="search-input-group">
               <input
+                
                 name="q"
                 id="search-input"
                 placeholder="Search our store"
@@ -234,12 +234,19 @@ function SearchPageContent() {
                 className="search-input"
               />
               {/* {console.log(inputRef.current.value.length , "newww")}    */}
-              {console.log(inputRef , "newww")}   
+              {/* {console.log(inputRef.current.value, 'newww')} */}
 
               <div className="search-input-buttons">
-                <button type='reset' className="px-5 h-12 hover:cursor-pointer" aria-label="Reset">
-                  <X className="w-6 h-6" />
-                </button>
+                {inputRef.current !== null &&
+                  inputRef.current.value.length > 0 && (
+                    <button
+                      type="reset"
+                      className="px-5 h-12 hover:cursor-pointer"
+                      aria-label="Reset"
+                    >
+                      <X className="w-6 h-6" />
+                    </button>
+                  )}
                 <button type="submit" className="search-submit-button">
                   Search
                 </button>
@@ -309,9 +316,12 @@ function SearchPageContent() {
                   <div className="collection-filters-outer">
                     <div className="collection-filters-header">
                       <div className="collection-filters-title-div">
-                        <p className='collection-filters-title'>Filter</p>
+                        <p className="collection-filters-title">Filter</p>
                       </div>
-                      <button className='filters-close-btn' onClick={toggleFilters}>
+                      <button
+                        className="filters-close-btn"
+                        onClick={toggleFilters}
+                      >
                         <X className="w-5 h-5 aside_close_btn_effect" />
                       </button>
                     </div>
@@ -370,7 +380,7 @@ function SearchPageContent() {
                 <div className="collection-products">
                   <SearchResults result={result} term={term}>
                     {({articles, pages, products, term}) => (
-                      <div className='search-results-product-container'>  
+                      <div className="search-results-product-container">
                         <SearchResults.Products
                           products={products}
                           term={term}
