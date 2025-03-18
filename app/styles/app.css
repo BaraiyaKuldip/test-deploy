@@ -35,6 +35,8 @@
     --font-adjust: 0.95;
     --font-size-11: 11px;
     --font-size-13: 13px;
+    --font-size-14: 14px;
+    --font-size-14-5: 14.5px;
     --line-height-1-5: 1.5;
     --line-height-1-6: 1.625;
 
@@ -1241,7 +1243,7 @@
       align-items: center;
       justify-content: space-between;
       padding: 0px 20px;
-      color: var(--text-color);
+      color: #000;
     }
 
   }
@@ -2486,3 +2488,243 @@ Search Page CSS
     border-top-right-radius: 3px;
     border-bottom-right-radius: 3px;
   }
+
+
+
+  /* ---collection-tabs--- */
+
+.collection-tabs-wrapper{
+  width: 100%;
+  max-width: 1450px;
+  margin: 0 auto;
+  padding-left: var(--outer);
+  padding-right: var(--outer);
+  padding-top: 60px;
+  padding-bottom: 60px;
+}
+
+
+
+@media only screen and (min-width: 480px) {
+  .collection-tabs-heading {
+      padding-left: 50px;
+      padding-right: 50px;
+  }
+}
+
+.collection-tabs-heading { 
+  font-family: var(--font-family-ms);
+  font-style: var(--font-style-nrml);
+  font-weight: var(--font-weight-6);
+  text-transform: var(--text-transform-up);
+  letter-spacing: var(--letter-spacing-9);
+  font-size: calc(var(--font-size-14-5)* var(--font-adjust));
+  color: var(--text-color-42);
+  padding-bottom: 20px;
+  position: relative;
+  text-align: center; 
+  margin-bottom: 50px;
+
+}
+
+
+
+/* Container */
+.tabs-scroll-container {
+  position: relative;
+  overflow: hidden;
+}
+
+/* Tabs Wrapper */
+.tabs-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+.collection-tabs-heading::after {
+  content: "";
+  margin: auto;
+  width: 30px;
+  height: 3px;
+  position: absolute;
+  bottom: 0;
+  background: var(--text-color-42);
+  opacity: .2;
+  left: 0;
+  right: 0;
+}
+
+/* Tab Buttons */
+.tab-button {
+  font-weight: 500;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  font-family: var(--font-family-ms);
+    font-style: var(--font-style-nrml);
+    font-weight: var(--font-weight-5);
+    font-weight: var(--font-weight-6);
+    text-transform: var(--text-transform-up);
+    letter-spacing: var(--letter-spacing-9);
+    font-size: calc(var(--font-size-13)* var(--font-adjust));
+    line-height: var(--line-height-1-5);
+    color: var(--text-color-42);
+    border: none;
+    padding: 6px 16px;
+    border-radius: 100px;
+    margin: 0;
+}
+
+.tab-button-active {
+  background-color: rgba(66, 66, 66, 0.05); /* Primary color */
+  color: var(--text-color-42);
+}
+
+.tab-button-inactive {
+  background-color: white; /* Inactive color */
+  color: var(--text-color-42); /* Secondary color */
+}
+
+/* Arrows */
+.tabs-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.tabs-arrow-prev {
+  left: 0;
+}
+
+.tabs-arrow-next {
+  right: 0;
+}
+
+/* Visually Hidden Text */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  border: 0;
+}
+
+
+
+/* Add this to your global CSS file */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.loading-shimmer {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+h3 {
+  margin:5px 0; 
+}
+
+body {
+  margin:10px;
+  padding:0;
+}
+.banner-slider .slick-slide {
+  background:pink;
+  color:#fff;
+  text-align:center;
+  font-size:40px
+}
+
+.banner-slider .slick-slide:nth-child(odd) {
+  
+  background:teal;
+}
+
+
+/* to be used from here */
+
+.banner-slider .slick-slide {
+  padding: 100px 0 100px;
+  height:300px;
+  box-sizing:border-box;
+  display:flex;
+  align-items:center;
+}
+
+.sliderContainer {
+  position: relative;
+}
+
+.banner-slider {
+  width: 100%;
+  position:relative;
+}
+
+.slick-prev:before,
+.slick-next:before {
+  color: black;
+}
+
+.slick-dots {
+  bottom: -30px;
+}
+
+.progressBarContainer {
+  position: absolute;
+  top:0;
+  width:100%;
+  left:0;
+  display:flex;
+  aligin-items:center;
+  justify-content:center;
+  padding:0 15px;
+  box-sizing:border-box;
+}
+
+.progressBarContainer div {
+  display: block;
+  width:10%;
+  min-width:30px;
+  max-width: 100px;
+  padding: 0;
+  cursor: pointer;
+  margin-right: 10px;
+  color: white;
+}
+
+.progressBarContainer div:last-child {
+  margin-right: 0;
+}
+
+.progressBarContainer div span.progressBar {
+  width: 100%;
+  height: 7px;
+  border-radius:10px;
+  background-color: rgba(255, 255, 255, 0.4);
+  display: block;
+  
+}
+
+.progressBarContainer div span.progressBar .inProgress {
+  background-color: #ea353d;
+  width: 0%;
+  min-width:0%;
+  max-width:100%;
+  height: 7px;
+  border-radius:10px;
+}
+
