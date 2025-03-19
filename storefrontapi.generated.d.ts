@@ -328,6 +328,41 @@ export type FeaturedCollectionFragment = Pick<
   image?: StorefrontAPI.Maybe<
     Pick<StorefrontAPI.Image, 'id' | 'url' | 'altText' | 'width' | 'height'>
   >;
+  products: {
+    nodes: Array<
+      Pick<
+        StorefrontAPI.Product,
+        'id' | 'title' | 'handle' | 'totalInventory'
+      > & {
+        options: Array<
+          Pick<StorefrontAPI.ProductOption, 'name'> & {
+            optionValues: Array<
+              Pick<StorefrontAPI.ProductOptionValue, 'name'> & {
+                firstSelectableVariant?: StorefrontAPI.Maybe<
+                  Pick<StorefrontAPI.ProductVariant, 'availableForSale'>
+                >;
+                swatch?: StorefrontAPI.Maybe<
+                  Pick<StorefrontAPI.ProductOptionValueSwatch, 'color'> & {
+                    image?: StorefrontAPI.Maybe<{
+                      previewImage?: StorefrontAPI.Maybe<
+                        Pick<StorefrontAPI.Image, 'url'>
+                      >;
+                    }>;
+                  }
+                >;
+              }
+            >;
+          }
+        >;
+        variants: {
+          nodes: Array<Pick<StorefrontAPI.ProductVariant, 'id' | 'title'>>;
+        };
+        variantsCount?: StorefrontAPI.Maybe<
+          Pick<StorefrontAPI.Count, 'count' | 'precision'>
+        >;
+      }
+    >;
+  };
 };
 
 export type FeaturedCollectionQueryVariables = StorefrontAPI.Exact<{
@@ -345,6 +380,46 @@ export type FeaturedCollectionQuery = {
             'id' | 'url' | 'altText' | 'width' | 'height'
           >
         >;
+        products: {
+          nodes: Array<
+            Pick<
+              StorefrontAPI.Product,
+              'id' | 'title' | 'handle' | 'totalInventory'
+            > & {
+              options: Array<
+                Pick<StorefrontAPI.ProductOption, 'name'> & {
+                  optionValues: Array<
+                    Pick<StorefrontAPI.ProductOptionValue, 'name'> & {
+                      firstSelectableVariant?: StorefrontAPI.Maybe<
+                        Pick<StorefrontAPI.ProductVariant, 'availableForSale'>
+                      >;
+                      swatch?: StorefrontAPI.Maybe<
+                        Pick<
+                          StorefrontAPI.ProductOptionValueSwatch,
+                          'color'
+                        > & {
+                          image?: StorefrontAPI.Maybe<{
+                            previewImage?: StorefrontAPI.Maybe<
+                              Pick<StorefrontAPI.Image, 'url'>
+                            >;
+                          }>;
+                        }
+                      >;
+                    }
+                  >;
+                }
+              >;
+              variants: {
+                nodes: Array<
+                  Pick<StorefrontAPI.ProductVariant, 'id' | 'title'>
+                >;
+              };
+              variantsCount?: StorefrontAPI.Maybe<
+                Pick<StorefrontAPI.Count, 'count' | 'precision'>
+              >;
+            }
+          >;
+        };
       }
     >;
   };
@@ -1207,7 +1282,7 @@ interface GeneratedQueryTypes {
     return: StoreRobotsQuery;
     variables: StoreRobotsQueryVariables;
   };
-  '#graphql\n  fragment FeaturedCollection on Collection {\n    id\n    title\n    image {\n      id\n      url\n      altText\n      width\n      height\n    }\n    handle\n  }\n  query FeaturedCollection($country: CountryCode, $language: LanguageCode)\n    @inContext(country: $country, language: $language) {\n    collections(first: 100, sortKey: TITLE, reverse: false) {\n      nodes {\n        ...FeaturedCollection\n      }\n    }\n  }\n': {
+  '#graphql\n  fragment FeaturedCollection on Collection {\n    id\n    title\n    image {\n      id\n      url\n      altText\n      width\n      height\n    }\n    handle\n    products(first:200){\n        nodes{\n          id\n          title\n          handle\n          totalInventory\n          options{\n            \n            name\n            optionValues{\n              name\n              \n              firstSelectableVariant{\n                availableForSale\n                \n              }\n              swatch{\n                color\n                image{\n                  previewImage{\n                    url\n                  }\n                }\n                \n              }\n              \n            }\n            \n            \n          }\n          \n          variants(first:100){\n            nodes{\n              id\n              title\n            }\n            \n          }\n          variantsCount{\n            count\n            precision\n          }\n        }\n      }\n  }\n  query FeaturedCollection($country: CountryCode, $language: LanguageCode)\n    @inContext(country: $country, language: $language) {\n    collections(first: 100, sortKey: TITLE, reverse: false) {\n      nodes {\n        ...FeaturedCollection\n      }\n    }\n  }\n': {
     return: FeaturedCollectionQuery;
     variables: FeaturedCollectionQueryVariables;
   };

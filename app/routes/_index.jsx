@@ -1,10 +1,18 @@
-import react, {useState} from 'react';
+import react, {useState, useRef} from 'react';
 import {defer} from '@shopify/remix-oxygen';
 import {Await, useLoaderData, Link} from '@remix-run/react';
 import {Suspense} from 'react';
 import {Image, Money} from '@shopify/hydrogen';
 import GirlImage1Landscape from '/images/GirlImage1Landscape.png?url';
 import GirlImage1Portrait from '/images/GirlImage1Portrait.png?url';
+import GirlImage1 from '/images/girl-1134567_1280.jpg?url';
+import GirlImage2 from '/images/woman-7121174_1280.jpg?url';
+import 'swiper/css';
+import 'swiper/css/effect-fade';
+import 'swiper/css/pagination';
+import 'swiper/css/navigation';
+import {EffectFade, Autoplay, Pagination, Navigation} from 'swiper/modules';
+import {Swiper, SwiperSlide} from 'swiper/react';
 
 /**
  * @type {MetaFunction}
@@ -133,17 +141,45 @@ function FeaturedCollection({collection}) {
     setActiveTab(tabIndex);
   };
 
+  // if (document !== undefined) {
+  //   const elementNN = document.getElementById('collection-tabs-content-wrapper');
+
+  //   elementNN.addEventListener('mouseover', function () {
+  //     console.log('Event triggered');
+  //   });
+  // }
+
   const image = collection?.image;
+  const [tempCount, setTempCount] = useState(0);
+
+  //   document.querySelector(".swiper-container").mouseenter(function () {
+  //     swiper.autoplay.start();
+  // });
+  // document.querySelector(".swiper-container").mouseleave(function () {
+  //     swiper.autoplay.stop();
+  // });
+
+  // $(".swiper-container").mouseenter(function () {
+  //   swiper.autoplay.start();
+  // });
+  // $(".swiper-container").mouseleave(function () {
+  //   swiper.autoplay.stop();
+  // });
+
+  console.log(Swiper, 'ssss');
+
   return (
     <>
       <div className="collection-tabs-wrapper">
         <div className="collection-tabs">
           <h2 className="collection-tabs-heading">Signature fabrics</h2>
         </div>
+
         <div className="tabs-scroll-container">
           {/* Tabs */}
           <div className="tabs-wrapper">
             {collection.map((collection, index) => (
+              
               <button
                 type="button"
                 className={`tab-button ${
@@ -155,6 +191,7 @@ function FeaturedCollection({collection}) {
                 data-tab={index}
                 tabIndex={index}
               >
+                {console.log(collection.products , "nknk")}
                 <span className="uppercase"> {collection.title}</span>
               </button>
             ))}
@@ -176,36 +213,183 @@ function FeaturedCollection({collection}) {
           </button>
         </div>
 
-        <div className="collection-tabs-content">
-          <div className="tabs-products-items-container">
-            <div className="tabs-products-items-error"></div>
-            <a href="#">
-              <div className="tabs-products-pagination"></div>
-              <div className="tabs-products-images">
-                <div className="h-[303.510px] w-[273.167px]">
-                  <img
+        <div
+          id="collection-tabs-content-wrapper"
+          className="collection-tabs-content-wrapper"
+          onMouseEnter={() => setTempCount(1)}
+          onMouseOut={() => setTempCount(0)}
+        >
+          <div className="collection-tabs-content">
+            <div className="tabs-products-items-container">
+              <div className="tabs-products-items-error"></div>
+              <a href="#" className="tabs-products-a-tag">
+                <div className="tabs-products-pagination"></div>
+                <div className="tabs-products-images">
+                  <div className="h-[303.510px] w-[273.167px]">
+                    {/* <img
                     className="h-[303.510px] w-[273.167px]"
                     src={GirlImage1Portrait}
                     alt="abs"
-                  />
+                  /> */}
+
+                    {tempCount === 1 && (
+                      <Swiper
+                        spaceBetween={30}
+                        effect="fade"
+                        loop={true}
+                        centeredSlides={true}
+                        autoplay={{
+                          delay: 3000,
+                          disableOnInteraction: false,
+                        }}
+                        // autoplay={tempCount === 1 ? {
+                        //   delay: 3000,
+                        //   disableOnInteraction: false,
+                        // } : ""}
+                        pagination={{
+                          el: '.swiper-pagination',
+                          clickable: 'true',
+                          type: 'bullets',
+                          renderBullet: function (index, className) {
+                            return (
+                              '<span class="' +
+                              className +
+                              '">' +
+                              '<i></i>' +
+                              '<b></b>' +
+                              '</span>'
+                            );
+                          },
+                        }}
+                        navigation={false}
+                        modules={[EffectFade, Autoplay, Pagination, Navigation]}
+                        className="mySwiper"
+                      >
+                        {console.log(tempCount, 'cccss')}
+                        <SwiperSlide>
+                          <img
+                            className="h-[303.510px] w-[273.167px]"
+                            src={GirlImage1Portrait}
+                            alt="abs"
+                          />
+                        </SwiperSlide>
+                        <SwiperSlide>
+                          <img
+                            className="h-[303.510px] w-[273.167px]"
+                            src={GirlImage1}
+                            alt="abs"
+                          />
+                        </SwiperSlide>
+                        <SwiperSlide>
+                          <img
+                            className="h-[303.510px] w-[273.167px]"
+                            src={GirlImage2}
+                            alt="abs"
+                          />
+                        </SwiperSlide>
+                        <SwiperSlide>
+                          <img
+                            className="h-[303.510px] w-[273.167px]"
+                            src={GirlImage1Portrait}
+                            alt="abs"
+                          />
+                        </SwiperSlide>
+                        <SwiperSlide>
+                          <img
+                            className="h-[303.510px] w-[273.167px]"
+                            src={GirlImage1}
+                            alt="abs"
+                          />
+                        </SwiperSlide>
+
+                        <div class="swiper-pagination "></div>
+                      </Swiper>
+                    )}
+
+                    {tempCount === 0 && (
+                      <Swiper
+                        spaceBetween={30}
+                        loop={true}
+                        centeredSlides={true}
+                        pagination={{
+                          el: '.swiper-pagination',
+                          clickable: 'true',
+                          type: 'bullets',
+                          renderBullet: function (index, className) {
+                            return (
+                              '<span class="' +
+                              className +
+                              '">' +
+                              '<i></i>' +
+                              '<b></b>' +
+                              '</span>'
+                            );
+                          },
+                        }}
+                        navigation={false}
+                        modules={[Autoplay, Pagination, Navigation]}
+                        className="mySwiper"
+                      >
+                        {console.log(tempCount, 'cccss')}
+                        <SwiperSlide>
+                          <img
+                            className="h-[303.510px] w-[273.167px]"
+                            src={GirlImage1Portrait}
+                            alt="abs"
+                          />
+                        </SwiperSlide>
+                        <SwiperSlide>
+                          <img
+                            className="h-[303.510px] w-[273.167px]"
+                            src={GirlImage1Portrait}
+                            alt="abs"
+                          />
+                        </SwiperSlide>
+                        <SwiperSlide>
+                          <img
+                            className="h-[303.510px] w-[273.167px]"
+                            src={GirlImage1Portrait}
+                            alt="abs"
+                          />
+                        </SwiperSlide>
+                        <SwiperSlide>
+                          <img
+                            className="h-[303.510px] w-[273.167px]"
+                            src={GirlImage1Portrait}
+                            alt="abs"
+                          />
+                        </SwiperSlide>
+                        <SwiperSlide>
+                          <img
+                            className="h-[303.510px] w-[273.167px]"
+                            src={GirlImage1Portrait}
+                            alt="abs"
+                          />
+                        </SwiperSlide>
+
+                        <div class="swiper-pagination "></div>
+                      </Swiper>
+                    )}
+                  </div>
                 </div>
+              </a>
+            </div>
+          </div>
+
+          <div className="tabs-products-info text-left">
+            <a href="#">
+              <p className="visually-hidden "></p>
+              <div className="tabs-products-title-wrapper">
+                <p className="tabs-products-title">title</p>
+              </div>
+
+              <div className="tabs-products-price-wrapper">
+                <span className="tabs-products-price-cutline">color</span>
+
+                <span className="tabs-products-price">price</span>
               </div>
             </a>
           </div>
-        </div>
-
-        <div className="tabs-products-info">
-          <a href="#">
-            <p className="visually-hidden "></p>
-            <div className="tabs-products-title-wrapper">
-              <p className="tabs-products-title">title</p>
-            </div>
-            <div className="tabs-products-price-wrapper">
-              <span className="tabs-products-price-cutline">color</span>
-
-              <span className="tabs-products-price">price</span>
-            </div>
-          </a>
         </div>
       </div>
     </>
@@ -269,6 +453,41 @@ const FEATURED_COLLECTION_QUERY = `#graphql
       height
     }
     handle
+    products(first:200){
+        nodes{
+          id
+          title
+          handle
+          totalInventory
+          options{
+            name
+            optionValues{
+              name
+              firstSelectableVariant{
+                availableForSale
+              }
+              swatch{
+                color
+                image{
+                  previewImage{
+                    url
+                  }
+                } 
+              } 
+            } 
+          }
+          variants(first:100){
+            nodes{
+              id
+              title
+            }
+          }
+          variantsCount{
+            count
+            precision
+          }
+        }
+      }
   }
   query FeaturedCollection($country: CountryCode, $language: LanguageCode)
     @inContext(country: $country, language: $language) {

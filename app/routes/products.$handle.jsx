@@ -83,6 +83,7 @@ function loadDeferredData({context, params}) {
 export default function Product() {
   /** @type {LoaderReturnData} */
   const {product} = useLoaderData();
+  console.log(product, "ppppp")
 
   // Optimistically selects a variant with given available variant information
   const selectedVariant = useOptimisticVariant(
@@ -104,6 +105,7 @@ export default function Product() {
 
   return (
     <div className="product">
+      {console.log(selectedVariant ,'cdcd')}
       <ProductImage image={selectedVariant?.image} />
       <div className="product-main">
         <h1>{title}</h1>

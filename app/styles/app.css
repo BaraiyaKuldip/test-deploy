@@ -2493,75 +2493,75 @@ Search Page CSS
 
   /* ---collection-tabs--- */
 
-.collection-tabs-wrapper{
-  width: 100%;
-  max-width: 1450px;
-  margin: 0 auto;
-  padding-left: var(--outer);
-  padding-right: var(--outer);
-  padding-top: 60px;
-  padding-bottom: 60px;
-}
+  .collection-tabs-wrapper {
+    width: 100%;
+    max-width: 1450px;
+    margin: 0 auto;
+    padding-left: var(--outer);
+    padding-right: var(--outer);
+    padding-top: 60px;
+    padding-bottom: 60px;
+  }
 
 
 
-@media only screen and (min-width: 480px) {
-  .collection-tabs-heading {
+  @media only screen and (min-width: 480px) {
+    .collection-tabs-heading {
       padding-left: 50px;
       padding-right: 50px;
+    }
   }
-}
 
-.collection-tabs-heading { 
-  font-family: var(--font-family-ms);
-  font-style: var(--font-style-nrml);
-  font-weight: var(--font-weight-6);
-  text-transform: var(--text-transform-up);
-  letter-spacing: var(--letter-spacing-9);
-  font-size: calc(var(--font-size-14-5)* var(--font-adjust));
-  color: var(--text-color-42);
-  padding-bottom: 20px;
-  position: relative;
-  text-align: center; 
-  margin-bottom: 50px;
+  .collection-tabs-heading {
+    font-family: var(--font-family-ms);
+    font-style: var(--font-style-nrml);
+    font-weight: var(--font-weight-6);
+    text-transform: var(--text-transform-up);
+    letter-spacing: var(--letter-spacing-9);
+    font-size: calc(var(--font-size-14-5)* var(--font-adjust));
+    color: var(--text-color-42);
+    padding-bottom: 20px;
+    position: relative;
+    text-align: center;
+    margin-bottom: 50px;
 
-}
-
+  }
 
 
-/* Container */
-.tabs-scroll-container {
-  position: relative;
-  overflow: hidden;
-}
 
-/* Tabs Wrapper */
-.tabs-wrapper {
-  display: flex;
-  justify-content: center;
-  gap: 1rem;
-  padding: 1rem;
-}
+  /* Container */
+  .tabs-scroll-container {
+    position: relative;
+    overflow: hidden;
+  }
 
-.collection-tabs-heading::after {
-  content: "";
-  margin: auto;
-  width: 30px;
-  height: 3px;
-  position: absolute;
-  bottom: 0;
-  background: var(--text-color-42);
-  opacity: .2;
-  left: 0;
-  right: 0;
-}
+  /* Tabs Wrapper */
+  .tabs-wrapper {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    padding: 1rem;
+  }
 
-/* Tab Buttons */
-.tab-button {
-  font-weight: 500;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  font-family: var(--font-family-ms);
+  .collection-tabs-heading::after {
+    content: "";
+    margin: auto;
+    width: 30px;
+    height: 3px;
+    position: absolute;
+    bottom: 0;
+    background: var(--text-color-42);
+    opacity: .2;
+    left: 0;
+    right: 0;
+  }
+
+  /* Tab Buttons */
+  .tab-button {
+    font-weight: 500;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    font-family: var(--font-family-ms);
     font-style: var(--font-style-nrml);
     font-weight: var(--font-weight-5);
     font-weight: var(--font-weight-6);
@@ -2574,157 +2574,286 @@ Search Page CSS
     padding: 6px 16px;
     border-radius: 100px;
     margin: 0;
-}
-
-.tab-button-active {
-  background-color: rgba(66, 66, 66, 0.05); /* Primary color */
-  color: var(--text-color-42);
-}
-
-.tab-button-inactive {
-  background-color: white; /* Inactive color */
-  color: var(--text-color-42); /* Secondary color */
-}
-
-/* Arrows */
-.tabs-arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  background-color: transparent;
-  border: none;
-  cursor: pointer;
-}
-
-.tabs-arrow-prev {
-  left: 0;
-}
-
-.tabs-arrow-next {
-  right: 0;
-}
-
-/* Visually Hidden Text */
-.visually-hidden {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  border: 0;
-}
-
-
-
-/* Add this to your global CSS file */
-@keyframes shimmer {
-  0% {
-    background-position: -200% 0;
   }
-  100% {
-    background-position: 200% 0;
+
+  .tab-button-active {
+    background-color: rgba(66, 66, 66, 0.05);
+    /* Primary color */
+    color: var(--text-color-42);
   }
+
+  .tab-button-inactive {
+    background-color: white;
+    /* Inactive color */
+    color: var(--text-color-42);
+    /* Secondary color */
+  }
+
+  /* Arrows */
+  .tabs-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+  }
+
+  .tabs-arrow-prev {
+    left: 0;
+  }
+
+  .tabs-arrow-next {
+    right: 0;
+  }
+
+  /* Visually Hidden Text */
+  .visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    border: 0;
+  }
+
+.collection-tabs-content-wrapper:hover{
+.swiper{
+  display: block !important;
+}
 }
 
-.loading-shimmer {
-  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-  background-size: 200% 100%;
-  animation: shimmer 1.5s infinite;
+
+  .tabs-products-info {
+    position: relative;
+    padding: 8px 0 0;
+  }
+
+  .tabs-products-info a {
+    display: block;
+    text-decoration: none;
+    color: #1f1919;
+  }
+
+  .tabs-products-title-wrapper {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .tabs-products-title{
+    font-family: var(--font-family-pp);
+    font-style: var(--font-style-nrml);
+    font-weight: var(--font-weight-4);
+    font-weight: var(--font-weight-5);
+    letter-spacing: normal;
+    text-transform: none;
+    font-size: var(--font-size-14-5);
+
+    line-height: var(--line-height-1-5);
+    margin: 8px 0 2px;
+    word-break: break-word;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  .text-left .tabs-products-price-wrapper {
+    justify-content: flex-start;
 }
 
-h3 {
-  margin:5px 0; 
-}
-
-body {
-  margin:10px;
-  padding:0;
-}
-.banner-slider .slick-slide {
-  background:pink;
-  color:#fff;
-  text-align:center;
-  font-size:40px
-}
-
-.banner-slider .slick-slide:nth-child(odd) {
-  
-  background:teal;
+.tabs-products-price-wrapper {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    overflow: hidden;
+    margin: 3px 0;
+    font-size: var(--font-size-13);
+    line-height: var(--line-height-1-5);
 }
 
 
-/* to be used from here */
 
-.banner-slider .slick-slide {
-  padding: 100px 0 100px;
-  height:300px;
-  box-sizing:border-box;
-  display:flex;
-  align-items:center;
-}
-
-.sliderContainer {
+.tabs-products-price-cutline {
   position: relative;
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+  padding-right: 6px;
+  margin-right: 5px;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  vertical-align: top;
 }
 
-.banner-slider {
-  width: 100%;
-  position:relative;
-}
-
-.slick-prev:before,
-.slick-next:before {
-  color: black;
-}
-
-.slick-dots {
-  bottom: -30px;
-}
-
-.progressBarContainer {
+.tabs-products-price-cutline:before {
+  content: "";
   position: absolute;
-  top:0;
-  width:100%;
-  left:0;
-  display:flex;
-  aligin-items:center;
-  justify-content:center;
-  padding:0 15px;
-  box-sizing:border-box;
+  top: 4px;
+  bottom: 4px;
+  right: 0;
+  border-right: 1px solid currentcolor;
 }
 
-.progressBarContainer div {
-  display: block;
-  width:10%;
-  min-width:30px;
-  max-width: 100px;
-  padding: 0;
-  cursor: pointer;
-  margin-right: 10px;
-  color: white;
+
+.tabs-products-price{
+  flex: 0 1 auto;
+  white-space: nowrap;
 }
 
-.progressBarContainer div:last-child {
-  margin-right: 0;
+  /* Add this to your global CSS file */
+  @keyframes shimmer {
+    0% {
+      background-position: -200% 0;
+    }
+
+    100% {
+      background-position: 200% 0;
+    }
+  }
+
+  .loading-shimmer {
+    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+  }
+
+
+  .swiper {
+    width: 100%;
+    height: 100%;
+    
+  }
+
+  .swiper-slide {
+    text-align: center;
+    font-size: 18px;
+    background: #fff;
+
+    /* Center slide text vertically */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .swiper-slide img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+
+  .swiper-container-horizontal>.swiper-pagination-bullets .swiper-pagination-bullet {
+    margin: 0;
+    margin-right: 2px;
+  }
+
+  .swiper-pagination-bullet {
+    position: relative;
+    top: 0;
+    width: 15px !important;
+    max-width: 20% !important;
+    max-height: 2px !important;
+    height: 2px !important;
+    text-align: left;
+    border-radius: 0;
+    opacity: 1 !important;
+    margin-right: 2px;
+    background-color: transparent;
+  }
+
+  .swiper-pagination-bullet em {
+    font-size: 15px;
+    line-height: 28px;
+    font-weight: bold;
+    letter-spacing: -0.38px;
+    color: #111;
+  }
+
+  .swiper-pagination-bullet i {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 1;
+    width: 100%;
+    height: 2px;
+    background-color: rgba(255, 255, 255, 0.272);
+    border-radius: 50px !important;
+  }
+
+  .swiper-pagination-bullet b {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    width: 0%;
+    height: 2px;
+    background-color: white;
+    border-radius: 50px !important;
+  }
+
+  .swiper-pagination-bullet-active {
+    background-color: transparent;
+  }
+
+  .swiper-pagination-bullet-active b {
+    animation-name: countingBar;
+    animation-duration: 3s;
+    animation-timing-function: ease-in;
+    animation-iteration-count: 1;
+    animation-direction: alternate;
+    animation-fill-mode: forwards;
+  }
+
+  @keyframes countingBar {
+    0% {
+      width: 0;
+    }
+
+    100% {
+      width: 100%;
+    }
+  }
+
+
+  .swiper-pagination-fraction,
+  .swiper-pagination-custom,
+  .swiper-horizontal>.swiper-pagination-bullets,
+  .swiper-pagination-bullets.swiper-pagination-horizontal {
+
+    top: 0 !important;
+    left: 0;
+    width: 100%;
+  }
+
+
+
+
+  .swiper-pagination-clickable .swiper-pagination-bullet {
+    cursor: pointer;
+    width: 17% !important;
+    background-color: rgba(255, 255, 255, 0.2) !important;
+    border-radius: 50px !important;
+  }
+
+
+  .swiper-horizontal>.swiper-pagination-bullets .swiper-pagination-bullet,
+  .swiper-pagination-horizontal.swiper-pagination-bullets .swiper-pagination-bullet {
+    margin: 2px !important;
+  }
+
+
+  .collection-tabs-content-wrapper:not(.is-mobile):hover .swiper-pagination {
+    opacity: 1;
 }
 
-.progressBarContainer div span.progressBar {
-  width: 100%;
-  height: 7px;
-  border-radius:10px;
-  background-color: rgba(255, 255, 255, 0.4);
-  display: block;
-  
-}
 
-.progressBarContainer div span.progressBar .inProgress {
-  background-color: #ea353d;
-  width: 0%;
-  min-width:0%;
-  max-width:100%;
-  height: 7px;
-  border-radius:10px;
-}
-
+  .swiper-pagination{
+   
+    background: linear-gradient(to bottom, rgba(13, 13, 13, 0.06) 0%, rgba(255, 255, 255, 0) 100%);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .5s cubic-bezier(.215,.61,.355,1);
+  }

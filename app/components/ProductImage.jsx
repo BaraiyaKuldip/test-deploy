@@ -9,6 +9,7 @@ export function ProductImage({image}) {
   if (!image) {
     return <div className="product-image" />;
   }
+  console.log(image, "iiii")
   return (
     <div className="product-image">
       <Image
