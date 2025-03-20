@@ -2623,6 +2623,16 @@ Search Page CSS
 .swiper{
   display: block !important;
 }
+
+
+  .swiper-pagination-bullet-active b {
+    animation-name: countingBar;
+    animation-duration: 3s;
+    animation-timing-function: ease-in;
+    animation-iteration-count: 1;
+    animation-direction: alternate;
+    animation-fill-mode: forwards;
+  }
 }
 
 
@@ -2739,7 +2749,7 @@ Search Page CSS
 
   .swiper-slide img {
     display: block;
-    width: 100%;
+    width: 100%;  
     height: 100%;
     object-fit: cover;
   }
@@ -2798,14 +2808,6 @@ Search Page CSS
     background-color: transparent;
   }
 
-  .swiper-pagination-bullet-active b {
-    animation-name: countingBar;
-    animation-duration: 3s;
-    animation-timing-function: ease-in;
-    animation-iteration-count: 1;
-    animation-direction: alternate;
-    animation-fill-mode: forwards;
-  }
 
   @keyframes countingBar {
     0% {
