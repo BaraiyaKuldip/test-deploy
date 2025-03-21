@@ -1,4 +1,4 @@
-import react, {useState, useRef} from 'react';
+import react, {useState, useRef, useEffect} from 'react';
 import {defer} from '@shopify/remix-oxygen';
 import {Await, useLoaderData, Link} from '@remix-run/react';
 import {Suspense} from 'react';
@@ -13,6 +13,7 @@ import 'swiper/css/pagination';
 import 'swiper/css/navigation';
 import {EffectFade, Autoplay, Pagination, Navigation} from 'swiper/modules';
 import {Swiper, SwiperSlide} from 'swiper/react';
+import SwiperComponent from '~/components/ProductCard';
 
 /**
  * @type {MetaFunction}
@@ -143,17 +144,6 @@ function FeaturedCollection({collection}) {
 
   const image = collection?.image;
 
-  const swiperRefLocal = useRef();
-
-  const handleMouseEnter = () => {
-    swiperRefLocal?.current?.swiper?.autoplay?.start();
-  };
-
-  const handleMouseLeave = () => {
-    swiperRefLocal?.current?.swiper?.autoplay?.stop();
-    swiperRefLocal?.current?.swiper?.slideTo(1, 0);
-  };
-
   return (
     <>
       <div className="collection-tabs-wrapper">
@@ -165,21 +155,22 @@ function FeaturedCollection({collection}) {
           {/* Tabs */}
           <div className="tabs-wrapper">
             {collection.map((collection, index) => (
-              <button
-                type="button"
-                className={`tab-button ${
-                  activeTab === index
-                    ? 'tab-button-active'
-                    : 'tab-button-inactive'
-                }`}
-                onClick={() => handleTabClick(index)}
-                data-tab={index}
-                tabIndex={index}
-                key={index}
-              >
-                {console.log(collection.products, 'nknk')}
-                <span className="uppercase"> {collection.title}</span>
-              </button>
+              <div key={index}>
+                <button
+                  type="button"
+                  className={`tab-button ${
+                    activeTab === index
+                      ? 'tab-button-active'
+                      : 'tab-button-inactive'
+                  }`}
+                  onClick={() => handleTabClick(index)}
+                  data-tab={index}
+                  tabIndex={index}
+                >
+                  {console.log(collection.products, 'nknk')}
+                  <span className="uppercase"> {collection.title}</span>
+                </button>
+              </div>
             ))}
           </div>
           {/* Arrows */}
@@ -201,107 +192,69 @@ function FeaturedCollection({collection}) {
 
         <div
           id="collection-tabs-content-wrapper"
-          className="collection-tabs-content-wrapper"
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-          >
-          {/* console.log(collection.products, 'collection products'); */}
-         
+          className="collection-tabs-content-wrapper h-[303.510px] w-[273.167px] flex"
+        >
+          {collection.map((collection, collectionIndex) => (
+            <>
+              {activeTab === collectionIndex && (
+                <div
+                  key={collectionIndex}
+                  className={`flex collection-tabs-content-${collection.title}`}
+                >
+                  {console.log(activeTab, 'active tab')}
+                  {collection.products.nodes.map((product, productIndex) => (
+                    <div key={productIndex} className="collection-tabs-content">
+                      {console.log(product.images, 'product map')}
+                      <div className="tabs-products-items-container">
+                        <div className="tabs-products-items-error"></div>
+                        <Link
+                          to={`products/${product.handle}`}
+                          className="tabs-products-a-tag"
+                        >
+                          <div className="tabs-products-pagination"></div>
+                          <div className="tabs-products-images">
+                            <SwiperComponent
+                              images={product.images}
+                              collectionIndex={collectionIndex}
+                              productIndex={productIndex}
+                            />
+                          </div>
+                        </Link>
+                      </div>
 
-          {/* <div className="collection-tabs-content">
-            <div className="tabs-products-items-container">
-              <div className="tabs-products-items-error"></div>
-              <a href="#" className="tabs-products-a-tag">
-                <div className="tabs-products-pagination"></div>
-                <div className="tabs-products-images">
-                  <div className="h-[303.510px] w-[273.167px]">
-                    <Swiper
-                      ref={swiperRefLocal}
-                      spaceBetween={30}
-                      effect="fade"
-                      loop={true}
-                      centeredSlides={true}
-                      autoplay={{
-                        delay: 3000,
-                        disableOnInteraction: false,
-                      }}
-                      pagination={{
-                        el: '.swiper-pagination',
-                        clickable: 'true',
-                        type: 'bullets',
-                        renderBullet: function (index, className) {
-                          return (
-                            '<span class="' +
-                            className +
-                            '">' +
-                            '<i></i>' +
-                            '<b></b>' +
-                            '</span>'
-                          );
-                        },
-                      }}
-                      navigation={false}
-                      modules={[EffectFade, Autoplay, Pagination, Navigation]}
-                      className="mySwiper"
-                    >
-                      <SwiperSlide>
-                        <img
-                          className="h-[303.510px] w-[273.167px]"
-                          src={GirlImage1Portrait}
-                          alt="abs"
-                        />
-                      </SwiperSlide>
-                      <SwiperSlide>
-                        <img
-                          className="h-[303.510px] w-[273.167px]"
-                          src={GirlImage1}
-                          alt="abs"
-                        />
-                      </SwiperSlide>
-                      <SwiperSlide>
-                        <img
-                          className="h-[303.510px] w-[273.167px]"
-                          src={GirlImage2}
-                          alt="abs"
-                        />
-                      </SwiperSlide>
-                      <SwiperSlide>
-                        <img
-                          className="h-[303.510px] w-[273.167px]"
-                          src={GirlImage1Portrait}
-                          alt="abs"
-                        />
-                      </SwiperSlide>
-                      <SwiperSlide>
-                        <img
-                          className="h-[303.510px] w-[273.167px]"
-                          src={GirlImage1}
-                          alt="abs"
-                        />
-                      </SwiperSlide>
+                      <div className="tabs-products-info text-left">
+                        <a href="#">
+                          <p className="visually-hidden">{product.title}</p>
+                          <div className="tabs-products-title-wrapper">
+                            <p className="tabs-products-title">
+                              {product.title}
+                            </p>
+                          </div>
 
-                      <div class="swiper-pagination "></div>
-                    </Swiper>
-                  </div>
+                          <div className="tabs-products-price-wrapper">
+                            <span className="tabs-products-price-cutline">
+                              color
+                            </span>
+                            <span className="tabs-products-price">
+                              {product?.selectedOrFirstAvailableVariant
+                                ?.price ? (
+                                <Money
+                                  data={
+                                    product?.selectedOrFirstAvailableVariant
+                                      ?.price
+                                  }
+                                />
+                              ) : null}
+                            </span>
+                          </div>
+                        </a>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-              </a>
-            </div>
-          </div> */}
-
-          <div className="tabs-products-info text-left">
-            <a href="#">
-              <p className="visually-hidden "></p>
-              <div className="tabs-products-title-wrapper">
-                <p className="tabs-products-title">title</p>
-              </div>
-
-              <div className="tabs-products-price-wrapper">
-                <span className="tabs-products-price-cutline">color</span>
-
-                <span className="tabs-products-price">price</span>
-              </div>
-            </a>
-          </div>
+              )}
+            </>
+          ))}
         </div>
       </div>
     </>
@@ -370,7 +323,90 @@ const FEATURED_COLLECTION_QUERY = `#graphql
           id
           title
           handle
+          images(first:6){
+            edges{
+              node{
+                id
+                url
+                altText
+                width
+                height
+              }
+            }
+          }
           totalInventory
+          selectedOrFirstAvailableVariant{
+							availableForSale
+            	id
+            	sku
+            	title
+            compareAtPrice{
+              amount
+              currencyCode
+            }
+            image{
+              __typename
+              id
+              url 
+              altText
+              width
+              height
+            }
+            price{
+              amount
+              currencyCode
+            }
+            product{
+              title
+              handle
+            }
+            selectedOptions{
+              name
+              value
+            }
+            unitPrice{
+              amount
+              currencyCode
+            }
+          }
+          adjacentVariants{
+            availableForSale
+            id
+            sku
+            title
+            compareAtPrice{
+              amount
+              currencyCode
+            }
+            image{
+              __typename
+              id
+              url
+              altText
+              height
+              width
+            }
+            price{
+              amount
+              currencyCode
+            }
+            product{
+              title
+              handle
+            }
+            selectedOptions{
+              name
+              value
+            }
+            unitPrice{
+              amount
+              currencyCode
+            }
+          }
+          seo{
+            description
+            title
+          }
           options{
             name
             optionValues{
@@ -434,7 +470,7 @@ const RECOMMENDED_PRODUCTS_QUERY = `#graphql
   }
   query RecommendedProducts ($country: CountryCode, $language: LanguageCode)
     @inContext(country: $country, language: $language) {
-    products(first: 10, sortKey: UPDATED_AT, reverse: true) {
+    products(first: 4, sortKey: UPDATED_AT, reverse: true) {
       nodes {
         ...RecommendedProduct
       }

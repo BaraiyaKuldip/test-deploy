@@ -83,7 +83,7 @@ function loadDeferredData({context, params}) {
 export default function Product() {
   /** @type {LoaderReturnData} */
   const {product} = useLoaderData();
-  console.log(product, "ppppp")
+  console.log(product, "product all data")
 
   // Optimistically selects a variant with given available variant information
   const selectedVariant = useOptimisticVariant(

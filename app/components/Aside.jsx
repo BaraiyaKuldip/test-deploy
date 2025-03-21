@@ -38,7 +38,7 @@ export function Aside({children, heading, type}) {
       // console.log(document.querySelector('.predictive-search-result-main-div') , "jjjj");
       
 
-    console.log('expanded', expanded);
+    // console.log('expanded', expanded);
 
     // const scrollY = window.scrollY;
 
@@ -84,7 +84,7 @@ export function Aside({children, heading, type}) {
     }
     return () => abortController.abort();
   }, [close, expanded]);
-console.log(heading ,"jjjjj")
+// console.log(heading ,"jjjjj")
   return (
     <div
       aria-modal

@@ -748,6 +748,7 @@
   }
 
   .footer-logo-div {
+    width: fit-content;
     padding-bottom: var(--padding-bottom);
   }
 
@@ -2619,21 +2620,25 @@ Search Page CSS
     border: 0;
   }
 
-.collection-tabs-content-wrapper:hover{
-.swiper{
-  display: block !important;
-}
+  .swiper:hover {
 
+    .swiper {
+      display: block;
+    }
 
-  .swiper-pagination-bullet-active b {
-    animation-name: countingBar;
-    animation-duration: 3s;
-    animation-timing-function: ease-in;
-    animation-iteration-count: 1;
-    animation-direction: alternate;
-    animation-fill-mode: forwards;
+    
+    .swiper-pagination-bullet-active b {
+
+      animation-name: countingBar;
+      /* animation-duration: 3s;
+      animation-timing-function: ease-in;
+      animation-iteration-count: 1;
+      animation-direction: alternate;
+      animation-fill-mode: forwards; */
+
+    }
+
   }
-}
 
 
   .tabs-products-info {
@@ -2653,7 +2658,7 @@ Search Page CSS
     align-items: center;
   }
 
-  .tabs-products-title{
+  .tabs-products-title {
     font-family: var(--font-family-pp);
     font-style: var(--font-style-nrml);
     font-weight: var(--font-weight-4);
@@ -2671,9 +2676,9 @@ Search Page CSS
 
   .text-left .tabs-products-price-wrapper {
     justify-content: flex-start;
-}
+  }
 
-.tabs-products-price-wrapper {
+  .tabs-products-price-wrapper {
     display: flex;
     flex-flow: row nowrap;
     align-items: center;
@@ -2681,36 +2686,36 @@ Search Page CSS
     margin: 3px 0;
     font-size: var(--font-size-13);
     line-height: var(--line-height-1-5);
-}
+  }
 
 
 
-.tabs-products-price-cutline {
-  position: relative;
-  display: inline-block;
-  overflow: hidden;
-  white-space: nowrap;
-  padding-right: 6px;
-  margin-right: 5px;
-  text-overflow: ellipsis;
-  max-width: 100%;
-  vertical-align: top;
-}
+  .tabs-products-price-cutline {
+    position: relative;
+    display: inline-block;
+    overflow: hidden;
+    white-space: nowrap;
+    padding-right: 6px;
+    margin-right: 5px;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    vertical-align: top;
+  }
 
-.tabs-products-price-cutline:before {
-  content: "";
-  position: absolute;
-  top: 4px;
-  bottom: 4px;
-  right: 0;
-  border-right: 1px solid currentcolor;
-}
+  .tabs-products-price-cutline:before {
+    content: "";
+    position: absolute;
+    top: 4px;
+    bottom: 4px;
+    right: 0;
+    border-right: 1px solid currentcolor;
+  }
 
 
-.tabs-products-price{
-  flex: 0 1 auto;
-  white-space: nowrap;
-}
+  .tabs-products-price {
+    flex: 0 1 auto;
+    white-space: nowrap;
+  }
 
   /* Add this to your global CSS file */
   @keyframes shimmer {
@@ -2733,7 +2738,7 @@ Search Page CSS
   .swiper {
     width: 100%;
     height: 100%;
-    
+
   }
 
   .swiper-slide {
@@ -2749,7 +2754,7 @@ Search Page CSS
 
   .swiper-slide img {
     display: block;
-    width: 100%;  
+    width: 100%;
     height: 100%;
     object-fit: cover;
   }
@@ -2763,8 +2768,8 @@ Search Page CSS
   .swiper-pagination-bullet {
     position: relative;
     top: 0;
-    width: 15px !important;
-    max-width: 20% !important;
+    /* width: 15px ; */
+    /* max-width: 20% !important; */
     max-height: 2px !important;
     height: 2px !important;
     text-align: left;
@@ -2824,7 +2829,7 @@ Search Page CSS
   .swiper-pagination-custom,
   .swiper-horizontal>.swiper-pagination-bullets,
   .swiper-pagination-bullets.swiper-pagination-horizontal {
-
+    bottom: 0 !important;
     top: 0 !important;
     left: 0;
     width: 100%;
@@ -2835,7 +2840,7 @@ Search Page CSS
 
   .swiper-pagination-clickable .swiper-pagination-bullet {
     cursor: pointer;
-    width: 17% !important;
+    /* width: 17%; */
     background-color: rgba(255, 255, 255, 0.2) !important;
     border-radius: 50px !important;
   }
@@ -2847,15 +2852,38 @@ Search Page CSS
   }
 
 
-  .collection-tabs-content-wrapper:not(.is-mobile):hover .swiper-pagination {
+  /* .collection-tabs-content-wrapper:not(.is-mobile):hover .swiper-pagination {
     opacity: 1;
-}
+} */
 
 
-  .swiper-pagination{
-   
+  .swiper-pagination {
+
     background: linear-gradient(to bottom, rgba(13, 13, 13, 0.06) 0%, rgba(255, 255, 255, 0) 100%);
     opacity: 0;
     pointer-events: none;
-    transition: opacity .5s cubic-bezier(.215,.61,.355,1);
+    transition: opacity .5s cubic-bezier(.215, .61, .355, 1);
+    display: flex !important;
+    padding: 12px 12px 15px;
+    height: 2px !important;
   }
+
+/* 
+  @keyframes bulletBAnimation {
+    0% {
+      width: 0;
+    }
+
+    100% {
+      width: 100%;
+    }
+  }
+
+  .swiper-bullet-b {
+    animation-name: countingBar;
+    animation-duration: 3s;
+    animation-timing-function: ease-in;
+    animation-iteration-count: 1;
+    animation-direction: alternate;
+    animation-fill-mode: forwards;
+  } */
