@@ -11,7 +11,7 @@ const SwiperComponent = ({ images, collectionIndex, productIndex }) => {
 
   useEffect(() => {
     if (document && window) {
-      
+
       // console.log(productIndex, images.edges.length, 'images length');
 
       let bulletWidth = 100 / images.edges.length;
@@ -86,7 +86,7 @@ const SwiperComponent = ({ images, collectionIndex, productIndex }) => {
 
   return (
     <div
-      className="h-[303.510px] w-[273.167px] swiper-wrapper-div"
+      className="swiper-wrapper-div"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >

@@ -15,6 +15,13 @@ import {EffectFade, Autoplay, Pagination, Navigation} from 'swiper/modules';
 import {Swiper, SwiperSlide} from 'swiper/react';
 import SwiperComponent from '~/components/ProductCard';
 
+import useEmblaCarousel from 'embla-carousel-react';
+import {
+  PrevButton,
+  NextButton,
+  usePrevNextButtons,
+} from '../components/EmblaCarouselArrowButtons';
+
 /**
  * @type {MetaFunction}
  */
@@ -144,6 +151,25 @@ function FeaturedCollection({collection}) {
 
   const image = collection?.image;
 
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    loop: false,
+    dragFree: true,
+    align: 'center',
+  });
+
+  const {
+    prevBtnDisabled,
+    nextBtnDisabled,
+    onPrevButtonClick,
+    onNextButtonClick,
+  } = usePrevNextButtons(emblaApi);
+
+  useEffect(() => {
+    if (emblaApi) {
+      console.log(emblaApi.slideNodes(), 'embla'); // Access API
+    }
+  }, [emblaApi]);
+
   return (
     <>
       <div className="collection-tabs-wrapper">
@@ -192,69 +218,87 @@ function FeaturedCollection({collection}) {
 
         <div
           id="collection-tabs-content-wrapper"
-          className="collection-tabs-content-wrapper h-[303.510px] w-[273.167px] flex"
+          className="collection-tabs-content-wrapper"
         >
+          <div className="embla__controls">
+            <div className="embla__buttons">
+              <PrevButton
+                onClick={onPrevButtonClick}
+                disabled={prevBtnDisabled}
+              />
+              <NextButton
+                onClick={onNextButtonClick}
+                disabled={nextBtnDisabled}
+              />
+            </div>
+          </div>
           {collection.map((collection, collectionIndex) => (
             <>
               {activeTab === collectionIndex && (
-                <div
-                  key={collectionIndex}
-                  className={`flex collection-tabs-content-${collection.title}`}
-                >
-                  {console.log(activeTab, 'active tab')}
-                  {collection.products.nodes.map((product, productIndex) => (
-                    <div key={productIndex} className="collection-tabs-content">
-                      {console.log(product.images, 'product map')}
-                      <div className="tabs-products-items-container">
-                        <div className="tabs-products-items-error"></div>
-                        <Link
-                          to={`products/${product.handle}`}
-                          className="tabs-products-a-tag"
-                        >
-                          <div className="tabs-products-pagination"></div>
-                          <div className="tabs-products-images">
-                            <SwiperComponent
-                              images={product.images}
-                              collectionIndex={collectionIndex}
-                              productIndex={productIndex}
-                            />
-                          </div>
-                        </Link>
-                      </div>
+                <div className="embla" ref={emblaRef}>
+                  <div
+                    key={collectionIndex}
+                    className={`embla__container collection-tabs-content-${collection.title}`}
+                  >
+                    {console.log(activeTab, 'active tab')}
+                    {collection.products.nodes.map((product, productIndex) => (
+                      <div
+                        key={productIndex}
+                        className="collection-tabs-content embla__slide"
+                      >
+                        {console.log(product.images, 'product map')}
+                        <div className="tabs-products-items-container h-[303.510px] w-[273.167px] ">
+                          <div className="tabs-products-items-error"></div>
+                          <Link
+                            to={`products/${product.handle}`}
+                            className="tabs-products-a-tag"
+                          >
+                            <div className="tabs-products-pagination"></div>
+                            <div className="tabs-products-images">
+                              <SwiperComponent
+                                images={product.images}
+                                collectionIndex={collectionIndex}
+                                productIndex={productIndex}
+                              />
+                            </div>
+                          </Link>
+                        </div>
 
-                      <div className="tabs-products-info text-left">
-                        <a href="#">
-                          <p className="visually-hidden">{product.title}</p>
-                          <div className="tabs-products-title-wrapper">
-                            <p className="tabs-products-title">
-                              {product.title}
-                            </p>
-                          </div>
+                        <div className="tabs-products-info text-left">
+                          <a href="#">
+                            <p className="visually-hidden">{product.title}</p>
+                            <div className="tabs-products-title-wrapper">
+                              <p className="tabs-products-title">
+                                {product.title}
+                              </p>
+                            </div>
 
-                          <div className="tabs-products-price-wrapper">
-                            <span className="tabs-products-price-cutline">
-                              color
-                            </span>
-                            <span className="tabs-products-price">
-                              {product?.selectedOrFirstAvailableVariant
-                                ?.price ? (
-                                <Money
-                                  data={
-                                    product?.selectedOrFirstAvailableVariant
-                                      ?.price
-                                  }
-                                />
-                              ) : null}
-                            </span>
-                          </div>
-                        </a>
+                            <div className="tabs-products-price-wrapper">
+                              <span className="tabs-products-price-cutline">
+                                color
+                              </span>
+                              <span className="tabs-products-price">
+                                {product?.selectedOrFirstAvailableVariant
+                                  ?.price ? (
+                                  <Money
+                                    data={
+                                      product?.selectedOrFirstAvailableVariant
+                                        ?.price
+                                    }
+                                  />
+                                ) : null}
+                              </span>
+                            </div>
+                          </a>
+                        </div>
                       </div>
-                    </div>
-                  ))}
+                    ))}
+                  </div>
                 </div>
               )}
             </>
           ))}
+          
         </div>
       </div>
     </>
