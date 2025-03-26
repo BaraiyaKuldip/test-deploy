@@ -21,6 +21,8 @@ import {
   NextButton,
   usePrevNextButtons,
 } from '../components/EmblaCarouselArrowButtons';
+import {AddToCartButton} from '~/components/AddToCartButton';
+import {useAside} from '~/components/Aside';
 
 /**
  * @type {MetaFunction}
@@ -55,7 +57,7 @@ async function loadCriticalData({context}) {
 
   return {
     featuredCollection: collections.nodes.filter((collection) =>
-      ['boot', 'Perfumes', 'Veggies'].includes(collection.title),
+      ['boot', 'Perfumes', 'Veggies', 'test2'].includes(collection.title),
     ),
   };
 }
@@ -138,6 +140,8 @@ export default function Homepage() {
  * }}
  */
 function FeaturedCollection({collection}) {
+  const {open} = useAside();
+
   if (!collection) return null;
   {
     console.log(collection, 'nnnn collection');
@@ -154,7 +158,7 @@ function FeaturedCollection({collection}) {
   const [emblaRef, emblaApi] = useEmblaCarousel({
     loop: false,
     dragFree: true,
-    align: 'center',
+    align: 'start',
   });
 
   const {
@@ -235,9 +239,8 @@ function FeaturedCollection({collection}) {
           {collection.map((collection, collectionIndex) => (
             <>
               {activeTab === collectionIndex && (
-                <div className="embla" ref={emblaRef}>
+                <div key={collectionIndex} className="embla" ref={emblaRef}>
                   <div
-                    key={collectionIndex}
                     className={`embla__container collection-tabs-content-${collection.title}`}
                   >
                     {console.log(activeTab, 'active tab')}
@@ -247,14 +250,14 @@ function FeaturedCollection({collection}) {
                         className="collection-tabs-content embla__slide"
                       >
                         {console.log(product.images, 'product map')}
-                        <div className="tabs-products-items-container h-[303.510px] w-[273.167px] ">
+                        <div className="tabs-products-items-container w-full">
                           <div className="tabs-products-items-error"></div>
                           <Link
                             to={`products/${product.handle}`}
                             className="tabs-products-a-tag"
                           >
                             <div className="tabs-products-pagination"></div>
-                            <div className="tabs-products-images">
+                            <div className="tabs-products-images aspect-[0.9]">
                               <SwiperComponent
                                 images={product.images}
                                 collectionIndex={collectionIndex}
@@ -262,6 +265,38 @@ function FeaturedCollection({collection}) {
                               />
                             </div>
                           </Link>
+
+                          {/* <AddToCartButton
+                            disabled={
+                              !product?.selectedOrFirstAvailableVariant ||
+                              !product?.selectedOrFirstAvailableVariant
+                                ?.availableForSale
+                            }
+                            onClick={() => {
+                              open('cart');
+                            }}
+                            lines={
+                              product?.selectedOrFirstAvailableVariant
+                                ? [
+                                    {
+                                      merchandiseId:
+                                        product?.selectedOrFirstAvailableVariant
+                                          .id,
+                                      quantity: 1,
+                                    },
+                                  ]
+                                : []
+                            }
+                          > */}
+
+                          {/* </AddToCartButton> */}
+
+                          {!product?.selectedOrFirstAvailableVariant
+                            ?.availableForSale && (
+                            <div className="tabs-product-sold-out-btn">
+                              Sold Out
+                            </div>
+                          )}
                         </div>
 
                         <div className="tabs-products-info text-left">
@@ -290,6 +325,205 @@ function FeaturedCollection({collection}) {
                               </span>
                             </div>
                           </a>
+
+                          <div className="tabs-product-variants-box">
+                            <div className="tabs-product-variants-box-wrapper">
+                              <div className="h-full w-full">
+                                <button className={`tabs-product-variants-btn ${product?.options[0].name !== 'Title' ? "variants_available" : ""}`}>
+                                  {/* <span>Quick Add</span> */}
+                                  <AddToCartButton
+                                    disabled={
+                                      !product?.selectedOrFirstAvailableVariant ||
+                                      !product?.selectedOrFirstAvailableVariant
+                                        ?.availableForSale
+                                    }
+                                    onClick={() => {
+                                      open('cart');
+                                    }}
+                                    lines={
+                                      product?.selectedOrFirstAvailableVariant
+                                        ? [
+                                            {
+                                              merchandiseId:
+                                                product
+                                                  ?.selectedOrFirstAvailableVariant
+                                                  .id,
+                                              quantity: 1,
+                                            },
+                                          ]
+                                        : []
+                                    }
+                                  >
+                                    {console.log(
+                                      product.selectedOrFirstAvailableVariant,
+                                      'product selected first available variant',
+                                    )}
+                                    <span
+                                      className={`${
+                                        product?.selectedOrFirstAvailableVariant
+                                          ?.availableForSale
+                                          ? 'opacity-100'
+                                          : 'opacity-30'
+                                      }`}
+                                    >
+                                      {product?.options[0].name !== 'Title'
+                                        ? 'Quick Add'
+                                        : 'Add To Cart'}
+                                    </span>
+                                  </AddToCartButton>
+                                </button>
+                                {/* <div className="tabs-product-variants"> */}
+
+                                {product?.options[0].name !== 'Title' && (
+                                  <div className="ket_option_variants">
+                                    <div
+                                      className="variant-selects"
+                                      id="variant-selects-template"
+                                    >
+                                      {console.log(
+                                        product?.options[0].name === 'Title',
+                                        'psops',
+                                      )}
+                                      {product?.options.map((option) => (
+                                        <>
+                                          {option.name === 'Size' && (
+                                            <>
+                                              {console.log(product, 'psops')}
+
+                                              {option.optionValues.map(
+                                                (
+                                                  optionValue,
+                                                  optionValueIndex,
+                                                ) => {
+                                                  return (
+                                                    <>
+                                                      <fieldset
+                                                        key={optionValueIndex}
+                                                        className="product-form__input product-form__input--pill h-12"
+                                                      >
+                                                        <div className="w-full h-full">
+                                                          <form
+                                                            method="post"
+                                                            action="/cart/add"
+                                                            onSubmit={console.log(
+                                                              'selected input ',
+                                                            )}
+                                                            className="form w-full h-full"
+                                                            encType="multipart/form-data"
+                                                            noValidate
+                                                          >
+                                                            <input
+                                                              type="hidden"
+                                                              name="form_type"
+                                                              value="product"
+                                                            />
+                                                            <input
+                                                              type="hidden"
+                                                              name="utf8"
+                                                              value="✓"
+                                                            />
+                                                            <input
+                                                              type="hidden"
+                                                              name="id"
+                                                              value="46910603919600"
+                                                              className="product-variant-id"
+                                                            />
+                                                            <div className="product-form__buttons w-full h-full">
+                                                              <button
+                                                                type="submit"
+                                                                name="add"
+                                                                value={
+                                                                  optionValue.name
+                                                                }
+                                                                className="product-form__submit button button--full-width h-full w-full"
+                                                              >
+                                                                <span>
+                                                                  {
+                                                                    optionValue.name
+                                                                  }
+                                                                </span>
+                                                                <div className="loading__spinner hidden">
+                                                                  <svg
+                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                    className="spinner"
+                                                                    viewBox="0 0 66 66"
+                                                                  >
+                                                                    <circle
+                                                                      strokeWidth="6"
+                                                                      cx="33"
+                                                                      cy="33"
+                                                                      r="30"
+                                                                      fill="none"
+                                                                      className="path"
+                                                                    ></circle>
+                                                                  </svg>
+                                                                </div>
+                                                              </button>
+                                                            </div>
+                                                            <input
+                                                              type="hidden"
+                                                              name="product-id"
+                                                              value="9144418861296"
+                                                            />
+                                                            <input
+                                                              type="hidden"
+                                                              name="section-id"
+                                                              value="template--18996264501488__featured_collection_tabs_egEfMA"
+                                                            />
+                                                          </form>
+                                                        </div>
+                                                      </fieldset>
+                                                      {/* <button
+                                                type="submit"
+                                                name="add"
+                                                value={
+                                                  optionValue.name
+                                                }
+                                                className="product-form__submit button button--full-width"
+                                              >
+                                                <span>
+                                                  {optionValue.name}
+                                                </span>
+                                                <div className="loading__spinner hidden">
+                                                  <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    className="spinner"
+                                                    viewBox="0 0 66 66"
+                                                  >
+                                                    <circle
+                                                      strokeWidth="6"
+                                                      cx="33"
+                                                      cy="33"
+                                                      r="30"
+                                                      fill="none"
+                                                      className="path"
+                                                    ></circle>
+                                                  </svg>
+                                                </div>
+                                              </button> */}
+                                                    </>
+                                                  );
+                                                },
+                                              )}
+                                            </>
+                                          )}
+                                        </>
+                                      ))}
+                                      {/* 
+                            <a
+                              className="ket_extar_variants"
+                              href="/products/the-lori-off-shoulder"
+                            >
+                              2+
+                            </a>
+                             */}
+                                    </div>
+                                  </div>
+                                )}
+                                {/* </div> */}
+                              </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
                     ))}
@@ -298,7 +532,6 @@ function FeaturedCollection({collection}) {
               )}
             </>
           ))}
-          
         </div>
       </div>
     </>

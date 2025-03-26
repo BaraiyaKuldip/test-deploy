@@ -1,17 +1,17 @@
-import React, { useEffect, useRef } from 'react';
+import React, {useEffect, useRef} from 'react';
 import 'swiper/css';
 import 'swiper/css/effect-fade';
 import 'swiper/css/pagination';
 import 'swiper/css/navigation';
-import { EffectFade, Autoplay, Pagination, Navigation } from 'swiper/modules';
-import { Swiper, SwiperSlide } from 'swiper/react';
+import {EffectFade, Autoplay, Pagination, Navigation} from 'swiper/modules';
+import {Swiper, SwiperSlide} from 'swiper/react';
+import {Image} from '@shopify/hydrogen';
 
-const SwiperComponent = ({ images, collectionIndex, productIndex }) => {
+const SwiperComponent = ({images, collectionIndex, productIndex}) => {
   const swiperRefLocal = useRef();
 
   useEffect(() => {
     if (document && window) {
-
       // console.log(productIndex, images.edges.length, 'images length');
 
       let bulletWidth = 100 / images.edges.length;
@@ -116,11 +116,19 @@ const SwiperComponent = ({ images, collectionIndex, productIndex }) => {
         className={`mySwiper swiper-${collectionIndex}-${productIndex}`}
       >
         {images.edges.map((image, index) => (
-          <SwiperSlide key={index}>
-            <img
+          <SwiperSlide key={index} className='relative block w-full h-full overflow-hidden aspect-[0.9]'>
+            {/* <img
               className="h-[303.510px] w-[273.167px]"
               src={image.node.url}
-              alt="abs"
+              alt={image.node.altText === null ? "Product Image" : image.node.altText}
+            /> */}
+            <Image
+              data={image.node}
+              height="2000"
+              width="1500"
+              aspectRatio="1/1"
+              sizes="(min-width: 1024px) calc(min(100vw, 1450px) / 4),(min-width: 768px) calc(min(100vw, 1450px) / 3),calc(min(100vw, 1450px) / 1.5)"
+              fetchPriority='high'
             />
           </SwiperSlide>
         ))}

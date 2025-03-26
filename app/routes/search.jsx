@@ -58,7 +58,7 @@ function SearchPageContent() {
   /** @type {LoaderReturnData} */
   const {type, term, result, error} = useLoaderData();
   if (type === 'predictive') return null;
-  console.log(type, 'ttt');
+  // console.log(type, 'ttt');
 
   const [filtersVisible, setFiltersVisible] = useState(true);
 
@@ -225,7 +225,6 @@ function SearchPageContent() {
           {({inputRef}) => (
             <div className="search-input-group">
               <input
-                
                 name="q"
                 id="search-input"
                 placeholder="Search our store"
@@ -327,6 +326,7 @@ function SearchPageContent() {
                     </div>
                     <div className="collection-filters-inner">
                       <form className="filters-form">
+                        {console.log(result, 'result searchh')}
                         <FilterGroup
                           title="Product type"
                           options={['Dresses', 'Tops', 'Bottoms', 'Outerwear']}
@@ -494,6 +494,54 @@ const SEARCH_PRODUCT_FRAGMENT = `#graphql
     title
     trackingParameters
     vendor
+    options{
+      name
+      optionValues{
+        name
+        firstSelectableVariant{
+          availableForSale
+          id
+          sku
+          title
+          compareAtPrice{
+          	amount
+            currencyCode
+          }
+          image{
+            __typename
+            id
+            url
+            altText
+            width
+            height
+          }
+          price{
+            amount
+            currencyCode
+          }
+          product{
+            title
+            handle
+          }
+          selectedOptions{
+            name
+            value
+          }
+          unitPrice{
+            amount
+            currencyCode
+          }
+        }
+        swatch{
+          color
+          image{
+            previewImage{
+              url
+            }   
+          }
+        }
+      }
+    }
     selectedOrFirstAvailableVariant(
       selectedOptions: []
       ignoreUnknownOptions: true

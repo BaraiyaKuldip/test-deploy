@@ -206,219 +206,435 @@
 
 
 
+{collection.map((collection, collectionIndex) => (
+  <>
+    {activeTab === collectionIndex && (
+      <div className="embla" ref={emblaRef}>
+        <div
+          key={collectionIndex}
+          className={`embla__container collection-tabs-content-${collection.title}`}
+        >
+          {console.log(activeTab, 'active tab')}
+          {collection.products.nodes.map((product, productIndex) => (
+            <div
+              key={productIndex}
+              className="collection-tabs-content embla__slide"
+            >
+              {console.log(product.images, 'product map')}
+              <div className="tabs-products-items-container h-full w-[273.167px]">
+                <div className="tabs-products-items-error"></div>
+                <Link
+                  to={`products/${product.handle}`}
+                  className="tabs-products-a-tag"
+                >
+                  <div className="tabs-products-pagination"></div>
+                  <div className="tabs-products-images">
+                    <SwiperComponent
+                      images={product.images}
+                      collectionIndex={collectionIndex}
+                      productIndex={productIndex}
+                    />
+                  </div>
+                </Link>
 
-
-
-
-
-
-
-image carousel code 
-
-
-<div classname="sliderContainer">
-  <div classname="banner-slider single-item">
-    <div classname="item">Slide1</div>
-    <div classname="item">Slide2</div>
-    <div classname="item">Slide3</div>
-    <div classname="item">Slide4</div>
-  </div>
-  <div classname="progressBarContainer"></div>
-</div>
-
-css
-
-
-
-
-h3 {
-  margin:5px 0; 
-}
-
-body {
-  margin:10px;
-  padding:0;
-}
-.banner-slider .slick-slide {
-  background:pink;
-  color:#fff;
-  text-align:center;
-  font-size:40px
-}
-
-.banner-slider .slick-slide:nth-child(odd) {
-  
-  background:teal;
-}
-
-
-/* to be used from here */
-
-.banner-slider .slick-slide {
-  padding: 100px 0 100px;
-  height:300px;
-  box-sizing:border-box;
-  display:flex;
-  align-items:center;
-}
-
-.sliderContainer {
-  position: relative;
-}
-
-.banner-slider {
-  width: 100%;
-  position:relative;
-}
-
-.slick-prev:before,
-.slick-next:before {
-  color: black;
-}
-
-.slick-dots {
-  bottom: -30px;
-}
-
-.progressBarContainer {
-  position: absolute;
-  top:0;
-  width:100%;
-  left:0;
-  display:flex;
-  aligin-items:center;
-  justify-content:center;
-  padding:0 15px;
-  box-sizing:border-box;
-}
-
-.progressBarContainer div {
-  display: block;
-  width:10%;
-  min-width:30px;
-  max-width: 100px;
-  padding: 0;
-  cursor: pointer;
-  margin-right: 10px;
-  color: white;
-}
-
-.progressBarContainer div:last-child {
-  margin-right: 0;
-}
-
-.progressBarContainer div span.progressBar {
-  width: 100%;
-  height: 7px;
-  border-radius:10px;
-  background-color: rgba(255, 255, 255, 0.4);
-  display: block;
-  
-}
-
-.progressBarContainer div span.progressBar .inProgress {
-  background-color: #ea353d;
-  width: 0%;
-  min-width:0%;
-  max-width:100%;
-  height: 7px;
-  border-radius:10px;
-}
-
-var maxIndex = null;
-$('.progressBarContainer').each(function() {
-  var maxValue = parseFloat($(this).find('.progressBar').attr('data-slick-index'));
-  maxIndex = (maxValue > maxIndex) ? value : maxIndex;
-});
-
-
-
-
-js
-
-
-if(document !== undefined)
-{
-  
-  const slideCount =  document.querySelector(".banner-slider .item").length;
-  const indexCount = slideCount - 1;
-  console.log(indexCount);
-  for(let i = 0; i < slideCount; i++){
-      document.querySelector(".progressBarContainer").append(`
-          <div classname="item"><span data-slick-index="document.querySelector{i}" classname="progressBar"></span></div>
-      `)
-  }
-  
-  document.querySelector(".banner-slider").slick({
-    infinite: true,
-    arrows: false,
-    dots: false,
-    autoplay: false,
-    speed: 800,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-  });
-  
-  
-   //ticking machine
-      var percentTime;
-      var tick;
-      var time = .1;
-      var progressBarIndex = 0;
-      
-  
-     
-  
-      document.querySelector('.progressBarContainer .progressBar').each(function(index) {
-          var progress = "<div classname='inProgress inProgress" + index + "'></div>";
-          document.querySelector(this).html(progress);
-      });
-  
-      function startProgressbar() {
-          resetProgressbar();
-          percentTime = 0;
-          tick = setInterval(interval, 10);
-      }
-  
-      function interval() {
-          if ((document.querySelector('.banner-slider .slick-track div[data-slick-index="' + progressBarIndex + '"]').attr("aria-hidden")) === "true") {
-              progressBarIndex = document.querySelector('.banner-slider .slick-track div[aria-hidden="false"]').data("slickIndex");
-              startProgressbar();
-          } else {
-              percentTime += 1 / (time + 5);
-              document.querySelector('.inProgress' + progressBarIndex).css({
-                  width: percentTime + "%"
-              });
-              if (percentTime >= 100) {
-                  document.querySelector('.single-item').slick('slickNext');
-                  progressBarIndex++;
-                  if (progressBarIndex > indexCount) {
-                      progressBarIndex = 0;
+                {/* <AddToCartButton
+                  disabled={
+                    !product?.selectedOrFirstAvailableVariant ||
+                    !product?.selectedOrFirstAvailableVariant
+                      ?.availableForSale
                   }
-                  startProgressbar();
-              }
-          }
-      }
-  
-      function resetProgressbar() {
-          document.querySelector('.inProgress').css({
-              width: 0 + '%'
-          });
-          clearInterval(tick);
-      }
-      startProgressbar();
-      // End ticking machine
-  
-      document.querySelector('.item').click(function () {
-        clearInterval(tick);
-        var goToThisIndex = document.querySelector(this).find("span").data("slickIndex");
-        document.querySelector('.single-item').slick('slickGoTo', goToThisIndex, false);
-        startProgressbar();
-      });
-  
-  var maxIndex = null;
-  document.querySelector('.progressBarContainer').each(function() {
-    var maxValue = parseFloat(document.querySelector(this).find('.progressBar').attr('data-slick-index'));
-    maxIndex = (maxValue > maxIndex) ? value : maxIndex;
-  });
+                  onClick={() => {
+                    open('cart');
+                  }}
+                  lines={
+                    product?.selectedOrFirstAvailableVariant
+                      ? [
+                          {
+                            merchandiseId:
+                              product?.selectedOrFirstAvailableVariant
+                                .id,
+                            quantity: 1,
+                          },
+                        ]
+                      : []
+                  }
+                > */}
+                <div className="tabs-product-variants-box">
+                  <div className="tabs-product-variants-box-wrapper">
+                    <div>
+                      <button className="tabs-product-variants-btn">
+                        {/* <span>Quick Add</span> */}
+                        <AddToCartButton
+                          disabled={
+                            !product?.selectedOrFirstAvailableVariant ||
+                            !product?.selectedOrFirstAvailableVariant
+                              ?.availableForSale
+                          }
+                          onClick={() => {
+                            open('cart');
+                          }}
+                          lines={
+                            product?.selectedOrFirstAvailableVariant
+                              ? [
+                                  {
+                                    merchandiseId:
+                                      product
+                                        ?.selectedOrFirstAvailableVariant
+                                        .id,
+                                    quantity: 1,
+                                  },
+                                ]
+                              : []
+                          }
+                        >
+                          <span
+                            className={`${
+                              product?.selectedOrFirstAvailableVariant
+                                ?.availableForSale
+                                ? 'opacity-100'
+                                : 'opacity-30'
+                            }`}
+                          >
+                            Quick Add
+                          </span>
+                        </AddToCartButton>
+                      </button>
+                      {/* <div className="tabs-product-variants"> */}
+
+                      {product?.options[0].name !== 'Title' && (
+                        <div className="ket_option_variants">
+                          <div
+                            className="variant-selects"
+                            id="variant-selects-template"
+                          >
+                            {console.log(
+                              product?.options[0].name === 'Title',
+                              'psops',
+                            )}
+                            {product?.options.map((option) => (
+                              <>
+                                {option.name === 'Size' && (
+                                  <>
+                                    {console.log(
+                                      product,
+                                      'psops',
+                                    )}
+
+                                    
+                                      {option.optionValues.map(
+                                        (optionValue) => {
+                                          return (
+                                            <>
+                                              <fieldset className="product-form__input product-form__input--pill h-12">
+                                              <div className="w-full h-full">
+                                                <form
+                                                  method="post"
+                                                  action="/cart/add"
+                                                  onSubmit={console.log(
+                                                    'selected input ',
+                                                  )}
+                                                  className="form"
+                                                  encType="multipart/form-data"
+                                                  noValidate
+                                                >
+                                                  <input
+                                                    type="hidden"
+                                                    name="form_type"
+                                                    value="product"
+                                                  />
+                                                  <input
+                                                    type="hidden"
+                                                    name="utf8"
+                                                    value="✓"
+                                                  />
+                                                  <input
+                                                    type="hidden"
+                                                    name="id"
+                                                    value="46910603919600"
+                                                    className="product-variant-id"
+                                                  />
+                                                  <div className="product-form__buttons">
+                                                    <button
+                                                      type="submit"
+                                                      name="add"
+                                                      value={
+                                                        optionValue.name
+                                                      }
+                                                      className="product-form__submit button button--full-width"
+                                                    >
+                                                      <span>
+                                                        {
+                                                          optionValue.name
+                                                        }
+                                                      </span>
+                                                      <div className="loading__spinner hidden">
+                                                        <svg
+                                                          xmlns="http://www.w3.org/2000/svg"
+                                                          className="spinner"
+                                                          viewBox="0 0 66 66"
+                                                        >
+                                                          <circle
+                                                            strokeWidth="6"
+                                                            cx="33"
+                                                            cy="33"
+                                                            r="30"
+                                                            fill="none"
+                                                            className="path"
+                                                          ></circle>
+                                                        </svg>
+                                                      </div>
+                                                    </button>
+                                                  </div>
+                                                  <input
+                                                    type="hidden"
+                                                    name="product-id"
+                                                    value="9144418861296"
+                                                  />
+                                                  <input
+                                                    type="hidden"
+                                                    name="section-id"
+                                                    value="template--18996264501488__featured_collection_tabs_egEfMA"
+                                                  />
+                                                </form>
+                                              </div>
+                                            </fieldset>
+                                              {/* <button
+                                                type="submit"
+                                                name="add"
+                                                value={
+                                                  optionValue.name
+                                                }
+                                                className="product-form__submit button button--full-width"
+                                              >
+                                                <span>
+                                                  {optionValue.name}
+                                                </span>
+                                                <div className="loading__spinner hidden">
+                                                  <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    className="spinner"
+                                                    viewBox="0 0 66 66"
+                                                  >
+                                                    <circle
+                                                      strokeWidth="6"
+                                                      cx="33"
+                                                      cy="33"
+                                                      r="30"
+                                                      fill="none"
+                                                      className="path"
+                                                    ></circle>
+                                                  </svg>
+                                                </div>
+                                              </button> */}
+                                            </>
+                                          );
+                                        },
+                                      )}
+                                    
+                                  </>
+                                )}
+                              </>
+                            ))}
+                            {/* 
+                            <a
+                              className="ket_extar_variants"
+                              href="/products/the-lori-off-shoulder"
+                            >
+                              2+
+                            </a>
+                             */}
+                          </div>
+                        </div>
+                      )}
+                      {/* </div> */}
+                    </div>
+                  </div>
+                </div>
+                {/* </AddToCartButton> */}
+              </div>
+
+              <div className="tabs-products-info text-left">
+                <a href="#">
+                  <p className="visually-hidden">{product.title}</p>
+                  <div className="tabs-products-title-wrapper">
+                    <p className="tabs-products-title">
+                      {product.title}
+                    </p>
+                  </div>
+
+                  <div className="tabs-products-price-wrapper">
+                    <span className="tabs-products-price-cutline">
+                      color
+                    </span>
+                    <span className="tabs-products-price">
+                      {product?.selectedOrFirstAvailableVariant
+                        ?.price ? (
+                        <Money
+                          data={
+                            product?.selectedOrFirstAvailableVariant
+                              ?.price
+                          }
+                        />
+                      ) : null}
+                    </span>
+                  </div>
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    )}
+  </>
+))}
+
+
+
+
+.tabs-product-variants-box {
+  height: 100%;
+  width: 100%;
+  /* position: relative; */
+  /* top: 100%; */
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+
+}
+
+.collection-tabs-content:hover {
+  .tabs-product-variants-box-wrapper {
+    /* top: -94px; */
+    bottom: 75px;
+    opacity: 1;
+    transition: 0.4s;
+  }
+
+  .tabs-product-variants-btn {
+    bottom: 0;
+    opacity: 1;
+    transition: 0.4s;
+    transition-property: opacity;
+    transition-timing-function: cubic-bezier(.215, .61, .355, 1);
+    transition-duration: 225ms;
+  }
+}
+
+.tabs-product-variants-box-wrapper:hover {
+  .tabs-product-variants-btn {
+    opacity: 1;
+    bottom: 0px;
+    transition: .4s;
+  }
+
+  .ket_option_variants {
+    opacity: 1;
+    top: -40px;
+    transition: 0.4s;
+  }
+}
+
+.tabs-product-variants-box-wrapper {
+  /* height: fit-content; */
+  background: red  ;
+  padding: 5px;
+  width: 92%;
+  position: absolute;
+  z-index: 2;
+  border-radius: 0;
+  opacity: 0;
+  /* top: 0px; */
+  bottom: 66px;
+  transition: 0.4s;
+  /* margin-top: -20px; */
+  height: 48px !important;
+}
+
+
+
+.tabs-product-variants-btn {
+  width: 100%;
+  padding: 10px;
+  background: none;
+  border: none;
+  opacity: 0;
+  transition: .7s;
+  position: relative;
+  bottom: -6px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+.tabs-product-variants {
+  position: absolute;
+  bottom: -50px;
+  opacity: 0;
+  width: 100%;
+  transition: 1s;
+  gap: 10px;
+}
+
+
+
+
+
+.ket_option_variants {
+  display: flex;
+  /* flex-direction: column;
+  gap: 1rem; */
+  position: relative;
+  top: -35px;
+  opacity: 0;
+  justify-content: center;
+  align-items: center;
+  transition: 0.4s;
+
+}
+
+.variant-selects {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+}
+
+/* .product-form__input {
+  padding: 1rem;
+}
+ */
+.product-form__buttons {
+  display: flex;
+  justify-content: center;
+}
+
+.product-form__submit {
+  color: black;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.ket_extar_variants {
+  color: black;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* .product-form__submit :hover {
+  background-color: rgba(66, 66, 66, 0.2);
+}
+*/
+
+.loading__spinner {
+  display: none;
+  /* Initially hidden */
+}
+
+.loading__spinner.hidden {
+  display: none;
+  /* Keep it hidden when not loading */
 }
