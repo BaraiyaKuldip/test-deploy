@@ -2745,6 +2745,13 @@ Search Page CSS
     white-space: nowrap;
   }
 
+  .tabs-products-sold-out{
+    margin: 3px 0;
+    padding: 0;
+    font-size: calc(var(--font-size-13)* 1.0);
+    line-height: var(--line-height-1-5);
+  }
+
   /* Add this to your global CSS file */
   @keyframes shimmer {
     0% {
@@ -3115,7 +3122,7 @@ Search Page CSS
 
 
   .tabs-product-variants-box {
-    height: 48px !important;
+    /* height: 48px !important; */
     /* overflow: hidden; */
     width: 100%;
     position: relative;
@@ -3128,7 +3135,7 @@ Search Page CSS
 
   .tabs-product-variants-box-wrapper {
     height: 100%;
-    width: 93%;
+    width: 92%;
     background: white;
     position: absolute;
     top: 0;
@@ -3144,6 +3151,7 @@ Search Page CSS
     top: 0;
     opacity: 1;
     transition: all 0.3s;
+    cursor: pointer;
   }
 
   .ket_option_variants {
@@ -3182,3 +3190,47 @@ Search Page CSS
       width: calc(min(100vw, 1450px) / 1.5);
     }
   }
+
+
+  .space-x-r2>:not([hidden])~:not([hidden]) {
+    --tw-space-x-reverse: 0;
+    --space-2:4px;
+    margin-right: calc(var(--space-2)* var(--tw-space-x-reverse));
+    margin-left: calc(var(--space-2)* calc(1 - var(--tw-space-x-reverse)));
+}
+
+
+.product-form__submit{
+  position: relative;
+  font-size: calc(11.5px * var(--font-adjust, 1));
+  line-height: var(--line-height-1-6);
+  white-space: nowrap;
+
+
+    font-family: var(--font-family-ms);
+    font-style: var(--font-style-nrml);
+    font-weight: var(--font-weight-5);
+    text-transform: var(--text-transform-up);
+    letter-spacing: var(--letter-spacing-9);
+}
+
+.tabs-variant-select-btn{
+  transition: color .2s, opacity .2s, visibility .2s;
+  padding: 8px;
+}
+
+.text-button-contrast{
+  --tw-text-opacity: 1;
+  color: rgb(66 66 66 / var(--tw-text-opacity));
+}
+
+.group-option-btn:hover .group-hover-option-button-bg-button-contrast-5{
+  background-color: rgb(66 66 66 / 0.05);
+}
+.group-option-btn:hover .group-hover-option-button-text-button-contrast{
+  --tw-text-opacity: 1;
+  color: rgb(66 66 66 / var(--tw-text-opacity));
+}
+
+
+

@@ -309,9 +309,32 @@ function FeaturedCollection({collection}) {
                             </div>
 
                             <div className="tabs-products-price-wrapper">
-                              <span className="tabs-products-price-cutline">
-                                color
-                              </span>
+                              {product.selectedOrFirstAvailableVariant.selectedOptions.map(
+                                (selectedOption) => (
+                                  <>
+                                    <span
+                                      className={`tabs-products-price-cutline`}
+                                      style={{
+                                        display: `${
+                                          selectedOption.name === 'Color'
+                                            ? 'block'
+                                            : 'none'
+                                        }`
+                                      }}
+                                    >
+                                      {selectedOption.name === 'Color' && (
+                                        <>{selectedOption.value}</>
+                                      )}
+                                    </span>
+                                  </>
+                                ),
+                              )}
+                              {/* color */}
+                              {console.log(
+                                product.selectedOrFirstAvailableVariant
+                                  .selectedOptions,
+                                'product selected or first',
+                              )}
                               <span className="tabs-products-price">
                                 {product?.selectedOrFirstAvailableVariant
                                   ?.price ? (
@@ -324,14 +347,30 @@ function FeaturedCollection({collection}) {
                                 ) : null}
                               </span>
                             </div>
+                            
+                            {!product?.selectedOrFirstAvailableVariant
+                            ?.availableForSale && (
+                            <p className='tabs-products-sold-out'>
+                              <em>
+                                Sold Out
+                              </em>
+                            </p>
+                            )}
+
                           </a>
 
-                          <div className="tabs-product-variants-box">
+                          <div className="tabs-product-variants-box min-h-[40px] md:min-h-[48px]">
                             <div className="tabs-product-variants-box-wrapper">
                               <div className="h-full w-full">
-                                <button className={`tabs-product-variants-btn ${product?.options[0].name !== 'Title' ? "variants_available" : ""}`}>
-                                  {/* <span>Quick Add</span> */}
-                                  <AddToCartButton
+                                <button
+                                  className={`tabs-product-variants-btn ${
+                                    product?.options[0].name !== 'Title'
+                                      ? 'variants_available'
+                                      : ''
+                                  }`}
+                                >
+                                  <span>Quick Add</span>
+                                  {/* <AddToCartButton
                                     disabled={
                                       !product?.selectedOrFirstAvailableVariant ||
                                       !product?.selectedOrFirstAvailableVariant
@@ -359,7 +398,7 @@ function FeaturedCollection({collection}) {
                                       'product selected first available variant',
                                     )}
                                     <span
-                                      className={`${
+                                      className={` cursor-pointer ${
                                         product?.selectedOrFirstAvailableVariant
                                           ?.availableForSale
                                           ? 'opacity-100'
@@ -370,14 +409,14 @@ function FeaturedCollection({collection}) {
                                         ? 'Quick Add'
                                         : 'Add To Cart'}
                                     </span>
-                                  </AddToCartButton>
+                                  </AddToCartButton> */}
                                 </button>
                                 {/* <div className="tabs-product-variants"> */}
 
                                 {product?.options[0].name !== 'Title' && (
                                   <div className="ket_option_variants">
                                     <div
-                                      className="variant-selects"
+                                      className="variant-selects flex flex-row items-center flex-wrap justify-center space-x-r2 py-r4 md:gap-y-r2 cursor-pointer"
                                       id="variant-selects-template"
                                     >
                                       {console.log(
@@ -435,9 +474,9 @@ function FeaturedCollection({collection}) {
                                                                 value={
                                                                   optionValue.name
                                                                 }
-                                                                className="product-form__submit button button--full-width h-full w-full"
+                                                                className="product-form__submit button button--full-width group-option-btn h-full w-full cursor-pointer"
                                                               >
-                                                                <span>
+                                                                <span className="tabs-variant-select-btn inline-block whitespace-nowrap text-button-contrast px-r4 py-r4 group-hover-option-button-text-button-contrast group-hover-option-button-bg-button-contrast-5">
                                                                   {
                                                                     optionValue.name
                                                                   }
