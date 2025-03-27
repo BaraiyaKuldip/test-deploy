@@ -266,98 +266,12 @@ function FeaturedCollection({collection}) {
                             </div>
                           </Link>
 
-                          {/* <AddToCartButton
-                            disabled={
-                              !product?.selectedOrFirstAvailableVariant ||
-                              !product?.selectedOrFirstAvailableVariant
-                                ?.availableForSale
-                            }
-                            onClick={() => {
-                              open('cart');
-                            }}
-                            lines={
-                              product?.selectedOrFirstAvailableVariant
-                                ? [
-                                    {
-                                      merchandiseId:
-                                        product?.selectedOrFirstAvailableVariant
-                                          .id,
-                                      quantity: 1,
-                                    },
-                                  ]
-                                : []
-                            }
-                          > */}
-
-                          {/* </AddToCartButton> */}
-
                           {!product?.selectedOrFirstAvailableVariant
                             ?.availableForSale && (
                             <div className="tabs-product-sold-out-btn">
                               Sold Out
                             </div>
                           )}
-                        </div>
-
-                        <div className="tabs-products-info text-left">
-                          <a href="#">
-                            <p className="visually-hidden">{product.title}</p>
-                            <div className="tabs-products-title-wrapper">
-                              <p className="tabs-products-title">
-                                {product.title}
-                              </p>
-                            </div>
-
-                            <div className="tabs-products-price-wrapper">
-                              {product.selectedOrFirstAvailableVariant.selectedOptions.map(
-                                (selectedOption) => (
-                                  <>
-                                    <span
-                                      className={`tabs-products-price-cutline`}
-                                      style={{
-                                        display: `${
-                                          selectedOption.name === 'Color'
-                                            ? 'block'
-                                            : 'none'
-                                        }`
-                                      }}
-                                    >
-                                      {selectedOption.name === 'Color' && (
-                                        <>{selectedOption.value}</>
-                                      )}
-                                    </span>
-                                  </>
-                                ),
-                              )}
-                              {/* color */}
-                              {console.log(
-                                product.selectedOrFirstAvailableVariant
-                                  .selectedOptions,
-                                'product selected or first',
-                              )}
-                              <span className="tabs-products-price">
-                                {product?.selectedOrFirstAvailableVariant
-                                  ?.price ? (
-                                  <Money
-                                    data={
-                                      product?.selectedOrFirstAvailableVariant
-                                        ?.price
-                                    }
-                                  />
-                                ) : null}
-                              </span>
-                            </div>
-                            
-                            {!product?.selectedOrFirstAvailableVariant
-                            ?.availableForSale && (
-                            <p className='tabs-products-sold-out'>
-                              <em>
-                                Sold Out
-                              </em>
-                            </p>
-                            )} 
-                            
-                          </a>
 
                           <div className="tabs-product-variants-box min-h-[40px] md:min-h-[48px]">
                             <div className="tabs-product-variants-box-wrapper">
@@ -369,8 +283,10 @@ function FeaturedCollection({collection}) {
                                       : ''
                                   }`}
                                 >
-                                  <span>Quick Add</span>
-                                  {/* <AddToCartButton
+
+
+                                  {/* <span>Quick Add</span> */}
+                                  <AddToCartButton
                                     disabled={
                                       !product?.selectedOrFirstAvailableVariant ||
                                       !product?.selectedOrFirstAvailableVariant
@@ -409,7 +325,7 @@ function FeaturedCollection({collection}) {
                                         ? 'Quick Add'
                                         : 'Add To Cart'}
                                     </span>
-                                  </AddToCartButton> */}
+                                  </AddToCartButton>
                                 </button>
                                 {/* <div className="tabs-product-variants"> */}
 
@@ -512,34 +428,6 @@ function FeaturedCollection({collection}) {
                                                           </form>
                                                         </div>
                                                       </fieldset>
-                                                      {/* <button
-                                                type="submit"
-                                                name="add"
-                                                value={
-                                                  optionValue.name
-                                                }
-                                                className="product-form__submit button button--full-width"
-                                              >
-                                                <span>
-                                                  {optionValue.name}
-                                                </span>
-                                                <div className="loading__spinner hidden">
-                                                  <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    className="spinner"
-                                                    viewBox="0 0 66 66"
-                                                  >
-                                                    <circle
-                                                      strokeWidth="6"
-                                                      cx="33"
-                                                      cy="33"
-                                                      r="30"
-                                                      fill="none"
-                                                      className="path"
-                                                    ></circle>
-                                                  </svg>
-                                                </div>
-                                              </button> */}
                                                     </>
                                                   );
                                                 },
@@ -548,14 +436,13 @@ function FeaturedCollection({collection}) {
                                           )}
                                         </>
                                       ))}
-                                      {/* 
-                            <a
-                              className="ket_extar_variants"
-                              href="/products/the-lori-off-shoulder"
-                            >
-                              2+
-                            </a>
-                             */}
+
+                                      {/* <a
+                                        className="ket_extar_variants"
+                                        href="/products/the-lori-off-shoulder"
+                                      >
+                                        2+
+                                      </a> */}
                                     </div>
                                   </div>
                                 )}
@@ -563,6 +450,76 @@ function FeaturedCollection({collection}) {
                               </div>
                             </div>
                           </div>
+                        </div>
+
+                        <div className="tabs-products-info text-left">
+                          <a href="#">
+                            <p className="visually-hidden">{product.title}</p>
+                            <div className="tabs-products-title-wrapper">
+                              <p className="tabs-products-title">
+                                {product.title}
+                              </p>
+                            </div>
+
+                            <div className="tabs-products-price-wrapper">
+                              {product.selectedOrFirstAvailableVariant.selectedOptions.map(
+                                (selectedOption) => (
+                                  <>
+                                    <span
+                                      className={`tabs-products-price-cutline`}
+                                      style={{
+                                        display: `${
+                                          selectedOption.name === 'Color'
+                                            ? 'block'
+                                            : 'none'
+                                        }`,
+                                      }}
+                                    >
+                                      {selectedOption.name === 'Color' && (
+                                        <>{selectedOption.value}</>
+                                      )}
+                                    </span>
+                                  </>
+                                ),
+                              )}
+                              {/* color */}
+                              {console.log(
+                                product.selectedOrFirstAvailableVariant
+                                  .selectedOptions,
+                                'product selected or first',
+                              )}
+                              <span className="tabs-products-price">
+                                {product?.selectedOrFirstAvailableVariant
+                                  ?.price ? (
+                                  <Money
+                                    data={
+                                      product?.selectedOrFirstAvailableVariant
+                                        ?.price
+                                    }
+                                  />
+                                ) : null}
+                              </span>
+                            </div>
+
+                            {!product?.selectedOrFirstAvailableVariant
+                              ?.availableForSale && (
+                              <p className="tabs-products-sold-out">
+                                <em>Sold Out</em>
+                              </p>
+                            )}
+
+                            <div className='tabs-products-swatch-main-container'>
+                              <div className='tabs-products-swatch-sub-container'>
+                                <p className='tabs-products-swatch-title'>
+                                </p>
+                                <div className=''>
+
+                                </div>
+                              </div>
+                            </div>
+
+
+                          </a>
                         </div>
                       </div>
                     ))}
