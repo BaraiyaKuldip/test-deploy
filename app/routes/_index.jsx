@@ -355,8 +355,8 @@ function FeaturedCollection({collection}) {
                                 Sold Out
                               </em>
                             </p>
-                            )}
-
+                            )} 
+                            
                           </a>
 
                           <div className="tabs-product-variants-box min-h-[40px] md:min-h-[48px]">
