@@ -98,11 +98,13 @@ export default function Product() {
   useSelectedOptionInUrlParam(selectedVariant.selectedOptions);
 
   // Get the product options array
-  console.log(product , "product options.")
+  console.log(product , "product")
   const productOptions = getProductOptions({
     ...product,
     selectedOrFirstAvailableVariant: selectedVariant,
   });
+  console.log(productOptions , "product options.")
+
 
   const {title, descriptionHtml} = product;
 
