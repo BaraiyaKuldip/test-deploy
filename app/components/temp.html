@@ -505,3 +505,85 @@ product card quick add component code
                             </a>
                           </div>
                         </div>
+
+
+
+
+
+
+fieldset for variatnt selection
+
+
+
+                        <fieldset
+                                        key={optionValueIndex}
+                                        className="product-form__input product-form__input--pill h-12"
+                                      >
+                                        <div className="w-full h-full">
+                                          <form
+                                            method="post"
+                                            action="/cart/add"
+                                            onSubmit={console.log(
+                                              'selected input ',
+                                            )}
+                                            className="form w-full h-full"
+                                            encType="multipart/form-data"
+                                            noValidate
+                                          >
+                                            <input
+                                              type="hidden"
+                                              name="form_type"
+                                              value="product"
+                                            />
+                                            <input
+                                              type="hidden"
+                                              name="utf8"
+                                              value="✓"
+                                            />
+                                            <input
+                                              type="hidden"
+                                              name="id"
+                                              value="46910603919600"
+                                              className="product-variant-id"
+                                            />
+                                            <div className="product-form__buttons w-full h-full">
+                                              <button
+                                                type="submit"
+                                                name="add"
+                                                value={optionValue.name}
+                                                className="product-form__submit button button--full-width group-option-btn h-full w-full cursor-pointer"
+                                              >
+                                                <span className="tabs-variant-select-btn inline-block whitespace-nowrap text-button-contrast px-r4 py-r4 group-hover-option-button-text-button-contrast group-hover-option-button-bg-button-contrast-5">
+                                                  {optionValue.name}
+                                                </span>
+                                                <div className="loading__spinner hidden">
+                                                  <svg
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    className="spinner"
+                                                    viewBox="0 0 66 66"
+                                                  >
+                                                    <circle
+                                                      strokeWidth="6"
+                                                      cx="33"
+                                                      cy="33"
+                                                      r="30"
+                                                      fill="none"
+                                                      className="path"
+                                                    ></circle>
+                                                  </svg>
+                                                </div>
+                                              </button>
+                                            </div>
+                                            <input
+                                              type="hidden"
+                                              name="product-id"
+                                              value="9144418861296"
+                                            />
+                                            <input
+                                              type="hidden"
+                                              name="section-id"
+                                              value="template--18996264501488__featured_collection_tabs_egEfMA"
+                                            />
+                                          </form>
+                                        </div>
+                                      </fieldset>

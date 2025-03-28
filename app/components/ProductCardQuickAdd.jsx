@@ -1,27 +1,28 @@
-import React from 'react';
-import {defer} from '@shopify/remix-oxygen';
-import {useLoaderData} from '@remix-run/react';
+import React, { useState } from 'react';
 import SwiperComponent from './ProductCard';
 import {Link} from '@remix-run/react';
 import {AddToCartButton} from './AddToCartButton';
 import {Money} from '@shopify/hydrogen';
 import {ProductImage} from './ProductImage';
 import {Image} from '@shopify/hydrogen';
+import {useAside} from './Aside';
 
 export default function ProductCardQuickAdd({
   product,
   productIndex,
   collectionIndex,
 }) {
+  const {open} = useAside();
+  const [selectedVariantId , setSelectedVariantId] = useState("");
   return (
     <>
-    {console.log(product , "products on quick add page")}
+      {console.log(product, 'products on quick add page')}
       <div key={productIndex} className="collection-tabs-content embla__slide">
         {/* {console.log(product.images, 'product map')} */}
         <div className="tabs-products-items-container ">
           <div className="tabs-products-items-error"></div>
           <Link
-            to={`products/${product.adjacentVariants.handle}`}
+            to={`products/${product.handle}`}
             className="tabs-products-a-tag"
           >
             <div className="tabs-products-pagination"></div>
@@ -75,7 +76,7 @@ export default function ProductCardQuickAdd({
                       'product selected first available variant',
                     )} */}
                     <span
-                      className={` cursor-pointer ${
+                      className={`h-full w-full cursor-pointer ${
                         product?.selectedOrFirstAvailableVariant
                           ?.availableForSale
                           ? 'opacity-100'
@@ -108,81 +109,64 @@ export default function ProductCardQuickAdd({
 
                               {option.optionValues.map(
                                 (optionValue, optionValueIndex) => {
-                                  
+                                  console.log(optionValue, ' options value');
+
                                   return (
                                     <>
-                                      <fieldset
-                                        key={optionValueIndex}
-                                        className="product-form__input product-form__input--pill h-12"
+                                      <AddToCartButton
+                                        disabled={
+                                          !optionValue?.firstSelectableVariant ||
+                                          !optionValue
+                                            ?.firstSelectableVariant
+                                            ?.availableForSale
+                                        }
+                                        onClick={() => {
+                                          open('cart');
+                                        }}
+                                        lines={
+                                          optionValue?.firstSelectableVariant
+                                            ? [
+                                                {
+                                                  merchandiseId:optionValue.firstSelectableVariant.id,
+                                                  quantity: 1,
+                                                },
+                                              ]
+                                            : []
+                                        }
                                       >
-                                        <div className="w-full h-full">
-                                          <form
-                                            method="post"
-                                            action="/cart/add"
-                                            onSubmit={console.log(
-                                              'selected input ',
-                                            )}
-                                            className="form w-full h-full"
-                                            encType="multipart/form-data"
-                                            noValidate
+                                        {/* {console.log(
+                            product.selectedOrFirstAvailableVariant,
+                            'product selected first available variant',
+                          )} */}
+                                        <div className="product-form__buttons w-full h-full">
+                                          <button
+                                            type="submit"
+                                            name="add"
+                                            value={optionValue.name}
+                                            className="product-form__submit button button--full-width group-option-btn h-full w-full cursor-pointer"
                                           >
-                                            <input
-                                              type="hidden"
-                                              name="form_type"
-                                              value="product"
-                                            />
-                                            <input
-                                              type="hidden"
-                                              name="utf8"
-                                              value="✓"
-                                            />
-                                            <input
-                                              type="hidden"
-                                              name="id"
-                                              value="46910603919600"
-                                              className="product-variant-id"
-                                            />
-                                            <div className="product-form__buttons w-full h-full">
-                                              <button
-                                                type="submit"
-                                                name="add"
-                                                value={optionValue.name}
-                                                className="product-form__submit button button--full-width group-option-btn h-full w-full cursor-pointer"
+                                            <span className="tabs-variant-select-btn inline-block whitespace-nowrap text-button-contrast px-r4 py-r4 group-hover-option-button-text-button-contrast group-hover-option-button-bg-button-contrast-5">
+                                              {optionValue.name}
+                                            </span>
+                                            <div className="loading__spinner hidden">
+                                              <svg
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                className="spinner"
+                                                viewBox="0 0 66 66"
                                               >
-                                                <span className="tabs-variant-select-btn inline-block whitespace-nowrap text-button-contrast px-r4 py-r4 group-hover-option-button-text-button-contrast group-hover-option-button-bg-button-contrast-5">
-                                                  {optionValue.name}
-                                                </span>
-                                                <div className="loading__spinner hidden">
-                                                  <svg
-                                                    xmlns="http://www.w3.org/2000/svg"
-                                                    className="spinner"
-                                                    viewBox="0 0 66 66"
-                                                  >
-                                                    <circle
-                                                      strokeWidth="6"
-                                                      cx="33"
-                                                      cy="33"
-                                                      r="30"
-                                                      fill="none"
-                                                      className="path"
-                                                    ></circle>
-                                                  </svg>
-                                                </div>
-                                              </button>
+                                                <circle
+                                                  strokeWidth="6"
+                                                  cx="33"
+                                                  cy="33"
+                                                  r="30"
+                                                  fill="none"
+                                                  className="path"
+                                                ></circle>
+                                              </svg>
                                             </div>
-                                            <input
-                                              type="hidden"
-                                              name="product-id"
-                                              value="9144418861296"
-                                            />
-                                            <input
-                                              type="hidden"
-                                              name="section-id"
-                                              value="template--18996264501488__featured_collection_tabs_egEfMA"
-                                            />
-                                          </form>
+                                          </button>
                                         </div>
-                                      </fieldset>
+                                      </AddToCartButton>
                                     </>
                                   );
                                 },
@@ -277,8 +261,7 @@ export default function ProductCardQuickAdd({
                                         : 'sold-out'
                                     }`}
                                   >
-                                    <a
-                                      href="#"
+                                    <button value={optionValue.firstSelectableVariant.id}
                                       className="tabs-products-swatch-link"
                                     >
                                       <div className="tabs-products-swatch">
@@ -328,17 +311,20 @@ export default function ProductCardQuickAdd({
                                             )}
                                         </div>
                                       </div>
-                                    </a>
+                                    </button>
                                   </div>
                                 </>
                               ))}
                               {option.optionValues.length > 5 && (
-                                  <>
-                                  <a href="#" className='  tabs-products-swatch-more-links'>
+                                <>
+                                  <a
+                                    href="#"
+                                    className="  tabs-products-swatch-more-links"
+                                  >
                                     {option.optionValues.length - 5}+
                                   </a>
-                                  </>
-                                )}
+                                </>
+                              )}
                             </div>
                           </div>
                         </div>

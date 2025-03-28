@@ -3154,6 +3154,18 @@ Search Page CSS
     line-height: var(--line-height-1-5);
   }
 
+  .tabs-product-variants-btn form{
+    height: 100%;
+    width: 100%;
+    cursor: pointer;
+  }
+
+  .tabs-product-variants-btn form button {
+    height: 100%;
+    width: 100%;
+    cursor: pointer;
+  }
+
   .ket_option_variants {
     width: 100%;
     height: 100%;

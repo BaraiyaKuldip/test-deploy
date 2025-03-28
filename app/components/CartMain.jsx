@@ -57,7 +57,8 @@ function CartEmpty({hidden = false}) {
           <div className='empty_cart_overlay'></div>
           </div>
         </div>
-        <a href="/collections" className='flex justify-center items-center flex-col -mt-20 pb-5 cart_circle_a'>
+        
+        <Link to="/collections" onClick={close} className='flex justify-center items-center flex-col -mt-20 pb-5 cart_circle_a'>
           <div className='empty_cart_circle'>
             <svg width="800px" height="800px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="none">
               <circle cx="7.5" cy="18.5" r="1.5" fill="#000000"/>
@@ -66,7 +67,7 @@ function CartEmpty({hidden = false}) {
             </svg>
           </div>
           <p className='empty_cart_continue_link'>Continue shopping</p>
-        </a>
+        </Link>
       </div>
       
       {/* <Link to="/collections" onClick={close} prefetch="viewport">

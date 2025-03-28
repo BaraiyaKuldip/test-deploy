@@ -334,6 +334,51 @@ export type FeaturedCollectionFragment = Pick<
         StorefrontAPI.Product,
         'id' | 'title' | 'handle' | 'totalInventory'
       > & {
+        media: {
+          nodes: Array<
+            | (Pick<
+                StorefrontAPI.ExternalVideo,
+                'alt' | 'id' | 'mediaContentType'
+              > & {
+                previewImage?: StorefrontAPI.Maybe<
+                  Pick<
+                    StorefrontAPI.Image,
+                    'url' | 'id' | 'altText' | 'height' | 'width'
+                  >
+                >;
+              })
+            | (Pick<
+                StorefrontAPI.MediaImage,
+                'alt' | 'id' | 'mediaContentType'
+              > & {
+                previewImage?: StorefrontAPI.Maybe<
+                  Pick<
+                    StorefrontAPI.Image,
+                    'url' | 'id' | 'altText' | 'height' | 'width'
+                  >
+                >;
+              })
+            | (Pick<
+                StorefrontAPI.Model3d,
+                'alt' | 'id' | 'mediaContentType'
+              > & {
+                previewImage?: StorefrontAPI.Maybe<
+                  Pick<
+                    StorefrontAPI.Image,
+                    'url' | 'id' | 'altText' | 'height' | 'width'
+                  >
+                >;
+              })
+            | (Pick<StorefrontAPI.Video, 'alt' | 'id' | 'mediaContentType'> & {
+                previewImage?: StorefrontAPI.Maybe<
+                  Pick<
+                    StorefrontAPI.Image,
+                    'url' | 'id' | 'altText' | 'height' | 'width'
+                  >
+                >;
+              })
+          >;
+        };
         images: {
           edges: Array<{
             node: Pick<
@@ -392,11 +437,11 @@ export type FeaturedCollectionFragment = Pick<
         >;
         seo: Pick<StorefrontAPI.Seo, 'description' | 'title'>;
         options: Array<
-          Pick<StorefrontAPI.ProductOption, 'name'> & {
+          Pick<StorefrontAPI.ProductOption, 'id' | 'name'> & {
             optionValues: Array<
-              Pick<StorefrontAPI.ProductOptionValue, 'name'> & {
+              Pick<StorefrontAPI.ProductOptionValue, 'id' | 'name'> & {
                 firstSelectableVariant?: StorefrontAPI.Maybe<
-                  Pick<StorefrontAPI.ProductVariant, 'availableForSale'>
+                  Pick<StorefrontAPI.ProductVariant, 'id' | 'availableForSale'>
                 >;
                 swatch?: StorefrontAPI.Maybe<
                   Pick<StorefrontAPI.ProductOptionValueSwatch, 'color'> & {
@@ -429,7 +474,19 @@ export type FeaturedCollectionFragment = Pick<
           }
         >;
         variants: {
-          nodes: Array<Pick<StorefrontAPI.ProductVariant, 'id' | 'title'>>;
+          nodes: Array<
+            Pick<
+              StorefrontAPI.ProductVariant,
+              'id' | 'title' | 'availableForSale'
+            > & {
+              image?: StorefrontAPI.Maybe<
+                Pick<
+                  StorefrontAPI.Image,
+                  'url' | 'altText' | 'id' | 'height' | 'width'
+                >
+              >;
+            }
+          >;
         };
         variantsCount?: StorefrontAPI.Maybe<
           Pick<StorefrontAPI.Count, 'count' | 'precision'>
@@ -460,6 +517,54 @@ export type FeaturedCollectionQuery = {
               StorefrontAPI.Product,
               'id' | 'title' | 'handle' | 'totalInventory'
             > & {
+              media: {
+                nodes: Array<
+                  | (Pick<
+                      StorefrontAPI.ExternalVideo,
+                      'alt' | 'id' | 'mediaContentType'
+                    > & {
+                      previewImage?: StorefrontAPI.Maybe<
+                        Pick<
+                          StorefrontAPI.Image,
+                          'url' | 'id' | 'altText' | 'height' | 'width'
+                        >
+                      >;
+                    })
+                  | (Pick<
+                      StorefrontAPI.MediaImage,
+                      'alt' | 'id' | 'mediaContentType'
+                    > & {
+                      previewImage?: StorefrontAPI.Maybe<
+                        Pick<
+                          StorefrontAPI.Image,
+                          'url' | 'id' | 'altText' | 'height' | 'width'
+                        >
+                      >;
+                    })
+                  | (Pick<
+                      StorefrontAPI.Model3d,
+                      'alt' | 'id' | 'mediaContentType'
+                    > & {
+                      previewImage?: StorefrontAPI.Maybe<
+                        Pick<
+                          StorefrontAPI.Image,
+                          'url' | 'id' | 'altText' | 'height' | 'width'
+                        >
+                      >;
+                    })
+                  | (Pick<
+                      StorefrontAPI.Video,
+                      'alt' | 'id' | 'mediaContentType'
+                    > & {
+                      previewImage?: StorefrontAPI.Maybe<
+                        Pick<
+                          StorefrontAPI.Image,
+                          'url' | 'id' | 'altText' | 'height' | 'width'
+                        >
+                      >;
+                    })
+                >;
+              };
               images: {
                 edges: Array<{
                   node: Pick<
@@ -518,11 +623,14 @@ export type FeaturedCollectionQuery = {
               >;
               seo: Pick<StorefrontAPI.Seo, 'description' | 'title'>;
               options: Array<
-                Pick<StorefrontAPI.ProductOption, 'name'> & {
+                Pick<StorefrontAPI.ProductOption, 'id' | 'name'> & {
                   optionValues: Array<
-                    Pick<StorefrontAPI.ProductOptionValue, 'name'> & {
+                    Pick<StorefrontAPI.ProductOptionValue, 'id' | 'name'> & {
                       firstSelectableVariant?: StorefrontAPI.Maybe<
-                        Pick<StorefrontAPI.ProductVariant, 'availableForSale'>
+                        Pick<
+                          StorefrontAPI.ProductVariant,
+                          'id' | 'availableForSale'
+                        >
                       >;
                       swatch?: StorefrontAPI.Maybe<
                         Pick<
@@ -574,7 +682,17 @@ export type FeaturedCollectionQuery = {
               >;
               variants: {
                 nodes: Array<
-                  Pick<StorefrontAPI.ProductVariant, 'id' | 'title'>
+                  Pick<
+                    StorefrontAPI.ProductVariant,
+                    'id' | 'title' | 'availableForSale'
+                  > & {
+                    image?: StorefrontAPI.Maybe<
+                      Pick<
+                        StorefrontAPI.Image,
+                        'url' | 'altText' | 'id' | 'height' | 'width'
+                      >
+                    >;
+                  }
                 >;
               };
               variantsCount?: StorefrontAPI.Maybe<
@@ -1530,7 +1648,7 @@ interface GeneratedQueryTypes {
     return: StoreRobotsQuery;
     variables: StoreRobotsQueryVariables;
   };
-  '#graphql\n  fragment FeaturedCollection on Collection {\n    id\n    title\n    image {\n      id\n      url\n      altText\n      width\n      height\n    }\n    handle\n    products(first:200){\n        nodes{\n          id\n          title\n          handle\n          images(first:6){\n            edges{\n              node{\n                id\n                url\n                altText\n                width\n                height\n              }\n            }\n          }\n          totalInventory\n          selectedOrFirstAvailableVariant{\n\t\t\t\t\t\t\tavailableForSale\n            \tid\n            \tsku\n            \ttitle\n            compareAtPrice{\n              amount\n              currencyCode\n            }\n            image{\n              __typename\n              id\n              url \n              altText\n              width\n              height\n            }\n            price{\n              amount\n              currencyCode\n            }\n            product{\n              title\n              handle\n            }\n            selectedOptions{\n              name\n              value\n            }\n            unitPrice{\n              amount\n              currencyCode\n            }\n          }\n          adjacentVariants{\n            availableForSale\n            id\n            sku\n            title\n            compareAtPrice{\n              amount\n              currencyCode\n            }\n            image{\n              __typename\n              id\n              url\n              altText\n              height\n              width\n            }\n            price{\n              amount\n              currencyCode\n            }\n            product{\n              title\n              handle\n            }\n            selectedOptions{\n              name\n              value\n            }\n            unitPrice{\n              amount\n              currencyCode\n            }\n          }\n          seo{\n            description\n            title\n          }\n          options{\n            name\n            optionValues{\n              name\n              firstSelectableVariant{\n                availableForSale\n              }\n              swatch{\n                color\n                image{\n                  alt\n                  id\n                  previewImage{\n                    id\n                    altText\n                    url\n                  }\n                } \n              } \n            } \n          }\n          variants(first:100){\n            nodes{\n              id\n              title\n            }\n          }\n          variantsCount{\n            count\n            precision\n          }\n        }\n      }\n  }\n  query FeaturedCollection($country: CountryCode, $language: LanguageCode)\n    @inContext(country: $country, language: $language) {\n    collections(first: 100, sortKey: TITLE, reverse: false) {\n      nodes {\n        ...FeaturedCollection\n      }\n    }\n  }\n': {
+  '#graphql\n  fragment FeaturedCollection on Collection {\n    id\n    title\n    image {\n      id\n      url\n      altText\n      width\n      height\n    }\n    handle\n    products(first:200){\n        nodes{\n          id\n          title\n          handle\n          media(first:100){\n            nodes{\n              alt\n              id\n              mediaContentType\n              previewImage{\n                url\n                id\n                altText\n                height\n                width\n              }\n            }\n          }\n          images(first:6){\n            edges{\n              node{\n                id\n                url\n                altText\n                width\n                height\n              }\n            }\n          }\n          totalInventory\n          selectedOrFirstAvailableVariant{\n\t\t\t\t\t\t\tavailableForSale\n            \tid\n            \tsku\n            \ttitle\n            compareAtPrice{\n              amount\n              currencyCode\n            }\n            image{\n              __typename\n              id\n              url \n              altText\n              width\n              height\n            }\n            price{\n              amount\n              currencyCode\n            }\n            product{\n              title\n              handle\n            }\n            selectedOptions{\n              name\n              value\n            }\n            unitPrice{\n              amount\n              currencyCode\n            }\n          }\n          adjacentVariants{\n            availableForSale\n            id\n            sku\n            title\n            compareAtPrice{\n              amount\n              currencyCode\n            }\n            image{\n              __typename\n              id\n              url\n              altText\n              height\n              width\n            }\n            price{\n              amount\n              currencyCode\n            }\n            product{\n              title\n              handle\n            }\n            selectedOptions{\n              name\n              value\n            }\n            unitPrice{\n              amount\n              currencyCode\n            }\n          }\n          seo{\n            description\n            title\n          }\n          options{\n            id\n            name\n            optionValues{\n              id\n              name\n              firstSelectableVariant{\n                id\n                availableForSale\n              }\n              swatch{\n                color\n                image{\n                  alt\n                  id\n                  previewImage{\n                    id\n                    altText\n                    url\n                  }\n                } \n              } \n            } \n          }\n          variants(first:100){\n            nodes{\n              id\n              title\n              image{\n                url\n                altText\n                id\n                height\n                width\n              }\n              availableForSale\n            }  \n          }\n          variantsCount{\n            count\n            precision\n          }\n        }\n      }\n  }\n  query FeaturedCollection($country: CountryCode, $language: LanguageCode)\n    @inContext(country: $country, language: $language) {\n    collections(first: 100, sortKey: TITLE, reverse: false) {\n      nodes {\n        ...FeaturedCollection\n      }\n    }\n  }\n': {
     return: FeaturedCollectionQuery;
     variables: FeaturedCollectionQueryVariables;
   };

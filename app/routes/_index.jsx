@@ -322,6 +322,20 @@ const FEATURED_COLLECTION_QUERY = `#graphql
           id
           title
           handle
+          media(first:100){
+            nodes{
+              alt
+              id
+              mediaContentType
+              previewImage{
+                url
+                id
+                altText
+                height
+                width
+              }
+            }
+          }
           images(first:6){
             edges{
               node{
@@ -407,10 +421,13 @@ const FEATURED_COLLECTION_QUERY = `#graphql
             title
           }
           options{
+            id
             name
             optionValues{
+              id
               name
               firstSelectableVariant{
+                id
                 availableForSale
               }
               swatch{
@@ -431,7 +448,15 @@ const FEATURED_COLLECTION_QUERY = `#graphql
             nodes{
               id
               title
-            }
+              image{
+                url
+                altText
+                id
+                height
+                width
+              }
+              availableForSale
+            }  
           }
           variantsCount{
             count
