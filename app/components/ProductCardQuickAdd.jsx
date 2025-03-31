@@ -1,4 +1,14 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
+import {defer} from '@shopify/remix-oxygen';
+import {useLoaderData} from '@remix-run/react';
+import {
+  getSelectedProductOptions,
+  Analytics,
+  useOptimisticVariant,
+  getProductOptions,
+  getAdjacentAndFirstAvailableVariants,
+  useSelectedOptionInUrlParam,
+} from '@shopify/hydrogen';
 import SwiperComponent from './ProductCard';
 import {Link} from '@remix-run/react';
 import {AddToCartButton} from './AddToCartButton';
@@ -13,7 +23,45 @@ export default function ProductCardQuickAdd({
   collectionIndex,
 }) {
   const {open} = useAside();
-  const [selectedVariantId , setSelectedVariantId] = useState("");
+  const [selectedVariantId, setSelectedVariantId] = useState('');
+
+  // const {product} = product;
+  console.log(product, 'product all data');
+
+  // Optimistically selects a variant with given available variant information
+  const selectedVariant = useOptimisticVariant(
+    product.selectedOrFirstAvailableVariant,
+    getAdjacentAndFirstAvailableVariants(product),
+  );
+
+  {
+    console.log(selectedVariant, 'selected variant');
+  }
+
+  // Sets the search param to the selected variant without navigation
+  // only when no search params are set in the url
+  useSelectedOptionInUrlParam(selectedVariant.selectedOptions);
+
+  // Get the product options array
+  console.log(product, 'product');
+  const productOptions = getProductOptions({
+    ...product,
+    selectedOrFirstAvailableVariant: selectedVariant,
+  });
+  console.log(productOptions, 'product options.');
+
+  const {title, descriptionHtml} = product;
+
+  // Log the data for debugging
+  console.log(
+    {
+      product, // Full product data
+      selectedVariant, // Currently selected variant
+      productOptions, // Structured options data
+    },
+    'product ,',
+  );
+
   return (
     <>
       {console.log(product, 'products on quick add page')}
@@ -109,15 +157,26 @@ export default function ProductCardQuickAdd({
 
                               {option.optionValues.map(
                                 (optionValue, optionValueIndex) => {
-                                  console.log(optionValue, ' options value');
-
+                                  const {
+                                    name,
+                                    handle,
+                                    variantUriQuery,
+                                    selected,
+                                    available,
+                                    exists,
+                                    isDifferentProduct,
+                                    swatch,
+                                  } = optionValue;
                                   return (
                                     <>
+                                      {console.log(
+                                        selected, variantUriQuery, available, isDifferentProduct,swatch, exists,name,handle,
+                                        ' options value',
+                                      )}
                                       <AddToCartButton
                                         disabled={
                                           !optionValue?.firstSelectableVariant ||
-                                          !optionValue
-                                            ?.firstSelectableVariant
+                                          !optionValue?.firstSelectableVariant
                                             ?.availableForSale
                                         }
                                         onClick={() => {
@@ -127,7 +186,10 @@ export default function ProductCardQuickAdd({
                                           optionValue?.firstSelectableVariant
                                             ? [
                                                 {
-                                                  merchandiseId:optionValue.firstSelectableVariant.id,
+                                                  merchandiseId:
+                                                    optionValue
+                                                      .firstSelectableVariant
+                                                      .id,
                                                   quantity: 1,
                                                 },
                                               ]
@@ -261,7 +323,8 @@ export default function ProductCardQuickAdd({
                                         : 'sold-out'
                                     }`}
                                   >
-                                    <button value={optionValue.firstSelectableVariant.id}
+                                    <button
+                                      value={optionValue.name}
                                       className="tabs-products-swatch-link"
                                     >
                                       <div className="tabs-products-swatch">

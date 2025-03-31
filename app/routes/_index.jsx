@@ -267,7 +267,7 @@ function FeaturedCollection({collection}) {
  */
 function RecommendedProducts({products}) {
   {
-    console.log(products, 'nnnn products');
+    console.log(products, 'recommeded products');
   }
 
   return (
@@ -321,7 +321,12 @@ const FEATURED_COLLECTION_QUERY = `#graphql
         nodes{
           id
           title
-          handle
+          vendor
+          handle  
+          descriptionHtml
+          description
+          encodedVariantExistence
+          encodedVariantAvailability
           media(first:100){
             nodes{
               alt
@@ -349,35 +354,35 @@ const FEATURED_COLLECTION_QUERY = `#graphql
           }
           totalInventory
           selectedOrFirstAvailableVariant{
-							availableForSale
-            	id
-            	sku
-            	title
-            compareAtPrice{
+            availableForSale
+            compareAtPrice {
               amount
               currencyCode
             }
-            image{
+            id
+            image {
               __typename
               id
-              url 
+              url
               altText
               width
               height
             }
-            price{
+            price {
               amount
               currencyCode
             }
-            product{
+            product {
               title
               handle
             }
-            selectedOptions{
+            selectedOptions {
               name
               value
             }
-            unitPrice{
+            sku
+            title
+            unitPrice {
               amount
               currencyCode
             }
@@ -427,8 +432,38 @@ const FEATURED_COLLECTION_QUERY = `#graphql
               id
               name
               firstSelectableVariant{
-                id
                 availableForSale
+                compareAtPrice {
+                  amount
+                  currencyCode
+                }
+                id
+                image {
+                  __typename
+                  id
+                  url
+                  altText
+                  width
+                  height
+                }
+                price {
+                  amount
+                  currencyCode
+                }
+                product {
+                  title
+                  handle
+                }
+                selectedOptions {
+                  name
+                  value
+                }
+                sku
+                title
+                unitPrice {
+                  amount
+                  currencyCode
+                }
               }
               swatch{
                 color
@@ -456,6 +491,10 @@ const FEATURED_COLLECTION_QUERY = `#graphql
                 width
               }
               availableForSale
+              selectedOptions{
+                name
+                value
+              }
             }  
           }
           variantsCount{
