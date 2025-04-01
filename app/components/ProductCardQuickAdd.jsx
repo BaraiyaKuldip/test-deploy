@@ -40,7 +40,7 @@ export default function ProductCardQuickAdd({
 
   // Sets the search param to the selected variant without navigation
   // only when no search params are set in the url
-  useSelectedOptionInUrlParam(selectedVariant.selectedOptions);
+  // useSelectedOptionInUrlParam(selectedVariant.selectedOptions);
 
   // Get the product options array
   console.log(product, 'product');
@@ -149,7 +149,7 @@ export default function ProductCardQuickAdd({
                         product?.options[0].name === 'Title',
                         'psops',
                       )} */}
-                      {product?.options.map((option) => (
+                      {productOptions.map((option) => (
                         <>
                           {option.name === 'Size' && (
                             <>
@@ -170,7 +170,14 @@ export default function ProductCardQuickAdd({
                                   return (
                                     <>
                                       {console.log(
-                                        selected, variantUriQuery, available, isDifferentProduct,swatch, exists,name,handle,
+                                        selected,
+                                        variantUriQuery,
+                                        available,
+                                        isDifferentProduct,
+                                        swatch,
+                                        exists,
+                                        name,
+                                        handle,
                                         ' options value',
                                       )}
                                       <AddToCartButton
@@ -298,21 +305,33 @@ export default function ProductCardQuickAdd({
                 <em>Sold Out</em>
               </p>
             )}
+          </a>
+          {productOptions.map((option) => (
+            <>
+              {console.log(option, 'optionss')}
+              {option.name === 'Color' && option.optionValues.length > 1 && (
+                <>
+                  <div className="tabs-products-swatch-main-container">
+                    <div className="tabs-products-swatch-sub-container">
+                      <p className="tabs-products-swatch-title">
+                        {option.optionValues.length} Colors Available
+                      </p>
+                      <div className="tabs-products-swatch-main-wrapper">
+                        <div className="tabs-products-swatch-sub-wrapper">
+                          <div className="tabs-products-swatch-inner">
+                            {option.optionValues.map((optionValue) => {
+                              const {
+                                name,
+                                handle,
+                                variantUriQuery,
+                                selected,
+                                available,
+                                exists,
+                                isDifferentProduct,
+                                swatch,
+                              } = optionValue ;
 
-            {product.options.map((option) => (
-              <>
-                {console.log(option, 'optionss')}
-                {option.name === 'Color' && option.optionValues.length > 1 && (
-                  <>
-                    <div className="tabs-products-swatch-main-container">
-                      <div className="tabs-products-swatch-sub-container">
-                        <p className="tabs-products-swatch-title">
-                          {option.optionValues.length} Colors Available
-                        </p>
-                        <div className="tabs-products-swatch-main-wrapper">
-                          <div className="tabs-products-swatch-sub-wrapper">
-                            <div className="tabs-products-swatch-inner">
-                              {option.optionValues.map((optionValue) => (
+                              return (
                                 <>
                                   {console.log(optionValue, 'option valueee')}
                                   <div
@@ -324,80 +343,90 @@ export default function ProductCardQuickAdd({
                                     }`}
                                   >
                                     <button
-                                      value={optionValue.name}
-                                      className="tabs-products-swatch-link"
+                                      type="button"
+                                      className={`product-options-item${
+                                        exists && !selected ? ' link' : ''
+                                      }`}
+                                      key={option.name + name}
+                                      style={{
+                                        border: selected
+                                          ? '1px solid black'
+                                          : '1px solid transparent',
+                                        opacity: available ? 1 : 0.3,
+                                      }}
+                                      disabled={!exists}
+                                      onClick={() => {
+                                        if (!selected) {
+                                          navigate(`?${variantUriQuery}`, {
+                                            replace: true,
+                                            preventScrollReset: true,
+                                          });
+                                        }
+                                      }}
+
                                     >
                                       <div className="tabs-products-swatch">
                                         <div className="tabs-products-swatch-size">
-                                          {optionValue.swatch !== null &&
-                                            optionValue.swatch.image
-                                              .previewImage !== null && (
-                                              <div className="relative block w-full h-full overflow-hidden aspect-[1.0]">
-                                                {/* <ProductImage product={ optionValue.swatch.image.previewImage}/> */}
-                                                {/* {console.log(optionValue.swatch.image.previewImage.url ,"urll")} */}
-                                                <Image
-                                                  data={
-                                                    optionValue.swatch.image
-                                                      .previewImage
-                                                  }
-                                                  class="block overflow-hidden w-full h-full object-cover transition-opacity duration-300 ease-linear"
-                                                  height="35"
-                                                  width="26"
-                                                  loading="lazy"
-                                                  fetchPriority="low"
-                                                  style={{
-                                                    objectPosition:
-                                                      'center center',
-                                                  }}
-                                                />
+                                          {optionValue.firstSelectableVariant
+                                            .image && (
+                                            <div className="relative block w-full h-full overflow-hidden aspect-[1.0]">
+                                              {console.log(
+                                                optionValue.name,
+                                                optionValue
+                                                  .firstSelectableVariant.image,
+                                                'imageee',
+                                              )}
+                                              <Image
+                                                data={
+                                                  optionValue
+                                                    .firstSelectableVariant
+                                                    .image
+                                                }
+                                                class="block overflow-hidden w-full h-full object-cover transition-opacity duration-300 ease-linear"
+                                                height="35"
+                                                width="26"
+                                                loading="lazy"
+                                                fetchPriority="low"
+                                                style={{
+                                                  objectPosition:
+                                                    'center center',
+                                                }}
+                                              />
 
-                                                {/* <img src={ optionValue.swatch.image.previewImage.url} alt={optionValue.swatch.image.previewImage.altText} height={35} width={26} style={{objectPosition:"center center"}}/> */}
-
-                                                {/* {optionValue.swatch.image.previewImage !== undefined && (
-                                                  <>
-                                                    <span>
-                                                      {
-                                                        optionValue.swatch
-                                                          .previewImage.altText
-                                                      }
-                                                    </span>
-                                                    <span>
-                                                      {
-                                                        optionValue.swatch
-                                                          .previewImage.url
-                                                      }
-                                                      
-                                                    </span>
-                                                  </>
-                                                )} */}
-                                              </div>
-                                            )}
+                                              {console.log(
+                                                optionValue.name,
+                                                optionValue
+                                                  .firstSelectableVariant.image,
+                                                'imageee',
+                                              )}
+                                            </div>
+                                          )}
                                         </div>
                                       </div>
                                     </button>
                                   </div>
                                 </>
-                              ))}
-                              {option.optionValues.length > 5 && (
-                                <>
-                                  <a
-                                    href="#"
-                                    className="  tabs-products-swatch-more-links"
-                                  >
-                                    {option.optionValues.length - 5}+
-                                  </a>
-                                </>
-                              )}
-                            </div>
+                              );
+                            })}
+                            {option.optionValues.length > 5 && (
+                              <>
+                                <a
+                                  href="#"
+                                  className="  tabs-products-swatch-more-links"
+                                >
+                                  {option.optionValues.length - 5}+
+                                </a>
+                              </>
+                            )}
                           </div>
                         </div>
                       </div>
                     </div>
-                  </>
-                )}
-              </>
-            ))}
-          </a>
+                  </div>
+                </>
+              )}
+            </>
+          ))}
         </div>
       </div>
     </>

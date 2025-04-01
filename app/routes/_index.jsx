@@ -198,7 +198,7 @@ function FeaturedCollection({collection}) {
                   data-tab={index}
                   tabIndex={index}
                 >
-                  {console.log(collection.products, 'nknk')}
+                  {console.log(collection.products, 'collection products')}
                   <span className="uppercase"> {collection.title}</span>
                 </button>
               </div>
@@ -341,7 +341,7 @@ const FEATURED_COLLECTION_QUERY = `#graphql
               }
             }
           }
-          images(first:6){
+          images(first:100){
             edges{
               node{
                 id
@@ -386,6 +386,11 @@ const FEATURED_COLLECTION_QUERY = `#graphql
               amount
               currencyCode
             }
+            metafield(namespace:"meta" , key:"swatch_images"){
+                value
+                id  
+                type
+              }
           }
           adjacentVariants{
             availableForSale
@@ -420,6 +425,11 @@ const FEATURED_COLLECTION_QUERY = `#graphql
               amount
               currencyCode
             }
+            metafield(namespace:"meta" , key:"swatch_images"){
+                value
+                id  
+                type
+              }
           }
           seo{
             description
@@ -464,6 +474,11 @@ const FEATURED_COLLECTION_QUERY = `#graphql
                   amount
                   currencyCode
                 }
+                metafield(namespace:"meta" , key:"swatch_images"){
+                value
+                id  
+                type
+              }
               }
               swatch{
                 color
@@ -495,11 +510,21 @@ const FEATURED_COLLECTION_QUERY = `#graphql
                 name
                 value
               }
+              metafield(namespace:"meta" , key:"swatch_images"){
+                value
+                id  
+                type
+              }
             }  
           }
           variantsCount{
             count
             precision
+          }
+          metafield(namespace:"meta" , key:"swatch_images"){
+            value
+            id  
+            type
           }
         }
       }

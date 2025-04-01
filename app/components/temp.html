@@ -587,3 +587,82 @@ fieldset for variatnt selection
                                           </form>
                                         </div>
                                       </fieldset>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                                      <button
+                                    value={optionValue.name}
+                                    className="tabs-products-swatch-link"
+                                  >
+                                    <div className="tabs-products-swatch">
+                                      <div className="tabs-products-swatch-size">
+                                        {optionValue.firstSelectableVariant
+                                          .image && (
+                                          <div className="relative block w-full h-full overflow-hidden aspect-[1.0]">
+                                            {/* <ProductImage product={ optionValue.swatch.image.previewImage}/> */}
+                                            {/* {console.log(optionValue.swatch.image.previewImage.url ,"urll")} */}
+                                            {console.log(
+                                              optionValue.name,
+                                              optionValue.firstSelectableVariant
+                                                .image,
+                                              'imageee',
+                                            )}
+                                            <Image
+                                              data={
+                                                optionValue
+                                                  .firstSelectableVariant.image
+                                              }
+                                              class="block overflow-hidden w-full h-full object-cover transition-opacity duration-300 ease-linear"
+                                              height="35"
+                                              width="26"
+                                              loading="lazy"
+                                              fetchPriority="low"
+                                              style={{
+                                                objectPosition: 'center center',
+                                              }}
+                                            />
+
+                                            {console.log(
+                                              optionValue.name,
+                                              optionValue.firstSelectableVariant
+                                                .image,
+                                              'imageee',
+                                            )}
+
+                                            {/* <img src={ optionValue.swatch.image.previewImage.url} alt={optionValue.swatch.image.previewImage.altText} height={35} width={26} style={{objectPosition:"center center"}}/> */}
+
+                                            {/* {optionValue.swatch.image.previewImage !== undefined && (
+                                                  <>
+                                                    <span>
+                                                      {
+                                                        optionValue.swatch
+                                                          .previewImage.altText
+                                                      }
+                                                    </span>
+                                                    <span>
+                                                      {
+                                                        optionValue.swatch
+                                                          .previewImage.url
+                                                      }
+                                                      
+                                                    </span>
+                                                  </>
+                                                )} */}
+                                          </div>
+                                        )}
+                                      </div>
+                                    </div>
+                                  </button>

@@ -7,6 +7,7 @@ import {
   getProductOptions,
   getAdjacentAndFirstAvailableVariants,
   useSelectedOptionInUrlParam,
+  Image,
 } from '@shopify/hydrogen';
 import {ProductPrice} from '~/components/ProductPrice';
 import {ProductImage} from '~/components/ProductImage';
@@ -110,8 +111,27 @@ export default function Product() {
 
   return (
     <div className="product">
+      
       {console.log(selectedVariant ,'cdcd')}
-      <ProductImage image={selectedVariant?.image} />
+      {
+        selectedVariant.selectedOptions.map((option)=> (
+          option.name === 'Color' ? <>
+          {product.images.edges.map((image)=>(
+            image.node.altText === option.value &&(
+              <>  
+              <ProductImage image={image.node} />
+              </>
+            )
+          ))} 
+          </> : <>
+          {option.name === 'Title' &&(
+           <ProductImage image={selectedVariant?.image} />        
+          )}
+          </>
+        ))
+      }
+
+      
       <div className="product-main">
         <h1>{title}</h1>
         <ProductPrice
@@ -198,6 +218,17 @@ const PRODUCT_FRAGMENT = `#graphql
     description
     encodedVariantExistence
     encodedVariantAvailability
+    images(first:100){
+      edges{
+        node{
+          id
+          url
+          altText
+          width
+          height
+        }
+      }
+    }
     options {
       name
       optionValues {

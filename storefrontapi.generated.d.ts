@@ -417,6 +417,9 @@ export type FeaturedCollectionFragment = Pick<
             unitPrice?: StorefrontAPI.Maybe<
               Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>
             >;
+            metafield?: StorefrontAPI.Maybe<
+              Pick<StorefrontAPI.Metafield, 'value' | 'id' | 'type'>
+            >;
           }
         >;
         adjacentVariants: Array<
@@ -440,6 +443,9 @@ export type FeaturedCollectionFragment = Pick<
             >;
             unitPrice?: StorefrontAPI.Maybe<
               Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>
+            >;
+            metafield?: StorefrontAPI.Maybe<
+              Pick<StorefrontAPI.Metafield, 'value' | 'id' | 'type'>
             >;
           }
         >;
@@ -472,6 +478,9 @@ export type FeaturedCollectionFragment = Pick<
                     >;
                     unitPrice?: StorefrontAPI.Maybe<
                       Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>
+                    >;
+                    metafield?: StorefrontAPI.Maybe<
+                      Pick<StorefrontAPI.Metafield, 'value' | 'id' | 'type'>
                     >;
                   }
                 >;
@@ -520,11 +529,17 @@ export type FeaturedCollectionFragment = Pick<
               selectedOptions: Array<
                 Pick<StorefrontAPI.SelectedOption, 'name' | 'value'>
               >;
+              metafield?: StorefrontAPI.Maybe<
+                Pick<StorefrontAPI.Metafield, 'value' | 'id' | 'type'>
+              >;
             }
           >;
         };
         variantsCount?: StorefrontAPI.Maybe<
           Pick<StorefrontAPI.Count, 'count' | 'precision'>
+        >;
+        metafield?: StorefrontAPI.Maybe<
+          Pick<StorefrontAPI.Metafield, 'value' | 'id' | 'type'>
         >;
       }
     >;
@@ -638,6 +653,9 @@ export type FeaturedCollectionQuery = {
                   unitPrice?: StorefrontAPI.Maybe<
                     Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>
                   >;
+                  metafield?: StorefrontAPI.Maybe<
+                    Pick<StorefrontAPI.Metafield, 'value' | 'id' | 'type'>
+                  >;
                 }
               >;
               adjacentVariants: Array<
@@ -661,6 +679,9 @@ export type FeaturedCollectionQuery = {
                   >;
                   unitPrice?: StorefrontAPI.Maybe<
                     Pick<StorefrontAPI.MoneyV2, 'amount' | 'currencyCode'>
+                  >;
+                  metafield?: StorefrontAPI.Maybe<
+                    Pick<StorefrontAPI.Metafield, 'value' | 'id' | 'type'>
                   >;
                 }
               >;
@@ -701,6 +722,12 @@ export type FeaturedCollectionQuery = {
                             Pick<
                               StorefrontAPI.MoneyV2,
                               'amount' | 'currencyCode'
+                            >
+                          >;
+                          metafield?: StorefrontAPI.Maybe<
+                            Pick<
+                              StorefrontAPI.Metafield,
+                              'value' | 'id' | 'type'
                             >
                           >;
                         }
@@ -768,11 +795,17 @@ export type FeaturedCollectionQuery = {
                     selectedOptions: Array<
                       Pick<StorefrontAPI.SelectedOption, 'name' | 'value'>
                     >;
+                    metafield?: StorefrontAPI.Maybe<
+                      Pick<StorefrontAPI.Metafield, 'value' | 'id' | 'type'>
+                    >;
                   }
                 >;
               };
               variantsCount?: StorefrontAPI.Maybe<
                 Pick<StorefrontAPI.Count, 'count' | 'precision'>
+              >;
+              metafield?: StorefrontAPI.Maybe<
+                Pick<StorefrontAPI.Metafield, 'value' | 'id' | 'type'>
               >;
             }
           >;
@@ -1196,6 +1229,14 @@ export type ProductFragment = Pick<
   | 'encodedVariantExistence'
   | 'encodedVariantAvailability'
 > & {
+  images: {
+    edges: Array<{
+      node: Pick<
+        StorefrontAPI.Image,
+        'id' | 'url' | 'altText' | 'width' | 'height'
+      >;
+    }>;
+  };
   options: Array<
     Pick<StorefrontAPI.ProductOption, 'name'> & {
       optionValues: Array<
@@ -1310,6 +1351,14 @@ export type ProductQuery = {
       | 'encodedVariantExistence'
       | 'encodedVariantAvailability'
     > & {
+      images: {
+        edges: Array<{
+          node: Pick<
+            StorefrontAPI.Image,
+            'id' | 'url' | 'altText' | 'width' | 'height'
+          >;
+        }>;
+      };
       options: Array<
         Pick<StorefrontAPI.ProductOption, 'name'> & {
           optionValues: Array<
@@ -1724,7 +1773,7 @@ interface GeneratedQueryTypes {
     return: StoreRobotsQuery;
     variables: StoreRobotsQueryVariables;
   };
-  '#graphql\n  fragment FeaturedCollection on Collection {\n    id\n    title\n    image {\n      id\n      url\n      altText\n      width\n      height\n    }\n    handle\n    products(first:200){\n        nodes{\n          id\n          title\n          vendor\n          handle  \n          descriptionHtml\n          description\n          encodedVariantExistence\n          encodedVariantAvailability\n          media(first:100){\n            nodes{\n              alt\n              id\n              mediaContentType\n              previewImage{\n                url\n                id\n                altText\n                height\n                width\n              }\n            }\n          }\n          images(first:6){\n            edges{\n              node{\n                id\n                url\n                altText\n                width\n                height\n              }\n            }\n          }\n          totalInventory\n          selectedOrFirstAvailableVariant{\n            availableForSale\n            compareAtPrice {\n              amount\n              currencyCode\n            }\n            id\n            image {\n              __typename\n              id\n              url\n              altText\n              width\n              height\n            }\n            price {\n              amount\n              currencyCode\n            }\n            product {\n              title\n              handle\n            }\n            selectedOptions {\n              name\n              value\n            }\n            sku\n            title\n            unitPrice {\n              amount\n              currencyCode\n            }\n          }\n          adjacentVariants{\n            availableForSale\n            id\n            sku\n            title\n            compareAtPrice{\n              amount\n              currencyCode\n            }\n            image{\n              __typename\n              id\n              url\n              altText\n              height\n              width\n            }\n            price{\n              amount\n              currencyCode\n            }\n            product{\n              title\n              handle\n            }\n            selectedOptions{\n              name\n              value\n            }\n            unitPrice{\n              amount\n              currencyCode\n            }\n          }\n          seo{\n            description\n            title\n          }\n          options{\n            id\n            name\n            optionValues{\n              id\n              name\n              firstSelectableVariant{\n                availableForSale\n                compareAtPrice {\n                  amount\n                  currencyCode\n                }\n                id\n                image {\n                  __typename\n                  id\n                  url\n                  altText\n                  width\n                  height\n                }\n                price {\n                  amount\n                  currencyCode\n                }\n                product {\n                  title\n                  handle\n                }\n                selectedOptions {\n                  name\n                  value\n                }\n                sku\n                title\n                unitPrice {\n                  amount\n                  currencyCode\n                }\n              }\n              swatch{\n                color\n                image{\n                  alt\n                  id\n                  previewImage{\n                    id\n                    altText\n                    url\n                  }\n                } \n              } \n            } \n          }\n          variants(first:100){\n            nodes{\n              id\n              title\n              image{\n                url\n                altText\n                id\n                height\n                width\n              }\n              availableForSale\n              selectedOptions{\n                name\n                value\n              }\n            }  \n          }\n          variantsCount{\n            count\n            precision\n          }\n        }\n      }\n  }\n  query FeaturedCollection($country: CountryCode, $language: LanguageCode)\n    @inContext(country: $country, language: $language) {\n    collections(first: 100, sortKey: TITLE, reverse: false) {\n      nodes {\n        ...FeaturedCollection\n      }\n    }\n  }\n': {
+  '#graphql\n  fragment FeaturedCollection on Collection {\n    id\n    title\n    image {\n      id\n      url\n      altText\n      width\n      height\n    }\n    handle\n    products(first:200){\n        nodes{\n          id\n          title\n          vendor\n          handle  \n          descriptionHtml\n          description\n          encodedVariantExistence\n          encodedVariantAvailability\n          media(first:100){\n            nodes{\n              alt\n              id\n              mediaContentType\n              previewImage{\n                url\n                id\n                altText\n                height\n                width\n              }\n            }\n          }\n          images(first:100){\n            edges{\n              node{\n                id\n                url\n                altText\n                width\n                height\n              }\n            }\n          }\n          totalInventory\n          selectedOrFirstAvailableVariant{\n            availableForSale\n            compareAtPrice {\n              amount\n              currencyCode\n            }\n            id\n            image {\n              __typename\n              id\n              url\n              altText\n              width\n              height\n            }\n            price {\n              amount\n              currencyCode\n            }\n            product {\n              title\n              handle\n            }\n            selectedOptions {\n              name\n              value\n            }\n            sku\n            title\n            unitPrice {\n              amount\n              currencyCode\n            }\n            metafield(namespace:"meta" , key:"swatch_images"){\n                value\n                id  \n                type\n              }\n          }\n          adjacentVariants{\n            availableForSale\n            id\n            sku\n            title\n            compareAtPrice{\n              amount\n              currencyCode\n            }\n            image{\n              __typename\n              id\n              url\n              altText\n              height\n              width\n            }\n            price{\n              amount\n              currencyCode\n            }\n            product{\n              title\n              handle\n            }\n            selectedOptions{\n              name\n              value\n            }\n            unitPrice{\n              amount\n              currencyCode\n            }\n            metafield(namespace:"meta" , key:"swatch_images"){\n                value\n                id  \n                type\n              }\n          }\n          seo{\n            description\n            title\n          }\n          options{\n            id\n            name\n            optionValues{\n              id\n              name\n              firstSelectableVariant{\n                availableForSale\n                compareAtPrice {\n                  amount\n                  currencyCode\n                }\n                id\n                image {\n                  __typename\n                  id\n                  url\n                  altText\n                  width\n                  height\n                }\n                price {\n                  amount\n                  currencyCode\n                }\n                product {\n                  title\n                  handle\n                }\n                selectedOptions {\n                  name\n                  value\n                }\n                sku\n                title\n                unitPrice {\n                  amount\n                  currencyCode\n                }\n                metafield(namespace:"meta" , key:"swatch_images"){\n                value\n                id  \n                type\n              }\n              }\n              swatch{\n                color\n                image{\n                  alt\n                  id\n                  previewImage{\n                    id\n                    altText\n                    url\n                  }\n                } \n              } \n            } \n          }\n          variants(first:100){\n            nodes{\n              id\n              title\n              image{\n                url\n                altText\n                id\n                height\n                width\n              }\n              availableForSale\n              selectedOptions{\n                name\n                value\n              }\n              metafield(namespace:"meta" , key:"swatch_images"){\n                value\n                id  \n                type\n              }\n            }  \n          }\n          variantsCount{\n            count\n            precision\n          }\n          metafield(namespace:"meta" , key:"swatch_images"){\n            value\n            id  \n            type\n          }\n        }\n      }\n  }\n  query FeaturedCollection($country: CountryCode, $language: LanguageCode)\n    @inContext(country: $country, language: $language) {\n    collections(first: 100, sortKey: TITLE, reverse: false) {\n      nodes {\n        ...FeaturedCollection\n      }\n    }\n  }\n': {
     return: FeaturedCollectionQuery;
     variables: FeaturedCollectionQueryVariables;
   };
@@ -1768,7 +1817,7 @@ interface GeneratedQueryTypes {
     return: PoliciesQuery;
     variables: PoliciesQueryVariables;
   };
-  '#graphql\n  query Product(\n    $country: CountryCode\n    $handle: String!\n    $language: LanguageCode\n    $selectedOptions: [SelectedOptionInput!]!\n  ) @inContext(country: $country, language: $language) {\n    product(handle: $handle) {\n      ...Product\n    }\n  }\n  #graphql\n  fragment Product on Product {\n    id\n    title\n    vendor\n    handle\n    descriptionHtml\n    description\n    encodedVariantExistence\n    encodedVariantAvailability\n    options {\n      name\n      optionValues {\n        name\n        firstSelectableVariant {\n          ...ProductVariant\n        }\n        swatch {\n          color\n          image {\n            previewImage {\n              url\n            }\n          }\n        }\n      }\n    }\n    selectedOrFirstAvailableVariant(selectedOptions: $selectedOptions, ignoreUnknownOptions: true, caseInsensitiveMatch: true) {\n      ...ProductVariant\n    }\n    adjacentVariants (selectedOptions: $selectedOptions) {\n      ...ProductVariant\n    }\n    seo {\n      description\n      title\n    }\n  }\n  #graphql\n  fragment ProductVariant on ProductVariant {\n    availableForSale\n    compareAtPrice {\n      amount\n      currencyCode\n    }\n    id\n    image {\n      __typename\n      id\n      url\n      altText\n      width\n      height\n    }\n    price {\n      amount\n      currencyCode\n    }\n    product {\n      title\n      handle\n    }\n    selectedOptions {\n      name\n      value\n    }\n    sku\n    title\n    unitPrice {\n      amount\n      currencyCode\n    }\n  }\n\n\n': {
+  '#graphql\n  query Product(\n    $country: CountryCode\n    $handle: String!\n    $language: LanguageCode\n    $selectedOptions: [SelectedOptionInput!]!\n  ) @inContext(country: $country, language: $language) {\n    product(handle: $handle) {\n      ...Product\n    }\n  }\n  #graphql\n  fragment Product on Product {\n    id\n    title\n    vendor\n    handle\n    descriptionHtml\n    description\n    encodedVariantExistence\n    encodedVariantAvailability\n    images(first:100){\n      edges{\n        node{\n          id\n          url\n          altText\n          width\n          height\n        }\n      }\n    }\n    options {\n      name\n      optionValues {\n        name\n        firstSelectableVariant {\n          ...ProductVariant\n        }\n        swatch {\n          color\n          image {\n            previewImage {\n              url\n            }\n          }\n        }\n      }\n    }\n    selectedOrFirstAvailableVariant(selectedOptions: $selectedOptions, ignoreUnknownOptions: true, caseInsensitiveMatch: true) {\n      ...ProductVariant\n    }\n    adjacentVariants (selectedOptions: $selectedOptions) {\n      ...ProductVariant\n    }\n    seo {\n      description\n      title\n    }\n  }\n  #graphql\n  fragment ProductVariant on ProductVariant {\n    availableForSale\n    compareAtPrice {\n      amount\n      currencyCode\n    }\n    id\n    image {\n      __typename\n      id\n      url\n      altText\n      width\n      height\n    }\n    price {\n      amount\n      currencyCode\n    }\n    product {\n      title\n      handle\n    }\n    selectedOptions {\n      name\n      value\n    }\n    sku\n    title\n    unitPrice {\n      amount\n      currencyCode\n    }\n  }\n\n\n': {
     return: ProductQuery;
     variables: ProductQueryVariables;
   };
