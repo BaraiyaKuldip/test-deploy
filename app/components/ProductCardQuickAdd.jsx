@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {defer} from '@shopify/remix-oxygen';
-import {useLoaderData} from '@remix-run/react';
+import {useLoaderData, useNavigate} from '@remix-run/react';
 import {
   getSelectedProductOptions,
   Analytics,
@@ -17,11 +17,78 @@ import {ProductImage} from './ProductImage';
 import {Image} from '@shopify/hydrogen';
 import {useAside} from './Aside';
 
+/**
+ * @param {LoaderFunctionArgs} args
+ */
+export async function loader(args) {
+  // Start fetching non-critical data without blocking time to first byte
+  const deferredData = loadDeferredData(args);
+
+  // Await the critical data required to render initial state of the page
+  const criticalData = await loadCriticalData(args);
+
+  return defer({...deferredData, ...criticalData});
+}
+
+/**
+ * Load data necessary for rendering content above the fold. This is the critical data
+ * needed to render the page. If it's unavailable, the whole page should 400 or 500 error.
+ * @param {LoaderFunctionArgs}
+ */
+async function loadCriticalData({context, params, request}) {
+  const {handle} = params;
+  const {storefront} = context;
+
+  if (!handle) {
+    throw new Error('Expected product handle to be defined');
+  }
+
+  const [{product}] = await Promise.all([
+    storefront.query(PRODUCT_QUERY, {
+      variables: {handle, selectedOptions: getSelectedProductOptions(request)},
+    }),
+    // Add other queries here, so that they are loaded in parallel
+  ]);
+  console.log(request ,"request on quick add")
+
+  if (!product?.id) {
+    throw new Response(null, {status: 404});
+  }
+
+  return {
+    product,
+  };
+}
+
+/**
+ * Load data for rendering content below the fold. This data is deferred and will be
+ * fetched after the initial page load. If it's unavailable, the page should still 200.
+ * Make sure to not throw any errors here, as it will cause the page to 500.
+ * @param {LoaderFunctionArgs}
+ */
+function loadDeferredData({context, params}) {
+  // Put any API calls that is not critical to be available on first page render
+  // For example: product reviews, product recommendations, social feeds.
+
+  return {};
+}
+
+/**
+ * @param {{
+*   productOptions: MappedProductOptions[];
+*   selectedVariant: ProductFragment['selectedOrFirstAvailableVariant'];
+* }}
+*/
+
 export default function ProductCardQuickAdd({
   product,
   productIndex,
   collectionIndex,
 }) {
+  
+/** @type {LoaderReturnData} */
+
+  const navigate = useNavigate();
   const {open} = useAside();
   const [selectedVariantId, setSelectedVariantId] = useState('');
 
@@ -40,7 +107,7 @@ export default function ProductCardQuickAdd({
 
   // Sets the search param to the selected variant without navigation
   // only when no search params are set in the url
-  // useSelectedOptionInUrlParam(selectedVariant.selectedOptions);
+  useSelectedOptionInUrlParam(selectedVariant.selectedOptions);
 
   // Get the product options array
   console.log(product, 'product');
@@ -149,54 +216,41 @@ export default function ProductCardQuickAdd({
                         product?.options[0].name === 'Title',
                         'psops',
                       )} */}
-                      {productOptions.map((option) => (
+                      {console.log(product, 'product optionsss')}
+                      {product.variants.nodes.map((variant) => (
                         <>
-                          {option.name === 'Size' && (
-                            <>
-                              {/* {console.log(product, 'psops')} */}
+                          {/* {console.log(product, 'psops')} */}
+                          {variant.selectedOptions.map((selectedOption) => {
+                            const variantColor = variant.selectedOptions.find(
+                              (opt) => opt.name === 'Color',
+                            )?.value;
 
-                              {option.optionValues.map(
-                                (optionValue, optionValueIndex) => {
-                                  const {
-                                    name,
-                                    handle,
-                                    variantUriQuery,
-                                    selected,
-                                    available,
-                                    exists,
-                                    isDifferentProduct,
-                                    swatch,
-                                  } = optionValue;
-                                  return (
+                            const selectedColor =
+                              selectedVariant.selectedOptions.find(
+                                (opt) => opt.name === 'Color',
+                              )?.value;
+
+                            return (
+                              <>
+                                {variantColor === selectedColor &&
+                                  selectedOption.name === 'Size' && (
                                     <>
                                       {console.log(
-                                        selected,
-                                        variantUriQuery,
-                                        available,
-                                        isDifferentProduct,
-                                        swatch,
-                                        exists,
-                                        name,
-                                        handle,
-                                        ' options value',
+                                        selectedOption,
+                                        'selected varrr',
                                       )}
                                       <AddToCartButton
                                         disabled={
-                                          !optionValue?.firstSelectableVariant ||
-                                          !optionValue?.firstSelectableVariant
-                                            ?.availableForSale
+                                          !variant || !variant?.availableForSale
                                         }
                                         onClick={() => {
                                           open('cart');
                                         }}
                                         lines={
-                                          optionValue?.firstSelectableVariant
+                                          variant
                                             ? [
                                                 {
-                                                  merchandiseId:
-                                                    optionValue
-                                                      .firstSelectableVariant
-                                                      .id,
+                                                  merchandiseId: variant.id,
                                                   quantity: 1,
                                                 },
                                               ]
@@ -204,18 +258,18 @@ export default function ProductCardQuickAdd({
                                         }
                                       >
                                         {/* {console.log(
-                            product.selectedOrFirstAvailableVariant,
-                            'product selected first available variant',
-                          )} */}
+                                product.selectedOrFirstAvailableVariant,
+                                'product selected first available variant',
+                              )} */}
                                         <div className="product-form__buttons w-full h-full">
                                           <button
                                             type="submit"
                                             name="add"
-                                            value={optionValue.name}
+                                            value={variant.id}
                                             className="product-form__submit button button--full-width group-option-btn h-full w-full cursor-pointer"
                                           >
                                             <span className="tabs-variant-select-btn inline-block whitespace-nowrap text-button-contrast px-r4 py-r4 group-hover-option-button-text-button-contrast group-hover-option-button-bg-button-contrast-5">
-                                              {optionValue.name}
+                                              {selectedOption.value}
                                             </span>
                                             <div className="loading__spinner hidden">
                                               <svg
@@ -237,18 +291,17 @@ export default function ProductCardQuickAdd({
                                         </div>
                                       </AddToCartButton>
                                     </>
-                                  );
-                                },
-                              )}
+                                  )}
+                              </>
+                            );
+                          })}
 
-                              {/* <a
+                          {/* <a
                                 className="ket_extar_variants"
                                 href="/products/the-lori-off-shoulder"
                               >
                                 2+
                               </a> */}
-                            </>
-                          )}
                         </>
                       ))}
                     </div>
@@ -319,7 +372,7 @@ export default function ProductCardQuickAdd({
                       <div className="tabs-products-swatch-main-wrapper">
                         <div className="tabs-products-swatch-sub-wrapper">
                           <div className="tabs-products-swatch-inner">
-                            {option.optionValues.map((optionValue) => {
+                            {option.optionValues.map((optionValue,index) => {
                               const {
                                 name,
                                 handle,
@@ -329,7 +382,13 @@ export default function ProductCardQuickAdd({
                                 exists,
                                 isDifferentProduct,
                                 swatch,
-                              } = optionValue ;
+                              } = optionValue;
+
+                              const [activeSwatchTab, setActiveSwatchTab] = useState(0);
+                              
+                                const handleSwatchTabClick = (tabIndex) => {
+                                  setActiveSwatchTab(tabIndex);
+                                };
 
                               return (
                                 <>
@@ -350,12 +409,15 @@ export default function ProductCardQuickAdd({
                                       key={option.name + name}
                                       style={{
                                         border: selected
-                                          ? '1px solid black'
+                                          ? '1px solid red'
                                           : '1px solid transparent',
                                         opacity: available ? 1 : 0.3,
                                       }}
                                       disabled={!exists}
+                                      data-tab={index}
+                                      tabIndex={index}
                                       onClick={() => {
+                                        handleSwatchTabClick(index)
                                         if (!selected) {
                                           navigate(`?${variantUriQuery}`, {
                                             replace: true,
@@ -363,19 +425,13 @@ export default function ProductCardQuickAdd({
                                           });
                                         }
                                       }}
-
                                     >
+                                      {console.log(activeSwatchTab,"active index")}
                                       <div className="tabs-products-swatch">
                                         <div className="tabs-products-swatch-size">
                                           {optionValue.firstSelectableVariant
                                             .image && (
                                             <div className="relative block w-full h-full overflow-hidden aspect-[1.0]">
-                                              {console.log(
-                                                optionValue.name,
-                                                optionValue
-                                                  .firstSelectableVariant.image,
-                                                'imageee',
-                                              )}
                                               <Image
                                                 data={
                                                   optionValue
@@ -392,13 +448,6 @@ export default function ProductCardQuickAdd({
                                                     'center center',
                                                 }}
                                               />
-
-                                              {console.log(
-                                                optionValue.name,
-                                                optionValue
-                                                  .firstSelectableVariant.image,
-                                                'imageee',
-                                              )}
                                             </div>
                                           )}
                                         </div>
@@ -432,3 +481,117 @@ export default function ProductCardQuickAdd({
     </>
   );
 }
+
+const PRODUCT_VARIANT_FRAGMENT = `#graphql
+  fragment ProductVariant on ProductVariant {
+    availableForSale
+    compareAtPrice {
+      amount
+      currencyCode
+    }
+    id
+    image {
+      __typename
+      id
+      url
+      altText
+      width
+      height
+    }
+    price {
+      amount
+      currencyCode
+    }
+    product {
+      title
+      handle
+    }
+    selectedOptions {
+      name
+      value
+    }
+    sku
+    title
+    unitPrice {
+      amount
+      currencyCode
+    }
+  }
+`;
+
+const PRODUCT_FRAGMENT = `#graphql
+  fragment Product on Product {
+    id
+    title
+    vendor
+    handle
+    descriptionHtml
+    description
+    encodedVariantExistence
+    encodedVariantAvailability
+    images(first:100){
+      edges{
+        node{
+          id
+          url
+          altText
+          width
+          height
+        }
+      }
+    }
+    options {
+      name
+      optionValues {
+        name
+        firstSelectableVariant {
+          ...ProductVariant
+        }
+        swatch {
+          color
+          image {
+            previewImage {
+              url
+            }
+          }
+        }
+      }
+    }
+    selectedOrFirstAvailableVariant(selectedOptions: $selectedOptions, ignoreUnknownOptions: true, caseInsensitiveMatch: true) {
+      ...ProductVariant
+    }
+    adjacentVariants (selectedOptions: $selectedOptions) {
+      ...ProductVariant
+    }
+    seo {
+      description
+      title
+    }
+  }
+  ${PRODUCT_VARIANT_FRAGMENT}
+`;
+
+const PRODUCT_QUERY = `#graphql
+  query Product(
+    $country: CountryCode
+    $handle: String!
+    $language: LanguageCode
+    $selectedOptions: [SelectedOptionInput!]!
+  ) @inContext(country: $country, language: $language) {
+    product(handle: $handle) {
+      ...Product
+    }
+  }
+  ${PRODUCT_FRAGMENT}
+`;
+
+
+/** @typedef {import('@shopify/hydrogen').MappedProductOptions} MappedProductOptions */
+/** @typedef {import('@shopify/hydrogen/storefront-api-types').Maybe} Maybe */
+/** @typedef {import('@shopify/hydrogen/storefront-api-types').ProductOptionValueSwatch} ProductOptionValueSwatch */
+/** @typedef {import('storefrontapi.generated').ProductFragment} ProductFragment */
+
+
+/** @typedef {import('@shopify/remix-oxygen').LoaderFunctionArgs} LoaderFunctionArgs */
+/** @template T @typedef {import('@remix-run/react').MetaFunction<T>} MetaFunction */
+/** @typedef {import('@shopify/remix-oxygen').SerializeFrom<typeof loader>} LoaderReturnData */

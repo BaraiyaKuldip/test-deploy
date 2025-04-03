@@ -12,6 +12,8 @@ import {
 import {ProductPrice} from '~/components/ProductPrice';
 import {ProductImage} from '~/components/ProductImage';
 import {ProductForm} from '~/components/ProductForm';
+import {ProductGallery} from '~/components/PhotoSwipeZoom';
+import {useEffect} from 'react';
 
 /**
  * @type {MetaFunction<typeof loader>}
@@ -47,6 +49,17 @@ export async function loader(args) {
 async function loadCriticalData({context, params, request}) {
   const {handle} = params;
   const {storefront} = context;
+
+  console.log(request, 'requestt');
+
+  // Request {
+  //   method: GET,
+  //   url: http://localhost:3000/products/uspa-tshirt-all-colors?Size=L&Color=Black,
+  //   headers: Headers,
+  //   redirect: follow,
+  //   fetcher: null
+  //   ...
+  // } requestt
 
   if (!handle) {
     throw new Error('Expected product handle to be defined');
@@ -84,7 +97,7 @@ function loadDeferredData({context, params}) {
 export default function Product() {
   /** @type {LoaderReturnData} */
   const {product} = useLoaderData();
-  console.log(product, "product all data")
+  console.log(product, 'product all data');
 
   // Optimistically selects a variant with given available variant information
   const selectedVariant = useOptimisticVariant(
@@ -92,82 +105,110 @@ export default function Product() {
     getAdjacentAndFirstAvailableVariants(product),
   );
 
-  {console.log(selectedVariant,"selected variant")}
+  {
+    console.log(selectedVariant, 'selected variant');
+  }
 
   // Sets the search param to the selected variant without navigation
   // only when no search params are set in the url
   useSelectedOptionInUrlParam(selectedVariant.selectedOptions);
 
   // Get the product options array
-  console.log(product , "product")
+  console.log(product, 'product');
   const productOptions = getProductOptions({
     ...product,
     selectedOrFirstAvailableVariant: selectedVariant,
   });
-  console.log(productOptions , "product options.")
-
+  console.log(productOptions, 'product options.');
 
   const {title, descriptionHtml} = product;
 
   return (
-    <div className="product">
-      
-      {console.log(selectedVariant ,'cdcd')}
-      {
-        selectedVariant.selectedOptions.map((option)=> (
-          option.name === 'Color' ? <>
-          {product.images.edges.map((image)=>(
-            image.node.altText === option.value &&(
-              <>  
-              <ProductImage image={image.node} />
-              </>
-            )
-          ))} 
-          </> : <>
-          {option.name === 'Title' &&(
-           <ProductImage image={selectedVariant?.image} />        
-          )}
-          </>
-        ))
-      }
+    <>
+      <div className="product-page-main-container">
+        <div className="product-page-sub-container">
+          {console.log(selectedVariant, 'cdcd')}
 
-      
-      <div className="product-main">
-        <h1>{title}</h1>
-        <ProductPrice
-          price={selectedVariant?.price}
-          compareAtPrice={selectedVariant?.compareAtPrice}
-        />
-        <br />
-        <ProductForm
-          productOptions={productOptions}
-          selectedVariant={selectedVariant}
-        />
-        <br />
-        <br />
-        <p>
-          <strong>Description</strong>
-        </p>
-        <br />
-        <div dangerouslySetInnerHTML={{__html: descriptionHtml}} />
-        <br />
+          <div className="product-page-media-wrapper large-up--five-eighths product__mobile--carousel medium--one-half">
+            <ProductGallery
+              images={product.images}
+              selectedVariant={selectedVariant}
+              product={product}
+            />
+
+            {/* <div className="product-page-media-grid">
+              {selectedVariant.selectedOptions.map((option) =>
+                option.name === 'Color' ? (
+                  <>
+                    {product.images.edges.map(
+                      (image) =>
+                        image.node.altText === option.value && (
+                          <>
+                            <div className="product-page-media">
+                              <div className="w-full">
+                                <div className="product-page-image-wrapper">
+                                  <ProductImage image={image.node} />
+                                </div>
+                              </div>
+                            </div>
+                          </>
+                        ),
+                    )}
+                  </>
+                ) : (
+                  <>
+                    {option.name === 'Title' && (
+                      <ProductImage image={selectedVariant?.image} />
+                    )}
+                  </>
+                ),
+              )}
+            </div> */}
+          </div>
+
+          <div className="product-details-container large-up--three-eighths medium--one-half">
+            <div className="product-details">
+              <h1>{title}</h1>
+              <ProductPrice
+                price={selectedVariant?.price}
+                compareAtPrice={selectedVariant?.compareAtPrice}
+              />
+              <br />
+              <ProductForm
+                productOptions={productOptions}
+                selectedVariant={selectedVariant}
+              />
+              <br />
+              <br />
+              <p>
+                <strong>Description</strong>
+              </p>
+              <br />
+              <div dangerouslySetInnerHTML={{__html: descriptionHtml}} />
+              <br />
+            </div>
+          </div>
+
+          <Analytics.ProductView
+            data={{
+              products: [
+                {
+                  id: product.id,
+                  title: product.title,
+                  price: selectedVariant?.price.amount || '0',
+                  vendor: product.vendor,
+                  variantId: selectedVariant?.id || '',
+                  variantTitle: selectedVariant?.title || '',
+                  quantity: 1,
+                },
+              ],
+            }}
+          />
+        </div>
+
+        <div></div>
       </div>
-      <Analytics.ProductView
-        data={{
-          products: [
-            {
-              id: product.id,
-              title: product.title,
-              price: selectedVariant?.price.amount || '0',
-              vendor: product.vendor,
-              variantId: selectedVariant?.id || '',
-              variantTitle: selectedVariant?.title || '',
-              quantity: 1,
-            },
-          ],
-        }}
-      />
-    </div>
+    </>
   );
 }
 

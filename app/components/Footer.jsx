@@ -238,7 +238,7 @@ export function Footer({
                 </div>
                 <div className='sub-footer-item-copyright'>
                   <span> © </span>
-                    <a className='link-hover-effect' href="#">MEETANSHI</a>
+                    <a className='link-hover-effect' target='_blank' href="https://meetanshi.com/">MEETANSHI</a>
                   <span> 2025 </span>
                 </div>
               </div>
