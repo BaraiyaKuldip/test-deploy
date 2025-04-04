@@ -14,6 +14,7 @@ import favicon from '~/assets/favicon.svg';
 import resetStyles from '~/styles/reset.css?url';
 import appStyles from '~/styles/app.css?url';
 import tailwindCss from '~/styles/tailwind.css?url';
+// import flickityCss from '~/styles/flickity.css?url';
 import {PageLayout} from '~/components/PageLayout';
 import {
   FOOTER_QUERY,
@@ -177,28 +178,35 @@ export function Layout({children}) {
         <link rel="stylesheet" href={tailwindCss}></link>
         <link rel="stylesheet" href={resetStyles}></link>
         <link rel="stylesheet" href={appStyles}></link>
-        
+        {/* <!-- Flickity CSS --> */}
+        <link
+          href="https://unpkg.com/flickity@2.2.2/dist/flickity.min.css"
+          rel="stylesheet"
+        />
+
+        {/* <!-- Flickity JS --> */}
+        <script src="https://unpkg.com/flickity@2.2.2/dist/flickity.pkgd.min.js"></script>
+
         <Meta />
         <Links />
       </head>
       <body>
         <div>
-        {data ? (
-          <Analytics.Provider
-            cart={data.cart}
-            shop={data.shop}
-            consent={data.consent}
-          >
-            {/* {console.log(data)} */}
-            <PageLayout {...data}>{children}</PageLayout>
-          </Analytics.Provider>
-        ) : (
-          children
-        )}
+          {data ? (
+            <Analytics.Provider
+              cart={data.cart}
+              shop={data.shop}
+              consent={data.consent}
+            >
+              {/* {console.log(data)} */}
+              <PageLayout {...data}>{children}</PageLayout>
+            </Analytics.Provider>
+          ) : (
+            children
+          )}
         </div>
         <ScrollRestoration nonce={nonce} />
         <Scripts nonce={nonce} />
-        
       </body>
     </html>
   );

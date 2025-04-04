@@ -58,7 +58,7 @@ async function loadCriticalData({context}) {
 
   return {
     featuredCollection: collections.nodes.filter((collection) =>
-      ['boot', 'Perfumes', 'Veggies', 'test2'].includes(collection.title),
+      ['boot', 'Perfumes', 'test2'].includes(collection.title),
     ),
   };
 }
@@ -130,6 +130,7 @@ export default function Homepage() {
         </div>
       </div>
       <FeaturedCollection collection={data.featuredCollection} />
+
       <RecommendedProducts products={data.recommendedProducts} />
     </div>
   );
@@ -304,6 +305,29 @@ function RecommendedProducts({products}) {
     </div>
   );
 }
+
+
+
+function CustomCollection(){
+
+  return(
+  <>
+    <div className='custom-collection'>
+      <div className='custom-collection-wrapper'>
+        <div className='custom-collection-main-heading'>
+          <p></p>
+          <p>Curated Collections</p>
+          <p></p>
+        </div>
+        <div className='custom-collection-sub-heading'>
+          <p>Handcrafted by our expert designers.</p>
+        </div>
+      </div>
+    </div>
+  </>
+  );
+}
+
 
 const FEATURED_COLLECTION_QUERY = `#graphql
   fragment FeaturedCollection on Collection {

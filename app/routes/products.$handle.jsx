@@ -12,8 +12,9 @@ import {
 import {ProductPrice} from '~/components/ProductPrice';
 import {ProductImage} from '~/components/ProductImage';
 import {ProductForm} from '~/components/ProductForm';
-import {ProductGallery} from '~/components/PhotoSwipeZoom';
-import {useEffect} from 'react';
+import {PhotoSwipeZoom} from '~/components/PhotoSwipeZoom';
+
+import {useEffect, useState, useRef} from 'react';
 
 /**
  * @type {MetaFunction<typeof loader>}
@@ -130,7 +131,9 @@ export default function Product() {
           {console.log(selectedVariant, 'cdcd')}
 
           <div className="product-page-media-wrapper large-up--five-eighths product__mobile--carousel medium--one-half">
-            <ProductGallery
+           
+
+            <PhotoSwipeZoom
               images={product.images}
               selectedVariant={selectedVariant}
               product={product}

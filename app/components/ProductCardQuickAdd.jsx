@@ -109,6 +109,7 @@ export default function ProductCardQuickAdd({
   // only when no search params are set in the url
   useSelectedOptionInUrlParam(selectedVariant.selectedOptions);
 
+
   // Get the product options array
   console.log(product, 'product');
   const productOptions = getProductOptions({
