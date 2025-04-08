@@ -2899,7 +2899,7 @@ Search Page CSS
     padding: 8px 0 0;
   }
 
-  .tabs-products-info a {
+  .tabs-products-info .tabs-products-info-a-tag  {
     display: block;
     text-decoration: none;
     color: #1f1919;
@@ -3408,6 +3408,7 @@ Search Page CSS
     height: 100%;
   }
 
+ 
   @media (min-width: 1024px) {
     .tabs-products-images {
       width: calc(min(100vw, 1450px) / 4);
@@ -3561,7 +3562,7 @@ Search Page CSS
     padding: 0px 0px 32px;
   }
 
-  .tabs-products-swatch-holder.sold-out .tabs-products-swatch-link::before {
+  .tabs-products-swatch-holder.sold-out .tabs-products-swatch-size::before {
     content: "";
     position: absolute;
     top: 0px;

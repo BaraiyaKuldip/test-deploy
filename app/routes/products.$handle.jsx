@@ -53,6 +53,8 @@ async function loadCriticalData({context, params, request}) {
 
   console.log(request, 'requestt');
 
+  // this is the request in console
+
   // Request {
   //   method: GET,
   //   url: http://localhost:3000/products/uspa-tshirt-all-colors?Size=L&Color=Black,
@@ -60,7 +62,7 @@ async function loadCriticalData({context, params, request}) {
   //   redirect: follow,
   //   fetcher: null
   //   ...
-  // } requestt
+  // }
 
   if (!handle) {
     throw new Error('Expected product handle to be defined');
@@ -77,10 +79,12 @@ async function loadCriticalData({context, params, request}) {
     throw new Response(null, {status: 404});
   }
 
+  
   return {
     product,
   };
 }
+// {console.log(product,"pto")}
 
 /**
  * Load data for rendering content below the fold. This data is deferred and will be

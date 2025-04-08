@@ -345,6 +345,7 @@ const FEATURED_COLLECTION_QUERY = `#graphql
         nodes{
           id
           title
+          availableForSale
           vendor
           handle  
           descriptionHtml
