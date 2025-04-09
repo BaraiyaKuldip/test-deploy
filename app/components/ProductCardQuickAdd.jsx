@@ -55,7 +55,7 @@ export default function ProductCardQuickAdd({
   };
 
   const currentVariant = findVariant() || selectedVariant;
-
+  const [searchParamsURL, setSearchParamsURL] = useState("");
   // Handle option selection
   const handleOptionChange = (optionName, optionValue) => {
     setSelectedOptions({
@@ -71,8 +71,9 @@ export default function ProductCardQuickAdd({
     }).forEach(([name, value]) => {
       newSearchParams.set(name, value);
     });
+    setSearchParamsURL(newSearchParams.toString());
 
-    navigate(`?${newSearchParams.toString()}`, {
+    navigate(`?${newSearchParams}`, {
       replace: true,
       preventScrollReset: true,
     });
@@ -82,13 +83,14 @@ export default function ProductCardQuickAdd({
     <div key={productIndex} className="collection-tabs-content embla__slide">
       <div className="tabs-products-items-container">
         <div className="tabs-products-items-error"></div>
-        <Link to={`products/${product.handle}`} className="tabs-products-a-tag">
+        <Link to={`products/${product.handle}?${searchParamsURL}`} className="tabs-products-a-tag">
           <div className="tabs-products-pagination"></div>
           <div className="tabs-products-images aspect-[0.9]">
             <SwiperComponent
               images={product.images}
               collectionIndex={collectionIndex}
               productIndex={productIndex}
+              currentVariant={currentVariant}
             />
           </div>
         </Link>
@@ -109,7 +111,8 @@ export default function ProductCardQuickAdd({
               >
                 <AddToCartButton
                   disabled={
-                    product?.options[0].name === 'Title' || !product?.availableForSale 
+                    !product?.options[0].name === 'Title' ||
+                    !product?.availableForSale
                   }
                   onClick={() => {
                     open('cart');
@@ -125,11 +128,10 @@ export default function ProductCardQuickAdd({
                       : []
                   }
                 >
+                  {console.log(currentVariant, 'current variant quick add page')}
                   <span
                     className={`h-full w-full cursor-pointer ${
-                      product.availableForSale
-                        ? 'opacity-100'
-                        : 'opacity-30'
+                      product.availableForSale ? 'opacity-100' : 'opacity-30'
                     }`}
                   >
                     {product?.options[0].name !== 'Title'
@@ -146,14 +148,11 @@ export default function ProductCardQuickAdd({
                     className="variant-selects flex flex-row items-center flex-wrap justify-center space-x-r2 py-r4 md:gap-y-r2 cursor-pointer"
                     id="variant-selects-template"
                   >
-                    {/* {console.log(
-                        product?.options[0].name === 'Title',
-                        'psops',
-                      )} */}
-                    {console.log(product, 'product optionsss')}
+                    
+                    {console.log(product, 'product data quick add page')}
                     {product.variants.nodes.map((variant) => (
                       <>
-                        {/* {console.log(product, 'psops')} */}
+                        
                         {variant.selectedOptions.map((selectedOption) => {
                           const variantColor = variant.selectedOptions.find(
                             (opt) => opt.name === 'Color',
@@ -163,16 +162,14 @@ export default function ProductCardQuickAdd({
                             currentVariant.selectedOptions.find(
                               (opt) => opt.name === 'Color',
                             )?.value;
-                          
+
                           return (
                             <>
-                                    {variantColor === selectedColor ? console.log(
-                                      currentVariant,
-                                      'selected varrr',
-                                    ):""}
+                              
                               {variantColor === selectedColor &&
                                 selectedOption.name === 'Size' && (
                                   <>
+                                  {console.log(variant,"variant product ")}
                                     <AddToCartButton
                                       disabled={
                                         !variant || !variant.availableForSale
@@ -185,22 +182,19 @@ export default function ProductCardQuickAdd({
                                           ? [
                                               {
                                                 merchandiseId:
-                                                  currentVariant.id,
+                                                currentVariant.id,
                                                 quantity: 1,
                                               },
                                             ]
                                           : []
                                       }
                                     >
-                                      {/* {console.log(
-                                product.selectedOrFirstAvailableVariant,
-                                'product selected first available variant',
-                              )} */}
-                              
-                                      <div className={`product-form__buttons w-full h-full` }>
+
+                                      <div
+                                        className={`product-form__buttons w-full h-full`}
+                                      >
                                         <button
                                           key={selectedOption.name}
-                                          type="button"
                                           type="submit"
                                           name="add"
                                           value={variant.id}
@@ -213,7 +207,13 @@ export default function ProductCardQuickAdd({
                                             )
                                           }
                                         >
-                                          <span className={`tabs-variant-select-btn inline-block whitespace-nowrap text-button-contrast px-r4 py-r4 group-hover-option-button-text-button-contrast group-hover-option-button-bg-button-contrast-5 ${variant.availableForSale ? "" : "opacity-70 line-through"}`}>
+                                          <span
+                                            className={`tabs-variant-select-btn inline-block whitespace-nowrap text-button-contrast px-r4 py-r4 group-hover-option-button-text-button-contrast group-hover-option-button-bg-button-contrast-5 ${
+                                              variant.availableForSale
+                                                ? ''
+                                                : 'opacity-70 line-through'
+                                            }`}
+                                          >
                                             {selectedOption.value}
                                           </span>
                                           <div className="loading__spinner hidden">
@@ -260,51 +260,44 @@ export default function ProductCardQuickAdd({
       <div className="tabs-products-info text-left">
         <Link
           className="tabs-products-info-a-tag"
-          to={`products/${product.handle}`}
+          to={`products/${product.handle}?${searchParamsURL}`}
         >
           <p className="visually-hidden">{product.title}</p>
-            <div className="tabs-products-title-wrapper">
-              <p className="tabs-products-title">{product.title}</p>
-            </div>
+          <div className="tabs-products-title-wrapper">
+            <p className="tabs-products-title">{product.title}</p>
+          </div>
 
-            <div className="tabs-products-price-wrapper">
-              {currentVariant.selectedOptions.map(
-                (selectedOption) => (
-                  <>
-                    <span
-                      className={`tabs-products-price-cutline`}
-                      style={{
-                        display: `${
-                          selectedOption.name === 'Color' ? 'block' : 'none'
-                        }`,
-                      }}
-                    >
-                      {selectedOption.name === 'Color' && (
-                        <>{selectedOption.value}</>
-                      )}
-                    </span>
-                  </>
-                ),
-              )}
-              {/* color */}
-              {/* {console.log(
-                product.selectedOrFirstAvailableVariant.selectedOptions,
-                'product selected or first',
-              )} */}
-              <span className="tabs-products-price">
-                {product?.selectedOrFirstAvailableVariant?.price ? (
-                  <Money
-                    data={product?.selectedOrFirstAvailableVariant?.price}
-                  />
-                ) : null}
-              </span>
-            </div>
+          <div className="tabs-products-price-wrapper">
+            {currentVariant.selectedOptions.map((selectedOption) => (
+              <>
+                <span
+                  className={`tabs-products-price-cutline`}
+                  style={{
+                    display: `${
+                      selectedOption.name === 'Color' ? 'block' : 'none'
+                    }`,
+                  }}
+                >
+                  {selectedOption.name === 'Color' && (
+                    <>{selectedOption.value}</>
+                  )}
+                </span>
+              </>
+            ))}
+            {/* color */}
+            
+            <span className="tabs-products-price">
+              {product?.selectedOrFirstAvailableVariant?.price ? (
+                <Money data={product?.selectedOrFirstAvailableVariant?.price} />
+              ) : null}
+            </span>
+          </div>
 
-            {!product?.selectedOrFirstAvailableVariant?.availableForSale && (
-              <p className="tabs-products-sold-out">
-                <em>Sold Out</em>
-              </p>
-            )}
+          {!product?.selectedOrFirstAvailableVariant?.availableForSale && (
+            <p className="tabs-products-sold-out">
+              <em>Sold Out</em>
+            </p>
+          )}
         </Link>
 
         {/* Color swatches */}
@@ -322,66 +315,70 @@ export default function ProductCardQuickAdd({
                   <div className="tabs-products-swatch-main-wrapper">
                     <div className="tabs-products-swatch-sub-wrapper">
                       <div className="tabs-products-swatch-inner">
-                        {option.optionValues.map((value) => {
+                        {option.optionValues.map((value, index) => {
                           const isSelected =
                             selectedOptions[option.name] === value.name;
                           const isAvailable = value.exists;
-                          console.log(value,"valuee");
-                          return (
-                            <div
-                              key={value.name}
-                              className={`tabs-products-swatch-holder ${
-                                !value.available ? 'sold-out' : ''
-                              }`}
-                            >
-                              <button
-                                type="button"
-                                className={`product-options-item${
-                                  isAvailable && !isSelected ? ' link' : ''
-                                }`}
-                                style={{
-                                  border: isSelected
-                                    ? '1px solid red'
-                                    : '1px solid transparent',
-                                  opacity: isAvailable ? 1 : 0.3,
-                                }}
-                                disabled={!isAvailable}
-                                onClick={() =>
-                                  handleOptionChange(option.name, value.name)
-                                }
-                              >
-                                <div className="tabs-products-swatch">
-                                  <div className="tabs-products-swatch-size">
-                                    {value.firstSelectableVariant.image && (
-                                      <div className="relative block w-full h-full overflow-hidden aspect-[1.0]">
-                                        <Image
-                                          data={
-                                            value.firstSelectableVariant.image
-                                          }
-                                          class="block overflow-hidden w-full h-full object-cover transition-opacity duration-300 ease-linear"
-                                          height="35"
-                                          width="26"
-                                          loading="lazy"
-                                          fetchPriority="low"
-                                          style={{
-                                            objectPosition: 'center center',
-                                          }}
-                                        />
+                          if (index < 5) {
+                            return (
+                              <>
+                                <div
+                                  key={value.name}
+                                  className={`tabs-products-swatch-holder ${
+                                    !value.available ? 'sold-out' : ''
+                                  }`}
+                                >
+                                  <button
+                                    type="button"
+                                    className={`product-options-item${
+                                      isAvailable && !isSelected
+                                        ? ' link'
+                                        : ' selected'
+                                    }`}
+                                    style={{opacity: isAvailable ? 1 : 0.3}}
+                                    disabled={!isAvailable}
+                                    onClick={() =>
+                                      handleOptionChange(
+                                        option.name,
+                                        value.name,
+                                      )
+                                    }
+                                  >
+                                    <div className="tabs-products-swatch">
+                                      <div className="tabs-products-swatch-size">
+                                        {value.firstSelectableVariant.image && (
+                                          <div className="relative block w-full h-full overflow-hidden aspect-[1.0]">
+                                            <Image
+                                              data={
+                                                value.firstSelectableVariant
+                                                  .image
+                                              }
+                                              class="block overflow-hidden w-full h-full object-cover transition-opacity duration-300 ease-linear"
+                                              height="35"
+                                              width="26"
+                                              loading="lazy"
+                                              fetchPriority="low"
+                                              style={{
+                                                objectPosition: 'center center',
+                                              }}
+                                            />
+                                          </div>
+                                        )}
                                       </div>
-                                    )}
-                                  </div>
+                                    </div>
+                                  </button>
                                 </div>
-                              </button>
-                            </div>
-                          );
+                              </>
+                            );
+                          }
                         })}
                         {option.optionValues.length > 5 && (
-                          <a
-                            href="#"
+                          <Link
+                            to={`products/${product.handle}?${searchParamsURL}`}
                             className="tabs-products-swatch-more-links"
                           >
                             {option.optionValues.length - 5}+
-                          </a>
+                          </Link>
                         )}
                       </div>
                     </div>

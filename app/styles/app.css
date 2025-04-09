@@ -1969,10 +1969,25 @@
 
   .product-options-item,
   .product-options-item:disabled {
-    padding: 0.25rem 0.5rem;
     background-color: transparent;
     font-size: 1rem;
     font-family: inherit;
+  }
+
+  .product-options-item.selected .tabs-products-swatch-size{
+    border: 5px solid white;
+  }
+
+  .product-options-item.selected .tabs-products-swatch-size::after{
+    content: "";
+    position: absolute;
+    top: -5px;
+    left: -5px;
+    width: 26px;
+    height: 26px;
+    min-width: 26px;
+    border: 2px solid var(--text-color-42);
+    z-index: 10;
   }
 
   .product-option-label-swatch {
@@ -3599,6 +3614,7 @@ Search Page CSS
 
   .tabs-products-swatch {
     overflow: hidden;
+    padding-top: 2px;
   }
 
   .tabs-products-swatch-size {

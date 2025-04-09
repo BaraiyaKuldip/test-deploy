@@ -7,14 +7,29 @@ import {EffectFade, Autoplay, Pagination, Navigation} from 'swiper/modules';
 import {Swiper, SwiperSlide} from 'swiper/react';
 import {Image} from '@shopify/hydrogen';
 
-const SwiperComponent = ({images, collectionIndex, productIndex}) => {
+const SwiperComponent = ({
+  images,
+  collectionIndex,
+  productIndex,
+  currentVariant,
+}) => {
   const swiperRefLocal = useRef();
 
   useEffect(() => {
     if (document && window) {
-      // console.log(productIndex, images.edges.length, 'images length');
+      console.log(productIndex, images, 'images length');
 
-      let bulletWidth = 100 / images.edges.length;
+      let imgLength = 0;
+
+      currentVariant.selectedOptions.map((option) =>
+        images.edges.map((image, index) => (
+            currentVariant.selectedOptions.find(
+              (opt) => opt.name === 'Color',
+            ) !== undefined ? (
+              image.node.altText === option.value && (imgLength = imgLength + 1)):(imgLength = images.edges.length)
+            )))
+      
+      let bulletWidth = 100 / imgLength;
 
       const element = document.querySelector(
         `.swiper-${collectionIndex}-${productIndex}`,
@@ -62,7 +77,7 @@ const SwiperComponent = ({images, collectionIndex, productIndex}) => {
         child.style.width = `${bulletWidth}%`;
       }
     }
-  }, [productIndex, images.edges.length]);
+  }, [productIndex, currentVariant]);
 
   const handleMouseEnter = () => {
     const swiper = swiperRefLocal.current.swiper;
@@ -115,23 +130,47 @@ const SwiperComponent = ({images, collectionIndex, productIndex}) => {
         modules={[EffectFade, Autoplay, Pagination, Navigation]}
         className={`mySwiper swiper-${collectionIndex}-${productIndex}`}
       >
-        {images.edges.map((image, index) => (
-          <SwiperSlide key={index} className='relative block w-full h-full overflow-hidden aspect-[0.9]'>
-            {/* <img
-              className="h-[303.510px] w-[273.167px]"
-              src={image.node.url}
-              alt={image.node.altText === null ? "Product Image" : image.node.altText}
-            /> */}
-            <Image
-              data={image.node}
-              height="2000"
-              width="1500"
-              aspectRatio="1/1"
-              sizes="(min-width: 1024px) calc(min(100vw, 1450px) / 4),(min-width: 768px) calc(min(100vw, 1450px) / 3),calc(min(100vw, 1450px) / 1.5)"
-              fetchPriority='high'
-            />
-          </SwiperSlide>
-        ))}
+        {currentVariant.selectedOptions.map((option) =>
+          images.edges.map((image, index) => (
+            <>
+              {currentVariant.selectedOptions.find(
+                (opt) => opt.name === 'Color',
+              ) !== undefined ? (
+                image.node.altText === option.value && (
+                  <SwiperSlide
+                    key={index}
+                    className="relative block w-full h-full overflow-hidden aspect-[0.9]"
+                  >
+                    <Image
+                      data={image.node}
+                      height="2000"
+                      width="1500"
+                      aspectRatio="1/1"
+                      sizes="(min-width: 1024px) calc(min(100vw, 1450px) / 4),(min-width: 768px) calc(min(100vw, 1450px) / 3),calc(min(100vw, 1450px) / 1.5)"
+                      fetchPriority="high"
+                    />
+                  </SwiperSlide>
+                )
+              ) : (
+                <>
+                  <SwiperSlide
+                    key={index}
+                    className="relative block w-full h-full overflow-hidden aspect-[0.9]"
+                  >
+                    <Image
+                      data={image.node}
+                      height="2000"
+                      width="1500"
+                      aspectRatio="1/1"
+                      sizes="(min-width: 1024px) calc(min(100vw, 1450px) / 4),(min-width: 768px) calc(min(100vw, 1450px) / 3),calc(min(100vw, 1450px) / 1.5)"
+                      fetchPriority="high"
+                    />
+                  </SwiperSlide>
+                </>
+              )}
+            </>
+          )),
+        )}
         <div
           className={`swiper-pagination swiper-pagination-${collectionIndex}-${productIndex}`}
         ></div>

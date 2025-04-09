@@ -3,7 +3,7 @@ import React from 'react';
 import PhotoSwipeLightbox from 'photoswipe/lightbox';
 import 'photoswipe/style.css';
 import {ProductImage} from './ProductImage';
-import {useEffect , useState , useRef} from 'react';
+import {useEffect, useState, useRef} from 'react';
 
 export function PhotoSwipeZoom({images, selectedVariant}) {
   useEffect(() => {
@@ -90,6 +90,7 @@ export function PhotoSwipeZoom({images, selectedVariant}) {
           padding: 0 0.5em 0 1.5em;
           gap: 20px;
           background: none;
+          z-index:2020;
         }
         
         /* Counter styling */
@@ -206,71 +207,89 @@ export function PhotoSwipeZoom({images, selectedVariant}) {
     };
   }, [images.edges.length]);
 
-
   return (
     <>
+      {console.log(selectedVariant, images, 'selectedVariant Product Page')}
       <div id="product-gallery" className="product-page-media-grid ">
-        {selectedVariant.selectedOptions.map((option, index) =>
-          option.name === 'Color' ? (
+        {console.log(
+          selectedVariant.selectedOptions.find((opt) => opt.name === 'Color'),
+          'findd',
+        )}
+        {selectedVariant.selectedOptions.map((option, index) => images.edges.map((image) => (
             <>
-              {images.edges.map(
-                (image) =>
-                  image.node.altText === option.value && (
-                    <div key={image.node.id} className="product-page-media">
-                      <div className="w-full">
-                        <div className="product-page-image-wrapper">
-                          <div className="relative block w-full h-full overflow-hidden">
-                            <ProductImage image={image.node} />
-                          </div>
-
-                          <a
-                            href={image.node.url}
-                            data-pswp-width={image.node.width}
-                            data-pswp-height={image.node.height}
-                            data-cropped="true"
-                          >
-                            <div className="product-page-media-zoom-btn-holder">
-                              <button className="product-page-media-zoom-btn">
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  aria-hidden="true"
-                                  class="icon-theme icon-theme-stroke icon-core-magnify"
-                                  viewBox="0 0 24 24"
-                                >
-                                  <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    d="M18.316 9.825c0 3.368-2.05 6.404-5.194 7.692a8.47 8.47 0 0 1-9.164-1.81A8.265 8.265 0 0 1 2.144 6.63C3.45 3.52 6.519 1.495 9.921 1.5c4.638.007 8.395 3.732 8.395 8.325ZM22.5 22.5l-6.558-6.87L22.5 22.5Z"
-                                  ></path>
-                                </svg>
-                                <span className="visually-hidden">Zoom</span>
-                              </button>
-                            </div>
-                          </a>
+            {console.log(option,"oppp")}
+              {selectedVariant.selectedOptions.find((opt) => opt.name === 'Color') !== undefined ? (
+                image.node.altText === option.value && (
+                  <div key={image.node.id} className="product-page-media">
+                    <div className="w-full">
+                      <div className="product-page-image-wrapper">
+                        <div className="relative block w-full h-full overflow-hidden">
+                          <ProductImage image={image.node} />
                         </div>
+                        <a
+                          href={image.node.url}
+                          data-pswp-width={image.node.width}
+                          data-pswp-height={image.node.height}
+                          data-cropped="true"
+                        >
+                          <div className="product-page-media-zoom-btn-holder">
+                            <button className="product-page-media-zoom-btn">
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                aria-hidden="true"
+                                class="icon-theme icon-theme-stroke icon-core-magnify"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  d="M18.316 9.825c0 3.368-2.05 6.404-5.194 7.692a8.47 8.47 0 0 1-9.164-1.81A8.265 8.265 0 0 1 2.144 6.63C3.45 3.52 6.519 1.495 9.921 1.5c4.638.007 8.395 3.732 8.395 8.325ZM22.5 22.5l-6.558-6.87L22.5 22.5Z"
+                                ></path>
+                              </svg>
+                              <span className="visually-hidden">Zoom</span>
+                            </button>
+                          </div>
+                        </a>
                       </div>
                     </div>
-                  ),
+                  </div>
+                )
+              ) : (
+                <div key={`title-${index}`} className="product-page-media">
+                  
+                    <div className="w-full">
+                      <div className="product-page-image-wrapper">
+                        <ProductImage image={image.node} />
+                      </div>
+                    </div>
+                    <a
+                          href={image.node.url}
+                          data-pswp-width={image.node.width}
+                          data-pswp-height={image.node.height}
+                          data-cropped="true"
+                        >
+                          <div className="product-page-media-zoom-btn-holder">
+                            <button className="product-page-media-zoom-btn">
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                aria-hidden="true"
+                                class="icon-theme icon-theme-stroke icon-core-magnify"
+                                viewBox="0 0 24 24"
+                              >
+                                <path
+                                  stroke-linecap="round"
+                                  stroke-linejoin="round"
+                                  d="M18.316 9.825c0 3.368-2.05 6.404-5.194 7.692a8.47 8.47 0 0 1-9.164-1.81A8.265 8.265 0 0 1 2.144 6.63C3.45 3.52 6.519 1.495 9.921 1.5c4.638.007 8.395 3.732 8.395 8.325ZM22.5 22.5l-6.558-6.87L22.5 22.5Z"
+                                ></path>
+                              </svg>
+                              <span className="visually-hidden">Zoom</span>
+                            </button>
+                          </div>
+                        </a>
+                  </div>
               )}
             </>
-          ) : (
-            option.name === 'Title' && (
-              <div key={`title-${index}`} className="product-page-media">
-                <a
-                  href={selectedVariant?.image.url}
-                  data-pswp-width={selectedVariant?.image.width}
-                  data-pswp-height={selectedVariant?.image.height}
-                  data-cropped="true"
-                >
-                  <div className="w-full">
-                    <div className="product-page-image-wrapper">
-                      <ProductImage image={selectedVariant?.image} />
-                    </div>
-                  </div>
-                </a>
-              </div>
-            )
-          ),
+          ))
         )}
       </div>
 
