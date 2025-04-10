@@ -147,7 +147,7 @@ const SwiperComponent = ({
                       width="1500"
                       aspectRatio="1/1"
                       sizes="(min-width: 1024px) calc(min(100vw, 1450px) / 4),(min-width: 768px) calc(min(100vw, 1450px) / 3),calc(min(100vw, 1450px) / 1.5)"
-                      fetchPriority="high"
+                      fetchpriority="high"
                     />
                   </SwiperSlide>
                 )
@@ -163,7 +163,7 @@ const SwiperComponent = ({
                       width="1500"
                       aspectRatio="1/1"
                       sizes="(min-width: 1024px) calc(min(100vw, 1450px) / 4),(min-width: 768px) calc(min(100vw, 1450px) / 3),calc(min(100vw, 1450px) / 1.5)"
-                      fetchPriority="high"
+                      fetchpriority="high"
                     />
                   </SwiperSlide>
                 </>

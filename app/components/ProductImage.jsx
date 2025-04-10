@@ -22,7 +22,7 @@ export function ProductImage({image}) {
         data={image}
         key={image.id}
         style={{objectPosition:"center center"}}
-        fetchPriority='high'
+        fetchpriority='high'
         sizes="(min-width: 1100px) 70vw, (min-width: 768px) 50vw, calc(85vw - 8px)"
       />
     {/* </div> */}

@@ -168,7 +168,7 @@ export default function ProductCardQuickAdd({
                               
                               {variantColor === selectedColor &&
                                 selectedOption.name === 'Size' && (
-                                  <>
+                                  <div className={`${variant.availableForSale ? "" : "user-select-none pointer-events-none"}`}>
                                   {console.log(variant,"variant product ")}
                                     <AddToCartButton
                                       disabled={
@@ -235,7 +235,7 @@ export default function ProductCardQuickAdd({
                                         </button>
                                       </div>
                                     </AddToCartButton>
-                                  </>
+                                  </div>
                                 )}
                             </>
                           );
@@ -285,15 +285,15 @@ export default function ProductCardQuickAdd({
               </>
             ))}
             {/* color */}
-            
+            {console.log(currentVariant,"currentVariant on quick add page")}
             <span className="tabs-products-price">
-              {product?.selectedOrFirstAvailableVariant?.price ? (
-                <Money data={product?.selectedOrFirstAvailableVariant?.price} />
+              {currentVariant?.price ? (
+                <Money data={currentVariant?.price} />
               ) : null}
             </span>
           </div>
 
-          {!product?.selectedOrFirstAvailableVariant?.availableForSale && (
+          {!currentVariant?.availableForSale && (
             <p className="tabs-products-sold-out">
               <em>Sold Out</em>
             </p>
@@ -357,7 +357,7 @@ export default function ProductCardQuickAdd({
                                               height="35"
                                               width="26"
                                               loading="lazy"
-                                              fetchPriority="low"
+                                              fetchpriority="low"
                                               style={{
                                                 objectPosition: 'center center',
                                               }}
@@ -392,108 +392,6 @@ export default function ProductCardQuickAdd({
   );
 }
 
-const PRODUCT_VARIANT_FRAGMENT = `#graphql
-  fragment ProductVariant on ProductVariant {
-    availableForSale
-    compareAtPrice {
-      amount
-      currencyCode
-    }
-    id
-    image {
-      __typename
-      id
-      url
-      altText
-      width
-      height
-    }
-    price {
-      amount
-      currencyCode
-    }
-    product {
-      title
-      handle
-    }
-    selectedOptions {
-      name
-      value
-    }
-    sku
-    title
-    unitPrice {
-      amount
-      currencyCode
-    }
-  }
-`;
-
-const PRODUCT_FRAGMENT = `#graphql
-  fragment Product on Product {
-    id
-    title
-    vendor
-    handle
-    descriptionHtml
-    description
-    encodedVariantExistence
-    encodedVariantAvailability
-    images(first:100){
-      edges{
-        node{
-          id
-          url
-          altText
-          width
-          height
-        }
-      }
-    }
-    options {
-      name
-      optionValues {
-        name
-        firstSelectableVariant {
-          ...ProductVariant
-        }
-        swatch {
-          color
-          image {
-            previewImage {
-              url
-            }
-          }
-        }
-      }
-    }
-    selectedOrFirstAvailableVariant(selectedOptions: $selectedOptions, ignoreUnknownOptions: true, caseInsensitiveMatch: true) {
-      ...ProductVariant
-    }
-    adjacentVariants (selectedOptions: $selectedOptions) {
-      ...ProductVariant
-    }
-    seo {
-      description
-      title
-    }
-  }
-  ${PRODUCT_VARIANT_FRAGMENT}
-`;
-
-const PRODUCT_QUERY = `#graphql
-  query Product(
-    $country: CountryCode
-    $handle: String!
-    $language: LanguageCode
-    $selectedOptions: [SelectedOptionInput!]!
-  ) @inContext(country: $country, language: $language) {
-    product(handle: $handle) {
-      ...Product
-    }
-  }
-  ${PRODUCT_FRAGMENT}
-`;
 
 /** @typedef {import('@shopify/hydrogen').MappedProductOptions} MappedProductOptions */
 /** @typedef {import('@shopify/hydrogen/storefront-api-types').Maybe} Maybe */

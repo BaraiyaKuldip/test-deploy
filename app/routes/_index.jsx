@@ -58,7 +58,7 @@ async function loadCriticalData({context}) {
 
   return {
     featuredCollection: collections.nodes.filter((collection) =>
-      ['boot', 'Perfumes', 'test2'].includes(collection.title),
+      ['boot', 'Perfumes', 'Veggies' , 'test2' , 'test1' , 'Home page ' , 'Empty collection' , 'mens chinos'].includes(collection.title),
     ),
   };
 }
@@ -531,6 +531,10 @@ const FEATURED_COLLECTION_QUERY = `#graphql
                 width
               }
               availableForSale
+              price {
+                  amount
+                  currencyCode
+                }
               selectedOptions{
                 name
                 value
