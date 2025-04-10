@@ -148,12 +148,72 @@ function FeaturedCollection({collection}) {
   {
     console.log(collection, 'nnnn collection');
   }
-
   const [activeTab, setActiveTab] = useState(0);
+  const tabsContainerRef = useRef(null);
+  const [showPrevArrow, setShowPrevArrow] = useState(false);
+  const [showNextArrow, setShowNextArrow] = useState(true);
 
-  const handleTabClick = (tabIndex) => {
-    setActiveTab(tabIndex);
+  const handleTabClick = (index) => {
+    setActiveTab(index);
+    // Scroll to center the active tab
+    if (tabsContainerRef.current) {
+      const tab = tabsContainerRef.current.children[index]?.firstChild;
+      if (tab) {
+        const containerWidth = tabsContainerRef.current.offsetWidth;
+        const tabLeft = tab.offsetLeft;
+        const tabWidth = tab.offsetWidth;
+        const scrollTo = tabLeft - (containerWidth / 2) + (tabWidth / 2);
+        
+        tabsContainerRef.current.scrollTo({
+          left: scrollTo,
+          behavior: 'smooth'
+        });
+      }
+    }
   };
+
+  const scrollTabs = (direction) => {
+    if (tabsContainerRef.current) {
+      const scrollAmount = tabsContainerRef.current.offsetWidth * 0.8;
+      const newScrollLeft = direction === 'prev' 
+        ? Math.max(0, tabsContainerRef.current.scrollLeft - scrollAmount)
+        : Math.min(
+            tabsContainerRef.current.scrollWidth - tabsContainerRef.current.offsetWidth,
+            tabsContainerRef.current.scrollLeft + scrollAmount
+          );
+      
+      tabsContainerRef.current.scrollTo({
+        left: newScrollLeft,
+        behavior: 'smooth',
+      });
+    }
+  };
+
+  const checkScrollPosition = () => {
+    if (tabsContainerRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = tabsContainerRef.current;
+      const atStart = scrollLeft <= 0;
+      const atEnd = scrollLeft >= scrollWidth - clientWidth - 1; // -1 for rounding errors
+      
+      setShowPrevArrow(!atStart);
+      setShowNextArrow(!atEnd);
+    }
+  };
+
+  // Initialize and add event listeners
+  useEffect(() => {
+    const container = tabsContainerRef.current;
+    if (container) {
+      checkScrollPosition();
+      container.addEventListener('scroll', checkScrollPosition);
+      window.addEventListener('resize', checkScrollPosition);
+      
+      return () => {
+        container.removeEventListener('scroll', checkScrollPosition);
+        window.removeEventListener('resize', checkScrollPosition);
+      };
+    }
+  }, []);
 
   const image = collection?.image;
 
@@ -184,43 +244,51 @@ function FeaturedCollection({collection}) {
         </div>
 
         <div className="tabs-scroll-container">
-          {/* Tabs */}
-          <div className="tabs-wrapper">
-            {collection.map((collection, index) => (
-              <div key={index}>
-                <button
-                  type="button"
-                  className={`tab-button ${
-                    activeTab === index
-                      ? 'tab-button-active'
-                      : 'tab-button-inactive'
-                  }`}
-                  onClick={() => handleTabClick(index)}
-                  data-tab={index}
-                  tabIndex={index}
-                >
-                  {console.log(collection.products, 'collection products')}
-                  <span className="uppercase"> {collection.title}</span>
-                </button>
-              </div>
-            ))}
+      {/* Tabs */}
+      <div 
+        className={`tabs-wrapper ${showPrevArrow || showNextArrow ? "sm:ms-[60px] sm:me-[50px]" : ""}`}
+        ref={tabsContainerRef}
+        style={{justifyContent:`${showPrevArrow || showNextArrow ? "normal" : "center"}` , gap:`${showPrevArrow || showNextArrow ? "0px" : "1rem"}`}}
+      >
+
+        {collection.map((collection, index) => (
+          <div key={index}>
+            <button
+              type="button"
+              className={`tab-button ${
+                activeTab === index
+                  ? 'tab-button-active'
+                  : 'tab-button-inactive'
+              }`}
+              onClick={() => handleTabClick(index)}
+              data-tab={index}
+              tabIndex={index}
+            >
+              <span className="uppercase"> {collection.title}</span>
+            </button>
           </div>
-          {/* Arrows */}
-          <button
-            type="button"
-            className="tabs-arrow tabs-arrow-prev"
-            data-scrollbar-arrow-prev=""
-          >
-            <span className="visually-hidden">See all</span>
-          </button>
-          <button
-            type="button"
-            className="tabs-arrow tabs-arrow-next"
-            data-scrollbar-arrow-next=""
-          >
-            <span className="visually-hidden">See all</span>
-          </button>
-        </div>
+        ))}
+      </div>
+      
+      {/* Arrows */}
+      <button
+        type="button"
+        className={`tabs-arrow tabs-arrow-prev ${!showPrevArrow ? 'is-hidden' : 'is-visible'}`}
+        onClick={() => scrollTabs('prev')}
+        data-scrollbar-arrow-prev=""
+      >
+        <span className="visually-hidden">Previous</span>
+      </button>
+      <button
+        type="button"
+        className={`tabs-arrow tabs-arrow-next ${!showNextArrow ? 'is-hidden' : 'is-visible'}`}
+        onClick={() => scrollTabs('next')}
+        data-scrollbar-arrow-next=""
+      >
+        <span className="visually-hidden">Next</span>
+      </button>
+    </div>
+
 
         <div
           id="collection-tabs-content-wrapper"

@@ -130,13 +130,16 @@ export default function ProductCardQuickAdd({
                 >
                   {console.log(currentVariant, 'current variant quick add page')}
                   <span
-                    className={`h-full w-full cursor-pointer ${
+                    className={`hidden md:block h-full w-full  cursor-pointer ${
                       product.availableForSale ? 'opacity-100' : 'opacity-30'
                     }`}
                   >
                     {product?.options[0].name !== 'Title'
                       ? 'Quick Add'
                       : 'Add To Cart'}
+                  </span>
+                  <span className='block md:hidden'>
+                  <svg xmlns="http://www.w3.org/2000/svg" class="icon-theme icon-theme-stroke icon-set-classic-cart" viewBox="0 0 24 24"><path d="M20.5 16.5H5.715l1.082-4.195-2.126-7.456L3.715 1.5H1.5m5.22 10h11.702l3.002-6.13s.428-.87-.745-.87H4.5m2 16.986a1 1 0 1 0 2 .028 1 1 0 0 0-2-.028Zm11 .014a1 1 0 1 0 2 0 1 1 0 0 0-2 0Z"></path><circle class="icon-cart-full" cx="13" cy="4.5" r="4"></circle></svg>
                   </span>
                 </AddToCartButton>
               </button>

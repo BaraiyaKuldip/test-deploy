@@ -1875,7 +1875,7 @@
     background: #ffffff;
     opacity: 0.3;
     -webkit-backdrop-filter: blur(40px);
-            backdrop-filter: blur(40px);
+    backdrop-filter: blur(40px);
     transition: all 0.3s;
   }
 
@@ -1900,15 +1900,15 @@
   }
 
   .product__grid--slides:hover .product-page-media-zoom-btn,
-.product__grid--slides:focus .product-page-media-zoom-btn,
-.product-page-media:hover .product-page-media-zoom-btn,
-.product-page-media:focus .product-page-media-zoom-btn,
-.product-page-media.is-expanded .product-page-media-zoom-btn,
-.product-page-media-zoom-btn:focus-within {
-  opacity: 1;
-}
+  .product__grid--slides:focus .product-page-media-zoom-btn,
+  .product-page-media:hover .product-page-media-zoom-btn,
+  .product-page-media:focus .product-page-media-zoom-btn,
+  .product-page-media.is-expanded .product-page-media-zoom-btn,
+  .product-page-media-zoom-btn:focus-within {
+    opacity: 1;
+  }
 
-/* --- Photo Swipe CSS ---  */
+  /* --- Photo Swipe CSS ---  */
 
 
   @media only screen and (min-width: 1100px) {
@@ -1974,11 +1974,11 @@
     font-family: inherit;
   }
 
-  .product-options-item.selected .tabs-products-swatch-size{
+  .product-options-item.selected .tabs-products-swatch-size {
     border: 5px solid white;
   }
 
-  .product-options-item.selected .tabs-products-swatch-size::after{
+  .product-options-item.selected .tabs-products-swatch-size::after {
     content: "";
     position: absolute;
     top: -5px;
@@ -2842,19 +2842,110 @@ Search Page CSS
   .tabs-arrow {
     position: absolute;
     top: 50%;
-    transform: translateY(-50%);
-    background-color: transparent;
-    border: none;
-    cursor: pointer;
+    display: block;
+    width: 26px;
+    height: 26px;
+    max-height: none;
+    margin-top: -12px;
+    border-radius:0;
+    background:none;
+    box-shadow: none;
+    transition:all .2s;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+  }
+
+  .tabs-scroll-container {
+    position: relative !important;
+    width: 100% !important;
+    overflow: hidden !important;
+  }
+
+  .tabs-wrapper {
+    display: flex !important;
+    overflow-x: auto !important;
+    scroll-behavior: smooth !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+    
+  }
+
+
+
+  .tabs-wrapper::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .tabs-arrow::before {
+    position: absolute !important;
+    top: 50% !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 200% !important;
+    transform: translateY(-50%) !important;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0) 0%, #ffffff 20%) !important;
+    content: "" !important;
+  }
+
+  .tabs-arrow::after {
+    content: "";
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-width: 0 0 2px 2px;
+    border-style: solid;
+    border-color: currentColor;
+    margin: -4px 0 0;
+    vertical-align: middle;
+    transform: rotate(-135deg);
+    transform-origin: 50% 50%;
+    transition: all .3s cubic-bezier(.215, .61, .355, 1);
+  }
+
+
+  .is-hidden {
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+
+  .visually-hidden {
+    position: absolute !important;
+    width: 1px !important;
+    height: 1px !important;
+    padding: 0 !important;
+    margin: -1px !important;
+    overflow: hidden !important;
+    clip: rect(0, 0, 0, 0) !important;
+    white-space: nowrap !important;
+    border: 0 !important;
+  }
+
+  .tab-button {
+    white-space: nowrap !important;
   }
 
   .tabs-arrow-prev {
-    left: 0;
+    left: 30px;
+    transform: scaleX(-1);
   }
 
+
+
   .tabs-arrow-next {
-    right: 0;
+    right: 40px;
   }
+
+@media only screen and (max-width:768px)
+{
+  .tabs-arrow-next{
+    right: 0px;
+  }
+  
+  .tabs-arrow-prev{
+    left: 0px;
+  }
+}
 
   /* Visually Hidden Text */
   .visually-hidden {
@@ -2914,7 +3005,7 @@ Search Page CSS
     padding: 8px 0 0;
   }
 
-  .tabs-products-info .tabs-products-info-a-tag  {
+  .tabs-products-info .tabs-products-info-a-tag {
     display: block;
     text-decoration: none;
     color: #1f1919;
@@ -3266,7 +3357,7 @@ Search Page CSS
   }
 
   .embla__button--prev {
-    left: 12px;
+    left: 0px;
     right: auto;
 
     @media only screen and (min-width:1560px) {
@@ -3276,7 +3367,7 @@ Search Page CSS
   }
 
   .embla__button--next {
-    right: 12px;
+    right: 0px;
     left: auto;
 
     @media only screen and (min-width:1560px) {
@@ -3423,7 +3514,7 @@ Search Page CSS
     height: 100%;
   }
 
- 
+
   @media (min-width: 1024px) {
     .tabs-products-images {
       width: calc(min(100vw, 1450px) / 4);
@@ -3626,7 +3717,3 @@ Search Page CSS
     position: relative;
   }
 
-
-
-
-  
