@@ -51,7 +51,7 @@ async function loadCriticalData({context, params, request}) {
   const {handle} = params;
   const {storefront} = context;
 
-  console.log(request, 'requestt');
+  // console.log(request, 'requestt');
 
   // this is the request in console
 

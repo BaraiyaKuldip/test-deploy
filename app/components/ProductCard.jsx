@@ -12,6 +12,7 @@ const SwiperComponent = ({
   collectionIndex,
   productIndex,
   currentVariant,
+  usePrefix,
 }) => {
   const swiperRefLocal = useRef();
 
@@ -32,20 +33,23 @@ const SwiperComponent = ({
       let bulletWidth = 100 / imgLength;
 
       const element = document.querySelector(
-        `.swiper-${collectionIndex}-${productIndex}`,
+        `.swiper-${collectionIndex}-${productIndex}-${usePrefix}`,
       );
 
       const paginationElement = document.querySelector(
-        `.swiper-pagination-${collectionIndex}-${productIndex}`,
+        `.swiper-pagination-${collectionIndex}-${productIndex}-${usePrefix}`,
       );
 
       // Get all <b> elements inside the pagination
       const targetBullets = paginationElement.querySelectorAll('.b-bullet');
 
       element.addEventListener('mouseover', () => {
-        paginationElement.style.background =
-          'linear-gradient(to bottom, rgba(13, 13, 13, 0.06) 0%, rgba(255, 255, 255, 0) 100%)';
-        paginationElement.style.opacity = '1';
+
+        if(imgLength > 1){
+          paginationElement.style.background =
+            'linear-gradient(to bottom, rgba(13, 13, 13, 0.06) 0%, rgba(255, 255, 255, 0) 100%)';
+          paginationElement.style.opacity = '1';
+        }
 
         // Apply styles to all <b> elements
         targetBullets.forEach((bullet) => {
@@ -107,12 +111,12 @@ const SwiperComponent = ({
     >
       <Swiper
         ref={swiperRefLocal}
-        key={`swiper-${collectionIndex}-${productIndex}`}
+        key={`swiper-${collectionIndex}-${productIndex}-${usePrefix}`}
         effect="fade"
         allowTouchMove={false}
         autoplay={false}
         pagination={{
-          el: `.swiper-pagination-${collectionIndex}-${productIndex}`,
+          el: `.swiper-pagination-${collectionIndex}-${productIndex}-${usePrefix}`,
           clickable: true,
           type: 'bullets',
           renderBullet: function (index, className) {
@@ -128,7 +132,7 @@ const SwiperComponent = ({
         }}
         navigation={false}
         modules={[EffectFade, Autoplay, Pagination, Navigation]}
-        className={`mySwiper swiper-${collectionIndex}-${productIndex}`}
+        className={`mySwiper swiper-${collectionIndex}-${productIndex}-${usePrefix}`}
       >
         {currentVariant.selectedOptions.map((option) =>
           images.edges.map((image, index) => (
@@ -172,7 +176,7 @@ const SwiperComponent = ({
           )),
         )}
         <div
-          className={`swiper-pagination swiper-pagination-${collectionIndex}-${productIndex}`}
+          className={`swiper-pagination swiper-pagination-${collectionIndex}-${productIndex}-${usePrefix}`}
         ></div>
       </Swiper>
     </div>

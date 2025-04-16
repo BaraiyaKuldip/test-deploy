@@ -7,6 +7,8 @@ import GirlImage1Landscape from '/images/GirlImage1Landscape.png?url';
 import GirlImage1Portrait from '/images/GirlImage1Portrait.png?url';
 import GirlImage1 from '/images/girl-1134567_1280.jpg?url';
 import GirlImage2 from '/images/woman-7121174_1280.jpg?url';
+import HolidayCollectionHeroImg from '/images/cc-holiday-collection-hero-img.jpg?url';
+import FringeCollectionHeroImg from '/images/cc-fringe-collection-hero-img.jpg?url';
 import 'swiper/css';
 import 'swiper/css/effect-fade';
 import 'swiper/css/pagination';
@@ -51,15 +53,15 @@ export async function loader(args) {
  * @param {LoaderFunctionArgs}
  */
 async function loadCriticalData({context}) {
-  const [{collections}] = await Promise.all([
+  // Execute both queries in parallel
+  const [featuredResults, curatedResults] = await Promise.all([
     context.storefront.query(FEATURED_COLLECTION_QUERY),
-    // Add other queries here, so that they are loaded in parallel
+    context.storefront.query(CURATED_COLLECTION_QUERY),
   ]);
 
   return {
-    featuredCollection: collections.nodes.filter((collection) =>
-      ['boot', 'Perfumes', 'Veggies' , 'test2' , 'test1' , 'Home page ' , 'Empty collection' , 'mens chinos'].includes(collection.title),
-    ),
+    featuredCollection: featuredResults.collections.nodes,
+    curatedCollection: curatedResults.collections.nodes,
   };
 }
 
@@ -130,7 +132,8 @@ export default function Homepage() {
         </div>
       </div>
       <FeaturedCollection collection={data.featuredCollection} />
-
+      <CuratedCollection />
+      <CuratedCollectionSplit collection={data.curatedCollection} />
       <RecommendedProducts products={data.recommendedProducts} />
     </div>
   );
@@ -162,11 +165,11 @@ function FeaturedCollection({collection}) {
         const containerWidth = tabsContainerRef.current.offsetWidth;
         const tabLeft = tab.offsetLeft;
         const tabWidth = tab.offsetWidth;
-        const scrollTo = tabLeft - (containerWidth / 2) + (tabWidth / 2);
-        
+        const scrollTo = tabLeft - containerWidth / 2 + tabWidth / 2;
+
         tabsContainerRef.current.scrollTo({
           left: scrollTo,
-          behavior: 'smooth'
+          behavior: 'smooth',
         });
       }
     }
@@ -175,13 +178,15 @@ function FeaturedCollection({collection}) {
   const scrollTabs = (direction) => {
     if (tabsContainerRef.current) {
       const scrollAmount = tabsContainerRef.current.offsetWidth * 0.8;
-      const newScrollLeft = direction === 'prev' 
-        ? Math.max(0, tabsContainerRef.current.scrollLeft - scrollAmount)
-        : Math.min(
-            tabsContainerRef.current.scrollWidth - tabsContainerRef.current.offsetWidth,
-            tabsContainerRef.current.scrollLeft + scrollAmount
-          );
-      
+      const newScrollLeft =
+        direction === 'prev'
+          ? Math.max(0, tabsContainerRef.current.scrollLeft - scrollAmount)
+          : Math.min(
+              tabsContainerRef.current.scrollWidth -
+                tabsContainerRef.current.offsetWidth,
+              tabsContainerRef.current.scrollLeft + scrollAmount,
+            );
+
       tabsContainerRef.current.scrollTo({
         left: newScrollLeft,
         behavior: 'smooth',
@@ -191,10 +196,10 @@ function FeaturedCollection({collection}) {
 
   const checkScrollPosition = () => {
     if (tabsContainerRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = tabsContainerRef.current;
+      const {scrollLeft, scrollWidth, clientWidth} = tabsContainerRef.current;
       const atStart = scrollLeft <= 0;
       const atEnd = scrollLeft >= scrollWidth - clientWidth - 1; // -1 for rounding errors
-      
+
       setShowPrevArrow(!atStart);
       setShowNextArrow(!atEnd);
     }
@@ -207,7 +212,7 @@ function FeaturedCollection({collection}) {
       checkScrollPosition();
       container.addEventListener('scroll', checkScrollPosition);
       window.addEventListener('resize', checkScrollPosition);
-      
+
       return () => {
         container.removeEventListener('scroll', checkScrollPosition);
         window.removeEventListener('resize', checkScrollPosition);
@@ -244,51 +249,60 @@ function FeaturedCollection({collection}) {
         </div>
 
         <div className="tabs-scroll-container">
-      {/* Tabs */}
-      <div 
-        className={`tabs-wrapper ${showPrevArrow || showNextArrow ? "sm:ms-[60px] sm:me-[50px]" : ""}`}
-        ref={tabsContainerRef}
-        style={{justifyContent:`${showPrevArrow || showNextArrow ? "normal" : "center"}` , gap:`${showPrevArrow || showNextArrow ? "0px" : "1rem"}`}}
-      >
-
-        {collection.map((collection, index) => (
-          <div key={index}>
-            <button
-              type="button"
-              className={`tab-button ${
-                activeTab === index
-                  ? 'tab-button-active'
-                  : 'tab-button-inactive'
-              }`}
-              onClick={() => handleTabClick(index)}
-              data-tab={index}
-              tabIndex={index}
-            >
-              <span className="uppercase"> {collection.title}</span>
-            </button>
+          {/* Tabs */}
+          <div
+            className={`tabs-wrapper ${
+              showPrevArrow || showNextArrow ? 'sm:ms-[60px] sm:me-[50px]' : ''
+            }`}
+            ref={tabsContainerRef}
+            style={{
+              justifyContent: `${
+                showPrevArrow || showNextArrow ? 'normal' : 'center'
+              }`,
+              gap: `${showPrevArrow || showNextArrow ? '0px' : '1rem'}`,
+            }}
+          >
+            {collection.map((collection, index) => (
+              <div key={index}>
+                <button
+                  type="button"
+                  className={`tab-button ${
+                    activeTab === index
+                      ? 'tab-button-active'
+                      : 'tab-button-inactive'
+                  }`}
+                  onClick={() => handleTabClick(index)}
+                  data-tab={index}
+                  tabIndex={index}
+                >
+                  <span className="uppercase"> {collection.title}</span>
+                </button>
+              </div>
+            ))}
           </div>
-        ))}
-      </div>
-      
-      {/* Arrows */}
-      <button
-        type="button"
-        className={`tabs-arrow tabs-arrow-prev ${!showPrevArrow ? 'is-hidden' : 'is-visible'}`}
-        onClick={() => scrollTabs('prev')}
-        data-scrollbar-arrow-prev=""
-      >
-        <span className="visually-hidden">Previous</span>
-      </button>
-      <button
-        type="button"
-        className={`tabs-arrow tabs-arrow-next ${!showNextArrow ? 'is-hidden' : 'is-visible'}`}
-        onClick={() => scrollTabs('next')}
-        data-scrollbar-arrow-next=""
-      >
-        <span className="visually-hidden">Next</span>
-      </button>
-    </div>
 
+          {/* Arrows */}
+          <button
+            type="button"
+            className={`tabs-arrow tabs-arrow-prev ${
+              !showPrevArrow ? 'is-hidden' : 'is-visible'
+            }`}
+            onClick={() => scrollTabs('prev')}
+            data-scrollbar-arrow-prev=""
+          >
+            <span className="visually-hidden">Previous</span>
+          </button>
+          <button
+            type="button"
+            className={`tabs-arrow tabs-arrow-next ${
+              !showNextArrow ? 'is-hidden' : 'is-visible'
+            }`}
+            onClick={() => scrollTabs('next')}
+            data-scrollbar-arrow-next=""
+          >
+            <span className="visually-hidden">Next</span>
+          </button>
+        </div>
 
         <div
           id="collection-tabs-content-wrapper"
@@ -315,8 +329,12 @@ function FeaturedCollection({collection}) {
                   >
                     {console.log(activeTab, 'active tab')}
                     {collection.products.nodes.map((product, productIndex) => (
-                      
-                      <ProductCardQuickAdd product={product} productIndex={productIndex} collectionIndex={collectionIndex} />
+                      <ProductCardQuickAdd
+                        product={product}
+                        productIndex={productIndex}
+                        collectionIndex={collectionIndex}
+                        usePrefix={"featured-collection"}
+                      />
                     ))}
                   </div>
                 </div>
@@ -374,28 +392,127 @@ function RecommendedProducts({products}) {
   );
 }
 
-
-
-function CustomCollection(){
-
-  return(
-  <>
-    <div className='custom-collection'>
-      <div className='custom-collection-wrapper'>
-        <div className='custom-collection-main-heading'>
-          <p></p>
-          <p>Curated Collections</p>
-          <p></p>
-        </div>
-        <div className='custom-collection-sub-heading'>
-          <p>Handcrafted by our expert designers.</p>
+function CuratedCollection() {
+  return (
+    <>
+      <div className="custom-collection">
+        <div className="custom-collection-wrapper">
+          <div className="custom-collection-heading-center">
+            <div className="custom-collection-main-heading">
+              <p></p>
+              <p>Curated Collections</p>
+              <p></p>
+            </div>
+            <div className="custom-collection-sub-heading">
+              <p>Handcrafted by our expert designers.</p>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-  </>
+    </>
   );
 }
 
+/**
+ * @param {{
+ *   collection: CuratedCollectionFragment;
+ * }}
+ */
+function CuratedCollectionSplit({collection}) {
+  console.log(collection, 'curated collection data');
+
+  return (
+    <>
+      <div className="custom-collection">
+        {collection.map((collection, collectionIndex) => {
+          return (
+            <div className="custom-collection-section">
+              <div className="custom-collection-wrapper">
+                <div className="custom-collection-grid">
+                  {/* Hero Block */}
+                  <div
+                    className={`custom-collection-hero-block index-${
+                      collectionIndex + 1
+                    }`}
+                  >
+                    <div className="custom-collection-hero-content">
+                      <div className="custom-collection-hero-text">
+                        <div>
+                          <p className="custom-collection-kicker">
+                            {collection.title}
+                          </p>
+                          <h2 className="custom-collection-title">
+                            {collection.description}
+                          </h2>
+                          <Link to="#" className="custom-collection-btn">
+                            {collectionIndex === 1
+                              ? 'Fringe Lookbook'
+                              : 'View The Lookbook'}
+                          </Link>
+                        </div>
+                      </div>
+
+                      <div className="custom-collection-overlay"></div>
+
+                      <div className="custom-collection-image-frame">
+                        <div className="custom-collection-image-pane">
+                          <div className="custom-collection-image-scale">
+                            <div className="custom-collection-image-wrapper relative block w-full h-full overflow-hidden aspect-[--wh-ratio]">
+                              {/* <Image data={collection.image}/> */}
+                              <img
+                                src={collection.image.url}
+                                alt={collection.image.altText || collection.title}
+                                width="1546"
+                                height="2001"
+                                loading="lazy"
+                                class="block overflow-hidden w-full h-full object-cover transition-opacity duration-300 ease-linear"
+                                sizes="100vw"
+                                fetchpriority="auto"
+                                style={{objectPosition: "61.1181% 25.4625%"}}
+                              ></img>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Products Grid */}
+                  <div
+                    className={`custom-collection-products index-${collectionIndex + 1}`}
+                  >
+                    <div className="custom-products-grid">
+                      {/* Product 1 */}
+                      {collection.products.nodes.map(
+                        (product, productIndex) => (
+                          <div className="custom-product-card">
+                            <div className="custom-product-wrapper">
+                              <ProductCardQuickAdd
+                                product={product}
+                                productIndex={productIndex}
+                                collectionIndex={collectionIndex}
+                                usePrefix={"curated-collection"}
+                              />
+                            </div>
+                          </div>
+                        ),
+                      )}
+                    </div>
+
+                    {/* Mobile Scrollbar */}
+                    <div className="custom-mobile-scrollbar">
+                      <div className="custom-scrollbar-track"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </>
+  );
+}
 
 const FEATURED_COLLECTION_QUERY = `#graphql
   fragment FeaturedCollection on Collection {
@@ -409,6 +526,7 @@ const FEATURED_COLLECTION_QUERY = `#graphql
       height
     }
     handle
+    description
     products(first:200){
         nodes{
           id
@@ -628,9 +746,249 @@ const FEATURED_COLLECTION_QUERY = `#graphql
   }
   query FeaturedCollection($country: CountryCode, $language: LanguageCode)
     @inContext(country: $country, language: $language) {
-    collections(first: 100, sortKey: TITLE, reverse: false) {
+    collections(first: 100, query: "title:'boot' OR title:'Perfumes' OR title:'Veggies' OR title:'test2' OR title:'test1' OR title:'Empty collection' OR title:'mens chinos'" , sortKey: TITLE) {
       nodes {
         ...FeaturedCollection
+      }
+    }
+  }
+`;
+
+const CURATED_COLLECTION_QUERY = `#graphql
+  fragment CuratedCollection on Collection {
+    id
+    title
+    image {
+      id
+      url
+      altText
+      width
+      height
+    }
+    handle
+    description
+    products(first: 4, sortKey: CREATED, reverse: true){
+        nodes{
+          id
+          title
+          availableForSale
+          vendor
+          handle  
+          descriptionHtml
+          description
+          encodedVariantExistence
+          encodedVariantAvailability
+          media(first:100){
+            nodes{
+              alt
+              id
+              mediaContentType
+              previewImage{
+                url
+                id
+                altText
+                height
+                width
+              }
+            }
+          }
+          images(first:100){
+            edges{
+              node{
+                id
+                url
+                altText
+                width
+                height
+              }
+            }
+          }
+          totalInventory
+          selectedOrFirstAvailableVariant{
+            availableForSale
+            compareAtPrice {
+              amount
+              currencyCode
+            }
+            id
+            image {
+              __typename
+              id
+              url
+              altText
+              width
+              height
+            }
+            price {
+              amount
+              currencyCode
+            }
+            product {
+              title
+              handle
+            }
+            selectedOptions {
+              name
+              value
+            }
+            sku
+            title
+            unitPrice {
+              amount
+              currencyCode
+            }
+            metafield(namespace:"meta" , key:"swatch_images"){
+                value
+                id  
+                type
+              }
+          }
+          adjacentVariants{
+            availableForSale
+            id
+            sku
+            title
+            compareAtPrice{
+              amount
+              currencyCode
+            }
+            image{
+              __typename
+              id
+              url
+              altText
+              height
+              width
+            }
+            price{
+              amount
+              currencyCode
+            }
+            product{
+              title
+              handle
+            }
+            selectedOptions{
+              name
+              value
+            }
+            unitPrice{
+              amount
+              currencyCode
+            }
+            metafield(namespace:"meta" , key:"swatch_images"){
+                value
+                id  
+                type
+              }
+          }
+          seo{
+            description
+            title
+          }
+          options{
+            id
+            name
+            optionValues{
+              id
+              name
+              firstSelectableVariant{
+                availableForSale
+                compareAtPrice {
+                  amount
+                  currencyCode
+                }
+                id
+                image {
+                  __typename
+                  id
+                  url
+                  altText
+                  width
+                  height
+                }
+                price {
+                  amount
+                  currencyCode
+                }
+                product {
+                  title
+                  handle
+                }
+                selectedOptions {
+                  name
+                  value
+                }
+                sku
+                title
+                unitPrice {
+                  amount
+                  currencyCode
+                }
+                metafield(namespace:"meta" , key:"swatch_images"){
+                value
+                id  
+                type
+              }
+              }
+              swatch{
+                color
+                image{
+                  alt
+                  id
+                  previewImage{
+                    id
+                    altText
+                    url
+                  }
+                } 
+              } 
+            } 
+          }
+          variants(first:100){
+            nodes{
+              id
+              title
+              image{
+                url
+                altText
+                id
+                height
+                width
+              }
+              availableForSale
+              price {
+                  amount
+                  currencyCode
+                }
+              selectedOptions{
+                name
+                value
+              }
+              metafield(namespace:"meta" , key:"swatch_images"){
+                value
+                id  
+                type
+              }
+            }  
+          }
+          variantsCount{
+            count
+            precision
+          }
+          metafield(namespace:"meta" , key:"swatch_images"){
+            value
+            id  
+            type
+          }
+        }
+      }
+  }
+  query CuratedCollection($country: CountryCode, $language: LanguageCode)
+    @inContext(country: $country, language: $language) {
+    collections(first: 100,  query: "title:'fringe collection' OR title:'holiday collection'") {
+      nodes {
+        ...CuratedCollection
       }
     }
   }
@@ -670,5 +1028,6 @@ const RECOMMENDED_PRODUCTS_QUERY = `#graphql
 /** @typedef {import('@shopify/remix-oxygen').LoaderFunctionArgs} LoaderFunctionArgs */
 /** @template T @typedef {import('@remix-run/react').MetaFunction<T>} MetaFunction */
 /** @typedef {import('storefrontapi.generated').FeaturedCollectionFragment} FeaturedCollectionFragment */
+/** @typedef {import('storefrontapi.generated').CuratedCollectionFragment} CuratedCollectionFragment */
 /** @typedef {import('storefrontapi.generated').RecommendedProductsQuery} RecommendedProductsQuery */
 /** @typedef {import('@shopify/remix-oxygen').SerializeFrom<typeof loader>} LoaderReturnData */

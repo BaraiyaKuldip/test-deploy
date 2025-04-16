@@ -3643,3 +3643,392 @@ Search Page CSS
   display: block;
   position: relative;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+/* QuickAddMenu.css */
+
+/* Main container */
+.quick-actions-toolbar {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+  overflow: hidden;
+  top: 8px;
+  right: 8px;
+  bottom: 8px;
+  left: 8px;
+  transition: all 0.3s ease;
+  pointer-events: none;
+}
+
+/* Quick add button */
+.quick-add-button {
+  background-color: var(--button-bg, #333);
+  color: var(--button-text, #fff);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+  transition: opacity 0.3s ease;
+  pointer-events: auto;
+  width: 48px;
+  aspect-ratio: 1/1;
+  min-width: 40px;
+  min-height: 40px;
+  border: none;
+  cursor: pointer;
+}
+
+.quick-add-button.is-open {
+  opacity: 0;
+  transition-delay: 0s;
+}
+
+@media (min-width: 768px) {
+  .quick-actions-toolbar {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  
+  .product-grid-item:hover .quick-actions-toolbar,
+  .product-grid-item:focus-within .quick-actions-toolbar {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  .quick-add-button {
+    min-height: 48px;
+    padding: 8px 16px;
+    width: 100%;
+    aspect-ratio: auto;
+  }
+  
+  .quick-add-button.is-open {
+    opacity: 1;
+  }
+}
+
+/* Button text */
+.button-text {
+  white-space: nowrap;
+  color: var(--button-text-color, #fff);
+  transition: transform 0.3s ease, opacity 0.3s ease;
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.button-text.is-hidden {
+  transform: translateY(100%);
+  opacity: 0;
+  transition-delay: 0s;
+}
+
+.desktop-text {
+  display: none;
+}
+
+.mobile-text {
+  display: block;
+}
+
+@media (min-width: 768px) {
+  .desktop-text {
+    display: block;
+  }
+  
+  .mobile-text {
+    display: none;
+  }
+}
+
+/* Cart icon */
+.cart-icon {
+  width: 24px;
+  height: 24px;
+  stroke: currentColor;
+  fill: none;
+}
+
+.icon-cart-full {
+  stroke: currentColor;
+  fill: none;
+}
+
+/* Popover */
+.quick-add-menu-popover {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+}
+
+.quick-add-menu-container {
+  position: absolute;
+  top: auto;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  max-height: 100%;
+  overflow: auto;
+  scrollbar-width: none;
+  pointer-events: auto;
+  transition: transform 0.6s ease, opacity 0.6s ease;
+  transform-origin: bottom;
+  background-color: var(--button-bg, #333);
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.quick-add-menu-container::-webkit-scrollbar {
+  display: none;
+}
+
+.quick-add-menu-container.is-visible {
+  animation: slideIn 0.6s ease forwards;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.quick-add-menu-content {
+  transition: transform 0.6s ease, opacity 0.6s ease;
+}
+
+.quick-add-menu-content.is-visible {
+  animation: fadeIn 0.6s ease forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    transform: translateY(50%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Toolbar */
+.quick-add-toolbar {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 16px;
+  min-height: 40px;
+}
+
+@media (min-width: 768px) {
+  .quick-add-toolbar {
+    gap: 8px;
+    row-gap: 8px;
+    min-height: 48px;
+  }
+}
+
+/* Product add button form */
+.product-add-button-form {
+  display: block;
+}
+
+.shopify-product-form {
+  display: inline-block;
+}
+
+/* Add to cart button */
+.add-to-cart-button {
+  display: block;
+  white-space: nowrap;
+  font-size: 14px;
+  cursor: pointer;
+  background: transparent;
+  border: none;
+  position: relative;
+}
+
+.add-to-cart-button:disabled {
+  cursor: not-allowed;
+}
+
+.button-ready-state {
+  display: inline-block;
+  white-space: nowrap;
+  border-radius: 2px;
+  color: var(--button-text-color, #fff);
+  padding: 8px 16px;
+}
+
+.add-to-cart-button:hover .button-ready-state {
+  background-color: rgba(255, 255, 255, 0.05);
+}
+
+.add-to-cart-button.is-sold-out .button-ready-state {
+  opacity: 0.7;
+  text-decoration: line-through;
+}
+
+.add-to-cart-button.is-loading .button-ready-state {
+  display: none;
+}
+
+.add-to-cart-button.has-success .button-ready-state {
+  display: none;
+}
+
+/* Loading state */
+.button-loading-state {
+  display: none;
+}
+
+.add-to-cart-button.is-loading .button-loading-state {
+  display: block;
+}
+
+.loading-svg {
+  --border: rgba(255, 255, 255, 0.5);
+  --text: rgb(255, 255, 255);
+}
+
+.loading-svg circle {
+  fill: none;
+  stroke: var(--border);
+  stroke-width: 2;
+}
+
+.loading-svg .loading-circle {
+  stroke: var(--text);
+  stroke-dasharray: 87.96459430051421 87.96459430051421;
+  animation: loading-spin 1s linear infinite;
+}
+
+@keyframes loading-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Complete state */
+.button-complete-state {
+  display: none;
+  --primary: rgb(255, 255, 255);
+}
+
+.add-to-cart-button.has-success .button-complete-state {
+  display: block;
+  position: relative;
+}
+
+.add-to-cart-button.has-success .button-complete-state::after {
+  content: "✓";
+  color: var(--primary);
+}
+
+
+
+
+
+
+
+/* ProductGridItem.css */
+
+.product-grid-item {
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.product-grid-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.product-image-container {
+  position: relative;
+  overflow: hidden;
+  padding-top: 125%; /* 4:5 aspect ratio */
+}
+
+.product-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.product-info {
+  padding: 16px;
+}
+
+.product-title {
+  font-size: 16px;
+  font-weight: 500;
+  margin: 0 0 8px;
+}
+
+.product-price {
+  font-size: 14px;
+  font-weight: 700;
+  margin: 0;
+  color: #333;
+}
+
+
+
+
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(1, 1fr);
+  gap: 24px;
+}
+
+@media (min-width: 576px) {
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 768px) {
+  .product-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 992px) {
+  .product-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}

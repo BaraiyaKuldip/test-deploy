@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {defer} from '@shopify/remix-oxygen';
 import {useLoaderData, useNavigate} from '@remix-run/react';
 import {
@@ -15,15 +15,17 @@ import {AddToCartButton} from './AddToCartButton';
 import {Money} from '@shopify/hydrogen';
 import {ProductImage} from './ProductImage';
 import {Image} from '@shopify/hydrogen';
-import {useAside} from './Aside';
+// import {useAside} from './Aside';
+import ProductCardQuickAddButton from './ProductCardQuickAddButton';
 
 export default function ProductCardQuickAdd({
   product,
   productIndex,
   collectionIndex,
+  usePrefix,
 }) {
   const navigate = useNavigate();
-  const {open} = useAside();
+  // const {open} = useAside();
 
   // Optimistically selects a variant with given available variant information
   const selectedVariant = useOptimisticVariant(
@@ -55,7 +57,7 @@ export default function ProductCardQuickAdd({
   };
 
   const currentVariant = findVariant() || selectedVariant;
-  const [searchParamsURL, setSearchParamsURL] = useState("");
+  const [searchParamsURL, setSearchParamsURL] = useState('');
   // Handle option selection
   const handleOptionChange = (optionName, optionValue) => {
     setSelectedOptions({
@@ -79,11 +81,39 @@ export default function ProductCardQuickAdd({
     });
   };
 
+  const parentRef = useRef(null);
+  const quickAddRef = useRef(null);
+
+  useEffect(() => {
+    const parentEl = parentRef.current;
+    const quickAddEl = quickAddRef.current;
+
+    if (!parentEl || !quickAddEl) return;
+
+    const resizeObserver = new ResizeObserver(() => {
+      const {width, height} = parentEl.getBoundingClientRect();
+      quickAddEl.style.width = `${width}px`;
+      quickAddEl.style.height = `${height}px`;
+    });
+
+    resizeObserver.observe(parentEl);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, []);
+
+
+  
+
   return (
     <div key={productIndex} className="collection-tabs-content embla__slide">
-      <div className="tabs-products-items-container">
+      <div className="tabs-products-items-container" ref={parentRef}>
         <div className="tabs-products-items-error"></div>
-        <Link to={`products/${product.handle}?${searchParamsURL}`} className="tabs-products-a-tag">
+        <Link
+          to={`products/${product.handle}?${searchParamsURL}`}
+          className="tabs-products-a-tag"
+        >
           <div className="tabs-products-pagination"></div>
           <div className="tabs-products-images aspect-[0.9]">
             <SwiperComponent
@@ -91,172 +121,54 @@ export default function ProductCardQuickAdd({
               collectionIndex={collectionIndex}
               productIndex={productIndex}
               currentVariant={currentVariant}
+              usePrefix={usePrefix}
             />
           </div>
         </Link>
 
-        {!currentVariant?.availableForSale && (
-          <div className="tabs-product-sold-out-btn">Sold Out</div>
-        )}
+        {productOptions
+          .map((opt) => {
+            opt.name === 'Color';
+            return opt.optionValues.find(
+              (value) =>
+                value.name ===
+                currentVariant.selectedOptions.find(
+                  (opt) => opt.name === 'Color',
+                )?.value,
+            )?.available;
+          })
+          .filter((itmes) => {
+            return itmes !== undefined;
+          })
+          .toString().length > 0
+          ? productOptions
+              .map((opt) => {
+                opt.name === 'Color';
+                return opt.optionValues.find(
+                  (value) =>
+                    value.name ===
+                    currentVariant.selectedOptions.find(
+                      (opt) => opt.name === 'Color',
+                    )?.value,
+                )?.available;
+              })
+              .filter((itmes) => {
+                return itmes !== undefined;
+              })
+              .toString() === 'false' && (
+              <div className="tabs-product-sold-out-btn">Sold Out</div>
+            )
+          : !currentVariant?.availableForSale && (
+              <div className="tabs-product-sold-out-btn">Sold Out</div>
+            )}
 
-        <div className="tabs-product-variants-box min-h-[40px] md:min-h-[48px]">
-          <div className="tabs-product-variants-box-wrapper">
-            <div className="h-full w-full">
-              <button
-                className={`tabs-product-variants-btn ${
-                  product?.options[0].name !== 'Title'
-                    ? 'variants_available'
-                    : ''
-                }`}
-              >
-                <AddToCartButton
-                  disabled={
-                    !product?.options[0].name === 'Title' ||
-                    !product?.availableForSale
-                  }
-                  onClick={() => {
-                    open('cart');
-                  }}
-                  lines={
-                    currentVariant
-                      ? [
-                          {
-                            merchandiseId: currentVariant.id,
-                            quantity: 1,
-                          },
-                        ]
-                      : []
-                  }
-                >
-                  {console.log(currentVariant, 'current variant quick add page')}
-                  <span
-                    className={`hidden md:block h-full w-full  cursor-pointer ${
-                      product.availableForSale ? 'opacity-100' : 'opacity-30'
-                    }`}
-                  >
-                    {product?.options[0].name !== 'Title'
-                      ? 'Quick Add'
-                      : 'Add To Cart'}
-                  </span>
-                  <span className='block md:hidden'>
-                  <svg xmlns="http://www.w3.org/2000/svg" class="icon-theme icon-theme-stroke icon-set-classic-cart" viewBox="0 0 24 24"><path d="M20.5 16.5H5.715l1.082-4.195-2.126-7.456L3.715 1.5H1.5m5.22 10h11.702l3.002-6.13s.428-.87-.745-.87H4.5m2 16.986a1 1 0 1 0 2 .028 1 1 0 0 0-2-.028Zm11 .014a1 1 0 1 0 2 0 1 1 0 0 0-2 0Z"></path><circle class="icon-cart-full" cx="13" cy="4.5" r="4"></circle></svg>
-                  </span>
-                </AddToCartButton>
-              </button>
-
-              {/* Variant Selector */}
-              {product?.options[0].name !== 'Title' && (
-                <div className={`ket_option_variants `}>
-                  <div
-                    className="variant-selects flex flex-row items-center flex-wrap justify-center space-x-r2 py-r4 md:gap-y-r2 cursor-pointer"
-                    id="variant-selects-template"
-                  >
-                    
-                    {console.log(product, 'product data quick add page')}
-                    {product.variants.nodes.map((variant) => (
-                      <>
-                        
-                        {variant.selectedOptions.map((selectedOption) => {
-                          const variantColor = variant.selectedOptions.find(
-                            (opt) => opt.name === 'Color',
-                          )?.value;
-
-                          const selectedColor =
-                            currentVariant.selectedOptions.find(
-                              (opt) => opt.name === 'Color',
-                            )?.value;
-
-                          return (
-                            <>
-                              
-                              {variantColor === selectedColor &&
-                                selectedOption.name === 'Size' && (
-                                  <div className={`${variant.availableForSale ? "" : "user-select-none pointer-events-none"}`}>
-                                  {console.log(variant,"variant product ")}
-                                    <AddToCartButton
-                                      disabled={
-                                        !variant || !variant.availableForSale
-                                      }
-                                      onClick={() => {
-                                        open('cart');
-                                      }}
-                                      lines={
-                                        currentVariant
-                                          ? [
-                                              {
-                                                merchandiseId:
-                                                currentVariant.id,
-                                                quantity: 1,
-                                              },
-                                            ]
-                                          : []
-                                      }
-                                    >
-
-                                      <div
-                                        className={`product-form__buttons w-full h-full`}
-                                      >
-                                        <button
-                                          key={selectedOption.name}
-                                          type="submit"
-                                          name="add"
-                                          value={variant.id}
-                                          className={`product-form__submit button button--full-width group-option-btn h-full w-full cursor-pointer `}
-                                          // disabled={!variant.availableForSale}
-                                          onClick={() =>
-                                            handleOptionChange(
-                                              selectedOption.name,
-                                              selectedOption.value,
-                                            )
-                                          }
-                                        >
-                                          <span
-                                            className={`tabs-variant-select-btn inline-block whitespace-nowrap text-button-contrast px-r4 py-r4 group-hover-option-button-text-button-contrast group-hover-option-button-bg-button-contrast-5 ${
-                                              variant.availableForSale
-                                                ? ''
-                                                : 'opacity-70 line-through'
-                                            }`}
-                                          >
-                                            {selectedOption.value}
-                                          </span>
-                                          <div className="loading__spinner hidden">
-                                            <svg
-                                              xmlns="http://www.w3.org/2000/svg"
-                                              className="spinner"
-                                              viewBox="0 0 66 66"
-                                            >
-                                              <circle
-                                                strokeWidth="6"
-                                                cx="33"
-                                                cy="33"
-                                                r="30"
-                                                fill="none"
-                                                className="path"
-                                              ></circle>
-                                            </svg>
-                                          </div>
-                                        </button>
-                                      </div>
-                                    </AddToCartButton>
-                                  </div>
-                                )}
-                            </>
-                          );
-                        })}
-
-                        {/* <a
-                                className="ket_extar_variants"
-                                href="/products/the-lori-off-shoulder"
-                              >
-                                2+
-                              </a> */}
-                      </>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          </div>
+        <div
+          className="quick-add-to-cart-container"
+          ref={quickAddRef}
+          style={{position: 'absolute', top: '0px'}}
+        >
+          <ProductCardQuickAddButton product={product} productOptions={productOptions} selectedVariant={selectedVariant} currentVariant={currentVariant} />
+         
         </div>
       </div>
 
@@ -269,6 +181,8 @@ export default function ProductCardQuickAdd({
           <div className="tabs-products-title-wrapper">
             <p className="tabs-products-title">{product.title}</p>
           </div>
+
+          {/* color */}
 
           <div className="tabs-products-price-wrapper">
             {currentVariant.selectedOptions.map((selectedOption) => (
@@ -287,8 +201,8 @@ export default function ProductCardQuickAdd({
                 </span>
               </>
             ))}
-            {/* color */}
-            {console.log(currentVariant,"currentVariant on quick add page")}
+            
+            {console.log(currentVariant, 'currentVariant on quick add page')}
             <span className="tabs-products-price">
               {currentVariant?.price ? (
                 <Money data={currentVariant?.price} />
@@ -311,11 +225,13 @@ export default function ProductCardQuickAdd({
                 key={option.name}
                 className="tabs-products-swatch-main-container"
               >
+                {option.optionValues.length > 1 && (
                 <div className="tabs-products-swatch-sub-container">
                   <p className="tabs-products-swatch-title">
                     {option.optionValues.length} Colors Available
                   </p>
-                  <div className="tabs-products-swatch-main-wrapper">
+                  
+                    <div className="tabs-products-swatch-main-wrapper">
                     <div className="tabs-products-swatch-sub-wrapper">
                       <div className="tabs-products-swatch-inner">
                         {option.optionValues.map((value, index) => {
@@ -346,6 +262,8 @@ export default function ProductCardQuickAdd({
                                         value.name,
                                       )
                                     }
+                                    title={`${value.name}`}
+                                    aria-label={`${value.name}`}
                                   >
                                     <div className="tabs-products-swatch">
                                       <div className="tabs-products-swatch-size">
@@ -386,7 +304,9 @@ export default function ProductCardQuickAdd({
                       </div>
                     </div>
                   </div>
+                 
                 </div>
+                )}
               </div>
             ),
         )}
@@ -394,7 +314,6 @@ export default function ProductCardQuickAdd({
     </div>
   );
 }
-
 
 /** @typedef {import('@shopify/hydrogen').MappedProductOptions} MappedProductOptions */
 /** @typedef {import('@shopify/hydrogen/storefront-api-types').Maybe} Maybe */

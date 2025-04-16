@@ -25,48 +25,27 @@ import {createContext, useContext, useEffect, useState} from 'react';
  */
 export function Aside({children, heading, type}) {
   const {type: activeType, close} = useAside();
-  const expanded = type === activeType;
+  const [isMounted, setIsMounted] = useState(false);
+  const expanded = isMounted && type === activeType;
 
   useEffect(() => {
-    if (!expanded) {
-      return(document.body.classList.remove('no-scroll')
-    );
+    setIsMounted(true);
+  }, []);
+
+  useEffect(() => {
+    if (!isMounted) return;
+    
+    if (expanded) {
+      document.body.classList.add('no-scroll');
+    } else {
+      document.body.classList.remove('no-scroll');
     }
 
-      
-      document.body.classList.add('no-scroll');
-      // console.log(document.querySelector('.predictive-search-result-main-div') , "jjjj");
-      
+    return () => {
+      document.body.classList.remove('no-scroll');
+    };
+  }, [expanded, isMounted]);
 
-    // console.log('expanded', expanded);
-
-    // const scrollY = window.scrollY;
-
-    // const originalStyles = {
-    //   overflow: document.body.style.overflow,
-    //   height: document.body.style.height,
-    //   position: document.body.style.position,
-    //   width: document.body.style.width,
-    //   top: document.body.style.top,
-    // };
-
-    
-    // document.body.style.overflow = 'hidden';
-    // document.body.style.height = '100vh';
-    // document.body.style.position = 'fixed';
-    // document.body.style.width = '100%';
-    // document.body.style.top = `-${scrollY}px`;
-
-    // return () => {
-    //   document.body.style.overflow = originalStyles.overflow;
-    //   document.body.style.height = originalStyles.height;
-    //   document.body.style.position = originalStyles.position;
-    //   document.body.style.width = originalStyles.width;
-    //   document.body.style.top = originalStyles.top;
-
-    //   window.scrollTo(0, scrollY);
-    // };
-  }, [expanded]);
 
   useEffect(() => {
     const abortController = new AbortController();
