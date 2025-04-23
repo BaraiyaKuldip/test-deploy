@@ -171,7 +171,7 @@ if (typeof window !== 'undefined') {
           </div>
         </div> */}
 
-        <div className="fixed_padding_page">{children}</div>
+        <div className="">{children}</div>
 
         {/* scrolling logos */}
 

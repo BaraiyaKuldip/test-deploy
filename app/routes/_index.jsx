@@ -72,8 +72,8 @@ async function loadCriticalData({context}) {
  * @param {LoaderFunctionArgs}
  */
 function loadDeferredData({context}) {
-  const recommendedProducts = context.storefront
-    .query(RECOMMENDED_PRODUCTS_QUERY)
+  const bestSellingProducts = context.storefront
+    .query(BEST_SELLING_PRODUCTS_QUERY)
     .catch((error) => {
       // Log query errors, but don't throw them so the page can still render
       console.error(error);
@@ -81,7 +81,7 @@ function loadDeferredData({context}) {
     });
 
   return {
-    recommendedProducts,
+    bestSellingProducts,
   };
 }
 
@@ -89,7 +89,7 @@ export default function Homepage() {
   /** @type {LoaderReturnData} */
   const data = useLoaderData();
   {
-    console.log(data, 'nnnn data');
+    console.log(data, 'data');
   }
   return (
     <div className="home">
@@ -134,7 +134,11 @@ export default function Homepage() {
       <FeaturedCollection collection={data.featuredCollection} />
       <CuratedCollection />
       <CuratedCollectionSplit collection={data.curatedCollection} />
-      <RecommendedProducts products={data.recommendedProducts} />
+      {/* <BestSellingProducts products={data.bestSellingProducts} /> */}
+      <BestSellers products={data.bestSellingProducts} />
+      {console.log(data.bestSellingProducts, 'best selling products')}
+
+      <div> hey </div>
     </div>
   );
 }
@@ -149,7 +153,7 @@ function FeaturedCollection({collection}) {
 
   if (!collection) return null;
   {
-    console.log(collection, 'nnnn collection');
+    console.log(collection, 'collection data');
   }
   const [activeTab, setActiveTab] = useState(0);
   const tabsContainerRef = useRef(null);
@@ -243,7 +247,7 @@ function FeaturedCollection({collection}) {
 
   return (
     <>
-      <div className="collection-tabs-wrapper">
+      <div className="collection-tabs-wrapper fixed_padding_page">
         <div className="collection-tabs">
           <h2 className="collection-tabs-heading">Signature fabrics</h2>
         </div>
@@ -327,13 +331,12 @@ function FeaturedCollection({collection}) {
                   <div
                     className={`embla__container collection-tabs-content-${collection.title}`}
                   >
-                    {console.log(activeTab, 'active tab')}
                     {collection.products.nodes.map((product, productIndex) => (
                       <ProductCardQuickAdd
                         product={product}
                         productIndex={productIndex}
                         collectionIndex={collectionIndex}
-                        usePrefix={"featured-collection"}
+                        usePrefix={'featured-collection'}
                       />
                     ))}
                   </div>
@@ -349,12 +352,12 @@ function FeaturedCollection({collection}) {
 
 /**
  * @param {{
- *   products: Promise<RecommendedProductsQuery | null>;
+ *   products: Promise<BestSellingProductsQuery | null>;
  * }}
  */
-function RecommendedProducts({products}) {
+function BestSellingProducts({products}) {
   {
-    console.log(products, 'recommeded products');
+    console.log(products, 'best selling products');
   }
 
   return (
@@ -392,6 +395,56 @@ function RecommendedProducts({products}) {
   );
 }
 
+import React from 'react';
+
+function BestSellers({products}) {
+  return (
+    <div
+      className="best-sellers-section palette-light fixed_padding_page"
+      style={{'--PT': '36px', '--PB': '36px'}}
+    >
+      <div className="best-sellers-wrapper section-padding">
+        <h2 className="best-sellers-kicker mb-r11">Best Sellers</h2>
+
+        <div
+          className="best-sellers-grid"
+          data-grid-large="4"
+          data-grid-small="2"
+        >
+          <Suspense fallback={<div>Loading...</div>}>
+            <Await resolve={products}>
+              {(response) => (
+                <>
+                  {console.log(response, 'response')}
+                  {response
+                    ? response.products.nodes.map((product, productIndex) => (
+                        <>
+                          {console.log(products, 'best selling products')}
+                          <ProductCardQuickAdd
+                            product={product}
+                            productIndex={productIndex}
+                            collectionIndex={1}
+                            usePrefix={'best-selling'}
+                          />
+                        </>
+                      ))
+                    : null}
+                </>
+              )}
+            </Await>
+          </Suspense>
+        </div>
+
+        <div className="best-sellers-view-all text-center mt-r8">
+          <Link to="/collections/best-sellers" className="button-outline">
+            View all
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function CuratedCollection() {
   return (
     <>
@@ -423,7 +476,7 @@ function CuratedCollectionSplit({collection}) {
 
   return (
     <>
-      <div className="custom-collection">
+      <div className="custom-collection fixed_padding_page">
         {collection.map((collection, collectionIndex) => {
           return (
             <div className="custom-collection-section">
@@ -461,14 +514,16 @@ function CuratedCollectionSplit({collection}) {
                               {/* <Image data={collection.image}/> */}
                               <img
                                 src={collection.image.url}
-                                alt={collection.image.altText || collection.title}
+                                alt={
+                                  collection.image.altText || collection.title
+                                }
                                 width="1546"
                                 height="2001"
                                 loading="lazy"
                                 class="block overflow-hidden w-full h-full object-cover transition-opacity duration-300 ease-linear"
                                 sizes="100vw"
                                 fetchpriority="auto"
-                                style={{objectPosition: "61.1181% 25.4625%"}}
+                                style={{objectPosition: '61.1181% 25.4625%'}}
                               ></img>
                             </div>
                           </div>
@@ -479,7 +534,9 @@ function CuratedCollectionSplit({collection}) {
 
                   {/* Products Grid */}
                   <div
-                    className={`custom-collection-products index-${collectionIndex + 1}`}
+                    className={`custom-collection-products index-${
+                      collectionIndex + 1
+                    }`}
                   >
                     <div className="custom-products-grid">
                       {/* Product 1 */}
@@ -491,7 +548,7 @@ function CuratedCollectionSplit({collection}) {
                                 product={product}
                                 productIndex={productIndex}
                                 collectionIndex={collectionIndex}
-                                usePrefix={"curated-collection"}
+                                usePrefix={'curated-collection'}
                               />
                             </div>
                           </div>
@@ -510,6 +567,7 @@ function CuratedCollectionSplit({collection}) {
           );
         })}
       </div>
+      {/* <div>hello</div> */}
     </>
   );
 }
@@ -994,32 +1052,227 @@ const CURATED_COLLECTION_QUERY = `#graphql
   }
 `;
 
-const RECOMMENDED_PRODUCTS_QUERY = `#graphql
-  fragment RecommendedProduct on Product {
+const BEST_SELLING_PRODUCTS_QUERY = `#graphql
+  fragment BestSellingProduct on Product {
     id
     title
-    handle
-    priceRange {
-      minVariantPrice {
+    availableForSale
+    vendor
+    handle  
+    descriptionHtml
+    description
+    encodedVariantExistence
+    encodedVariantAvailability
+    media(first:100){
+      nodes{
+        alt
+        id
+        mediaContentType
+        previewImage{
+          url
+          id
+          altText
+          height
+          width
+        }
+      }
+    }
+    images(first:100){
+      edges{
+        node{
+          id
+          url
+          altText
+          width
+          height
+        }
+      }
+    }
+    totalInventory
+    selectedOrFirstAvailableVariant{
+      availableForSale
+      compareAtPrice {
         amount
         currencyCode
       }
-    }
-    images(first: 1) {
-      nodes {
+      id
+      image {
+        __typename
         id
         url
         altText
         width
         height
       }
+      price {
+        amount
+        currencyCode
+      }
+      product {
+        title
+        handle
+      }
+      selectedOptions {
+        name
+        value
+      }
+      sku
+      title
+      unitPrice {
+        amount
+        currencyCode
+      }
+      metafield(namespace:"meta" , key:"swatch_images"){
+          value
+          id  
+          type
+        }
     }
+    adjacentVariants{
+      availableForSale
+      id
+      sku
+      title
+      compareAtPrice{
+        amount
+        currencyCode
+      }
+      image{
+        __typename
+        id
+        url
+        altText
+        height
+        width
+      }
+      price{
+        amount
+        currencyCode
+      }
+      product{
+        title
+        handle
+      }
+      selectedOptions{
+        name
+        value
+      }
+      unitPrice{
+        amount
+        currencyCode
+      }
+      metafield(namespace:"meta" , key:"swatch_images"){
+          value
+          id  
+          type
+        }
+    }
+    seo{
+      description
+      title
+    }
+    options{
+      id
+      name
+      optionValues{
+        id
+        name
+        firstSelectableVariant{
+          availableForSale
+          compareAtPrice {
+            amount
+            currencyCode
+          }
+          id
+          image {
+            __typename
+            id
+            url
+            altText
+            width
+            height
+          }
+          price {
+            amount
+            currencyCode
+          }
+          product {
+            title
+            handle
+          }
+          selectedOptions {
+            name
+            value
+          }
+          sku
+          title
+          unitPrice {
+            amount
+            currencyCode
+          }
+          metafield(namespace:"meta" , key:"swatch_images"){
+          value
+          id  
+          type
+        }
+        }
+        swatch{
+          color
+          image{
+            alt
+            id
+            previewImage{
+              id
+              altText
+              url
+            }
+          } 
+        } 
+      } 
+    }
+    variants(first:100){
+      nodes{
+        id
+        title
+        image{
+          url
+          altText
+          id
+          height
+          width
+        }
+        availableForSale
+        price {
+            amount
+            currencyCode
+          }
+        selectedOptions{
+          name
+          value
+        }
+        metafield(namespace:"meta" , key:"swatch_images"){
+          value
+          id  
+          type
+        }
+      }  
+    }
+    variantsCount{
+      count
+      precision
+    }
+    metafield(namespace:"meta" , key:"swatch_images"){
+      value
+      id  
+      type
+    }
+        
   }
-  query RecommendedProducts ($country: CountryCode, $language: LanguageCode)
+  query BestSellingProducts ($country: CountryCode, $language: LanguageCode)
     @inContext(country: $country, language: $language) {
-    products(first: 4, sortKey: UPDATED_AT, reverse: true) {
+    products(first: 8, sortKey: BEST_SELLING) {
       nodes {
-        ...RecommendedProduct
+        ...BestSellingProduct
       }
     }
   }
@@ -1029,5 +1282,5 @@ const RECOMMENDED_PRODUCTS_QUERY = `#graphql
 /** @template T @typedef {import('@remix-run/react').MetaFunction<T>} MetaFunction */
 /** @typedef {import('storefrontapi.generated').FeaturedCollectionFragment} FeaturedCollectionFragment */
 /** @typedef {import('storefrontapi.generated').CuratedCollectionFragment} CuratedCollectionFragment */
-/** @typedef {import('storefrontapi.generated').RecommendedProductsQuery} RecommendedProductsQuery */
+/** @typedef {import('storefrontapi.generated').BestSellingProductsQuery} BestSellingProductsQuery */
 /** @typedef {import('@shopify/remix-oxygen').SerializeFrom<typeof loader>} LoaderReturnData */

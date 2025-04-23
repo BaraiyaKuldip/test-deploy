@@ -22,7 +22,7 @@ export function ProductForm({productOptions, selectedVariant}) {
             <h5>{option.name}</h5>
             <div className="product-options-grid">
               {option.optionValues.map((value) => {
-                console.log(option ,'vvvv')
+                // console.log(option ,'vvvv')
                 const {
                   name,
                   handle,

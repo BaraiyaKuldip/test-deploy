@@ -22,6 +22,9 @@ import {
   HEADER_QUERY,
 } from '~/lib/fragments';
 
+import poppins from "@fontsource/poppins?url";
+import montserrat from "@fontsource/montserrat?url";
+import libreBaskerville from "@fontsource/libre-baskerville?url";
 /**
  * This is important to avoid re-fetching root queries on sub-navigations
  * @type {ShouldRevalidateFunction}
@@ -175,6 +178,10 @@ export function Layout({children}) {
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
+
+        <link rel="stylesheet" href={poppins} />
+        <link rel="stylesheet" href={montserrat} />
+        <link rel="stylesheet" href={libreBaskerville} />
         <link rel="stylesheet" href={tailwindCss}></link>
         <link rel="stylesheet" href={resetStyles}></link>
         <link rel="stylesheet" href={appStyles}></link>

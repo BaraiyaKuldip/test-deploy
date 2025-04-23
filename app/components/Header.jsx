@@ -526,7 +526,8 @@ function HeaderCtas({isLoggedIn, cart}) {
             <span className="sr-only">
               {(isLoggedIn) => (isLoggedIn ? 'Account' : 'Sign in')}
             </span>
-            <User className="w-6 h-6" />
+            {/* <User className="w-5 h-5" /> */}
+            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="w-5 h-5 lucide-icon-h" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 1.5c-2.575 0-4.49 1.593-4.49 5.747s1.664 4.985 1.954 5.27c.267.358.267.855 0 1.213-.238.245-4.544 1.116-6.115 2.723a4.647 4.647 0 0 0-1.665 2.915c-.069.293-.135 1.14-.181 1.88-.043.67.434 1.252 1.443 1.252h18.118c.491 0 1.477-.573 1.435-1.237-.047-.743-.113-1.6-.183-1.895a4.645 4.645 0 0 0-1.664-2.887c-1.572-1.621-5.878-2.493-6.116-2.724a1.019 1.019 0 0 1 0-1.212c.29-.286 1.955-1.103 1.955-5.27 0-4.168-1.85-5.775-4.49-5.775Z"></path></svg>
           </Await>
         </Suspense>
       </NavLink>
@@ -544,7 +545,7 @@ function HeaderMenuMobileToggle() {
   const {open} = useAside();
   return (
     <button className="p-2 -ml-2" onClick={() => open('mobile')}>
-      <Menu className="w-6 h-6 lucide-icon-h" />
+      <Menu className="w-5 h-5 lucide-icon-h" />
     </button>
   );
 }
@@ -553,10 +554,12 @@ function SearchToggle() {
   const {open} = useAside();
   return (
     <button
-      className="reset hover:cursor-pointer px-5 py-1.25"
+      className="reset hover:cursor-pointer px-3.75 py-1.25"
       onClick={() => open('search')}
     >
-      <Search className="w-6 h-6" />
+      {/* <Search className="w-5 h-5" /> */}
+
+      <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="w-5 h-5 lucide-icon-h" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18.316 9.825c0 3.368-2.05 6.404-5.194 7.692a8.47 8.47 0 0 1-9.164-1.81A8.265 8.265 0 0 1 2.144 6.63C3.45 3.52 6.519 1.495 9.921 1.5c4.638.007 8.395 3.732 8.395 8.325ZM22.5 22.5l-6.558-6.87L22.5 22.5Z"></path></svg>
     </button>
   );
 }
@@ -583,7 +586,10 @@ function CartBadge({count}) {
         });
       }}
     >
-      <ShoppingCart className="w-6 h-6 lucide-icon-h" />
+      {/* <ShoppingCart className="w-5 h-5 lucide-icon-h" />   */}
+      <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="w-5 h-5 lucide-icon-h" viewBox="0 0 24 24"><path d="M16.25 7.8V5.7h4.2l1.05 16.8H2.6L3.65 5.7h4.2a4.2 4.2 0 0 1 8.4 0h-8.4v2.1"></path>
+      {/* <circle class="icon-cart-full" cx="12" cy="15" r="4"></circle> */}
+      </svg>
       {/* {count !== null && count > 0 && (
         <span className='absolute top-0 right-6 bg-orange-400 text-black text-[12px] font-medium rounded-full w-3 h-3 flex justify-center items-center'>
           {count > 9 ? '9+' : count}

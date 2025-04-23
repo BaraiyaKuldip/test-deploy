@@ -18,18 +18,19 @@ const SwiperComponent = ({
 
   useEffect(() => {
     if (document && window) {
-      console.log(productIndex, images, 'images length');
+      // console.log(productIndex, images, 'images length');
 
       let imgLength = 0;
 
       currentVariant.selectedOptions.map((option) =>
-        images.edges.map((image, index) => (
-            currentVariant.selectedOptions.find(
-              (opt) => opt.name === 'Color',
-            ) !== undefined ? (
-              image.node.altText === option.value && (imgLength = imgLength + 1)):(imgLength = images.edges.length)
-            )))
-      
+        images.edges.map((image, index) =>
+          currentVariant.selectedOptions.find((opt) => opt.name === 'Color') !==
+          undefined
+            ? image.node.altText === option.value && (imgLength = imgLength + 1)
+            : (imgLength = images.edges.length),
+        ),
+      );
+
       let bulletWidth = 100 / imgLength;
 
       const element = document.querySelector(
@@ -44,8 +45,7 @@ const SwiperComponent = ({
       const targetBullets = paginationElement.querySelectorAll('.b-bullet');
 
       element.addEventListener('mouseover', () => {
-
-        if(imgLength > 1){
+        if (imgLength > 1) {
           paginationElement.style.background =
             'linear-gradient(to bottom, rgba(13, 13, 13, 0.06) 0%, rgba(255, 255, 255, 0) 100%)';
           paginationElement.style.opacity = '1';
@@ -145,13 +145,36 @@ const SwiperComponent = ({
                     key={index}
                     className="relative block w-full h-full overflow-hidden aspect-[0.9]"
                   >
-                    <Image
+                    {/* <Image
                       data={image.node}
                       height="2000"
                       width="1500"
                       aspectRatio="1/1"
                       sizes="(min-width: 1024px) calc(min(100vw, 1450px) / 4),(min-width: 768px) calc(min(100vw, 1450px) / 3),calc(min(100vw, 1450px) / 1.5)"
                       fetchpriority="high"
+                    /> */}
+
+                    <img
+                      src={image.node.url}
+                      alt={image.node.altText || image.node.title}
+                      height={image.node.height}
+                      width={image.node.width}
+                      loading="lazy"
+                      className="block overflow-hidden w-full h-full object-cover transition-opacity duration-300 ease-linear product-grid-item__image"
+                      fetchPriority="high"
+                      srcset={`
+                              ${image.node.url}?width=1500 1500w,
+                              ${image.node.url}?width=200 200w,
+                              ${image.node.url}?width=400 400w,
+                              ${image.node.url}?width=223 223w,
+                              ${image.node.url}?width=446 446w,
+                              ${image.node.url}?width=231 231w,
+                              ${image.node.url}?width=462 462w,
+                              ${image.node.url}?width=250 250w,
+                              ${image.node.url}?width=500 500w,
+                              ${image.node.url}?width=325 325w,
+                              ${image.node.url}?width=650 650w
+                            `}
                     />
                   </SwiperSlide>
                 )
@@ -161,13 +184,35 @@ const SwiperComponent = ({
                     key={index}
                     className="relative block w-full h-full overflow-hidden aspect-[0.9]"
                   >
-                    <Image
+                    {/* <Image
                       data={image.node}
                       height="2000"
                       width="1500"
                       aspectRatio="1/1"
                       sizes="(min-width: 1024px) calc(min(100vw, 1450px) / 4),(min-width: 768px) calc(min(100vw, 1450px) / 3),calc(min(100vw, 1450px) / 1.5)"
                       fetchpriority="high"
+                    /> */}
+                    <img
+                      src={image.node.url}
+                      alt={image.node.altText || image.node.title}
+                      height={image.node.height}
+                      width={image.node.width}
+                      loading="lazy"
+                      className="block overflow-hidden w-full h-full object-cover transition-opacity duration-300 ease-linear product-grid-item__image"
+                      fetchPriority="high"
+                      srcset={`
+                              ${image.node.url}?width=1500 1500w,
+                              ${image.node.url}?width=200 200w,
+                              ${image.node.url}?width=400 400w,
+                              ${image.node.url}?width=223 223w,
+                              ${image.node.url}?width=446 446w,
+                              ${image.node.url}?width=231 231w,
+                              ${image.node.url}?width=462 462w,
+                              ${image.node.url}?width=250 250w,
+                              ${image.node.url}?width=500 500w,
+                              ${image.node.url}?width=325 325w,
+                              ${image.node.url}?width=650 650w
+                            `}
                     />
                   </SwiperSlide>
                 </>

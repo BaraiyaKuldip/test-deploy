@@ -9,7 +9,7 @@ export function ProductImage({image}) {
   if (!image) {
     return <div className="product-image" />;
   }
-  console.log(image, "iiii")
+  // console.log(image, "iiii")
   return (
     <>
     {/* <div className="relative block w-full h-full overflow-hidden"> */}

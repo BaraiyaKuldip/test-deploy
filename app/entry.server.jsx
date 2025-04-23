@@ -25,12 +25,8 @@ export default async function handleRequest(
     styleSrc:[
         "'self'",
         'https://cdn.shopify.com',
-        // 'https://parampatelmeetanshi.github.io/resources/font_family.css',
     ],
-    // fontSrc:[
-    //   "'self'",
-    //   'https://baraiyakuldip.github.io/Frontend/font_style.css',
-    // ]
+    
   });
 
   
