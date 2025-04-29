@@ -24,7 +24,11 @@ export default defineConfig({
   build: {
     // Allow a strict Content-Security-Policy
     // withtout inlining assets as base64:
+    commonjsOptions: {
+      transformMixedEsModules: true, // Transpile CommonJS to ESM
+    },
     assetsInlineLimit: 0,
+
   },
   ssr: {
     optimizeDeps: {
@@ -38,7 +42,7 @@ export default defineConfig({
        * Include 'example-dep' in the array below.
        * @see https://vitejs.dev/config/dep-optimization-options
        */
-      include: [],
+      include: ['react-slick', 'slick-carousel'], // Pre-bundle these dependencies
     },
   },
 });

@@ -9,6 +9,7 @@ import SiteLogoIconBlack from '/images/site_logo_mezzo_black.png?url';
 import {SearchForm} from './SearchForm';
 import {SearchFormPredictive} from './SearchFormPredictive';
 import { SearchResultsPredictive } from './SearchResultsPredictive';
+import { P } from 'dist/client/assets/ProductPrice-kwE0Sy2X';
 
 /**
  * @param {HeaderProps}
@@ -211,6 +212,7 @@ export function HeaderMenu({
   const queriesDatalistId = useId();
 
   function myFunction() {
+    if(typeof window !== "undefined"){
     // Declare variables
     var input, filter, ul, li, a, i;
     input = document.getElementById('mySearch');
@@ -226,6 +228,7 @@ export function HeaderMenu({
       } else {
         li[i].style.display = 'none';
       }
+    }
     }
   }
 

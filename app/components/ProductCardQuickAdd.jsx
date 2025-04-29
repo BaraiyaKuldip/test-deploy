@@ -103,9 +103,6 @@ export default function ProductCardQuickAdd({
     };
   }, []);
 
-
-  
-
   return (
     <div key={productIndex} className="collection-tabs-content embla__slide">
       <div className="tabs-products-items-container" ref={parentRef}>
@@ -167,8 +164,12 @@ export default function ProductCardQuickAdd({
           ref={quickAddRef}
           style={{position: 'absolute', top: '0px'}}
         >
-          <ProductCardQuickAddButton product={product} productOptions={productOptions} selectedVariant={selectedVariant} currentVariant={currentVariant} />
-         
+          <ProductCardQuickAddButton
+            product={product}
+            productOptions={productOptions}
+            selectedVariant={selectedVariant}
+            currentVariant={currentVariant}
+          />
         </div>
       </div>
 
@@ -201,7 +202,7 @@ export default function ProductCardQuickAdd({
                 </span>
               </>
             ))}
-            
+
             {console.log(currentVariant, 'currentVariant on quick add page')}
             <span className="tabs-products-price">
               {currentVariant?.price ? (
@@ -226,86 +227,87 @@ export default function ProductCardQuickAdd({
                 className="tabs-products-swatch-main-container"
               >
                 {option.optionValues.length > 1 && (
-                <div className="tabs-products-swatch-sub-container">
-                  <p className="tabs-products-swatch-title">
-                    {option.optionValues.length} Colors Available
-                  </p>
-                  
+                  <div className="tabs-products-swatch-sub-container">
+                    <p className="tabs-products-swatch-title">
+                      {option.optionValues.length} Colors Available
+                    </p>
+
                     <div className="tabs-products-swatch-main-wrapper">
-                    <div className="tabs-products-swatch-sub-wrapper">
-                      <div className="tabs-products-swatch-inner">
-                        {option.optionValues.map((value, index) => {
-                          const isSelected =
-                            selectedOptions[option.name] === value.name;
-                          const isAvailable = value.exists;
-                          if (index < 5) {
-                            return (
-                              <>
-                                <div
-                                  key={value.name}
-                                  className={`tabs-products-swatch-holder ${
-                                    !value.available ? 'sold-out' : ''
-                                  }`}
-                                >
-                                  <button
-                                    type="button"
-                                    className={`product-options-item${
-                                      isAvailable && !isSelected
-                                        ? ' link'
-                                        : ' selected'
+                      <div className="tabs-products-swatch-sub-wrapper">
+                        <div className="tabs-products-swatch-inner">
+                          {option.optionValues.map((value, index) => {
+                            const isSelected =
+                              selectedOptions[option.name] === value.name;
+                            const isAvailable = value.exists;
+                            if (index < 5) {
+                              return (
+                                <>
+                                  <div
+                                    key={value.name}
+                                    className={`tabs-products-swatch-holder ${
+                                      !value.available ? 'sold-out' : ''
                                     }`}
-                                    style={{opacity: isAvailable ? 1 : 0.3}}
-                                    disabled={!isAvailable}
-                                    onClick={() =>
-                                      handleOptionChange(
-                                        option.name,
-                                        value.name,
-                                      )
-                                    }
-                                    title={`${value.name}`}
-                                    aria-label={`${value.name}`}
                                   >
-                                    <div className="tabs-products-swatch">
-                                      <div className="tabs-products-swatch-size">
-                                        {value.firstSelectableVariant.image && (
-                                          <div className="relative block w-full h-full overflow-hidden aspect-[1.0]">
-                                            <Image
-                                              data={
-                                                value.firstSelectableVariant
-                                                  .image
-                                              }
-                                              class="block overflow-hidden w-full h-full object-cover transition-opacity duration-300 ease-linear"
-                                              height="35"
-                                              width="26"
-                                              loading="lazy"
-                                              fetchpriority="low"
-                                              style={{
-                                                objectPosition: 'center center',
-                                              }}
-                                            />
-                                          </div>
-                                        )}
+                                    <button
+                                      type="button"
+                                      className={`product-options-item${
+                                        isAvailable && !isSelected
+                                          ? ' link'
+                                          : ' selected'
+                                      }`}
+                                      style={{opacity: isAvailable ? 1 : 0.3}}
+                                      disabled={!isAvailable}
+                                      onClick={() =>
+                                        handleOptionChange(
+                                          option.name,
+                                          value.name,
+                                        )
+                                      }
+                                      title={`${value.name}`}
+                                      aria-label={`${value.name}`}
+                                    >
+                                      <div className="tabs-products-swatch">
+                                        <div className="tabs-products-swatch-size">
+                                          {value.firstSelectableVariant
+                                            .image && (
+                                            <div className="relative block w-full h-full overflow-hidden aspect-[1.0]">
+                                              <Image
+                                                data={
+                                                  value.firstSelectableVariant
+                                                    .image
+                                                }
+                                                class="block overflow-hidden w-full h-full object-cover transition-opacity duration-300 ease-linear"
+                                                height="35"
+                                                width="26"
+                                                loading="lazy"
+                                                fetchpriority="low"
+                                                style={{
+                                                  objectPosition:
+                                                    'center center',
+                                                }}
+                                              />
+                                            </div>
+                                          )}
+                                        </div>
                                       </div>
-                                    </div>
-                                  </button>
-                                </div>
-                              </>
-                            );
-                          }
-                        })}
-                        {option.optionValues.length > 5 && (
-                          <Link
-                            to={`products/${product.handle}?${searchParamsURL}`}
-                            className="tabs-products-swatch-more-links"
-                          >
-                            {option.optionValues.length - 5}+
-                          </Link>
-                        )}
+                                    </button>
+                                  </div>
+                                </>
+                              );
+                            }
+                          })}
+                          {option.optionValues.length > 5 && (
+                            <Link
+                              to={`products/${product.handle}?${searchParamsURL}`}
+                              className="tabs-products-swatch-more-links"
+                            >
+                              {option.optionValues.length - 5}+
+                            </Link>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>
-                 
-                </div>
                 )}
               </div>
             ),

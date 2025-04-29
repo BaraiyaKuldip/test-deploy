@@ -347,6 +347,8 @@ function CartBadge({count}) {
   const {publish, shop, cart, prevCart} = useAnalytics();
 
   return (
+  <>
+    {typeof window !== "undefined" && (
     <a
       href="/cart"
       onClick={(e) => {
@@ -362,6 +364,8 @@ function CartBadge({count}) {
     >
       Cart {count === null ? <span>&nbsp;</span> : count}
     </a>
+    )}
+    </>
   );
 }
 

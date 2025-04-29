@@ -55,14 +55,23 @@ export async function loader(args) {
  */
 async function loadCriticalData({context}) {
   // Execute both queries in parallel
-  const [featuredResults, curatedResults] = await Promise.all([
+  const [
+    featuredResults,
+    curatedResults,
+    theLookCollectionResults,
+    wayfarerCollectionResults,
+  ] = await Promise.all([
     context.storefront.query(FEATURED_COLLECTION_QUERY),
     context.storefront.query(CURATED_COLLECTION_QUERY),
+    context.storefront.query(THE_LOOK_COLLECTION),
+    context.storefront.query(WAYFARER_COLLECTION),
   ]);
 
   return {
     featuredCollection: featuredResults.collections.nodes,
     curatedCollection: curatedResults.collections.nodes,
+    TheLookCollection: theLookCollectionResults.collections.nodes,
+    WayfarerCollection: wayfarerCollectionResults.collections.nodes,
   };
 }
 
@@ -133,15 +142,20 @@ export default function Homepage() {
         </div>
       </div>
       <FeaturedCollection collection={data.featuredCollection} />
-      <CuratedCollection />
-      <CuratedCollectionSplit collection={data.curatedCollection} />
+
+      <CuratedCollection collection={data.curatedCollection} />
       {/* <BestSellingProducts products={data.bestSellingProducts} /> */}
       <BestSellers products={data.bestSellingProducts} />
-      {console.log(data.bestSellingProducts, 'best selling products')}
-      <HotspotSection/>
-      <ProductHotspot/>
-
-      <div> hey </div>
+      {/* {console.log(data.bestSellingProducts, 'best selling products')} */}
+      <TheLookCollection
+        products={data.TheLookCollection[0].products.nodes}
+        collection={data.TheLookCollection[0]}
+      />
+      {console.log(data.TheLookCollection[0], 'collectionnn')}
+      <WayfarerCollection
+        products={data.WayfarerCollection[0].products.nodes}
+        collection={data.WayfarerCollection[0]}
+      />
     </div>
   );
 }
@@ -358,47 +372,9 @@ function FeaturedCollection({collection}) {
  *   products: Promise<BestSellingProductsQuery | null>;
  * }}
  */
-function BestSellingProducts({products}) {
-  {
-    console.log(products, 'best selling products');
-  }
-
-  return (
-    <div className="recommended-products">
-      <h2>Recommended Products</h2>
-      <Suspense fallback={<div>Loading...</div>}>
-        <Await resolve={products}>
-          {(response) => (
-            <div className="recommended-products-grid">
-              {response
-                ? response.products.nodes.map((product) => (
-                    <Link
-                      key={product.id}
-                      className="recommended-product"
-                      to={`/products/${product.handle}`}
-                    >
-                      <Image
-                        data={product.images.nodes[0]}
-                        aspectRatio="1/1"
-                        sizes="(min-width: 45em) 20vw, 50vw"
-                      />
-                      <h4>{product.title}</h4>
-                      <small>
-                        <Money data={product.priceRange.minVariantPrice} />
-                      </small>
-                    </Link>
-                  ))
-                : null}
-            </div>
-          )}
-        </Await>
-      </Suspense>
-      <br />
-    </div>
-  );
-}
 
 import React from 'react';
+import CustomFlickitySlider from '~/components/CustomFlickitySlider';
 
 function BestSellers({products}) {
   return (
@@ -448,46 +424,27 @@ function BestSellers({products}) {
   );
 }
 
-function CuratedCollection() {
-  return (
-    <>
-      <div className="custom-collection">
-        <div className="custom-collection-wrapper">
-          <div className="custom-collection-heading-center">
-            <div className="custom-collection-main-heading">
-              <p></p>
-              <p>Curated Collections</p>
-              <p></p>
-            </div>
-            <div className="custom-collection-sub-heading">
-              <p>Handcrafted by our expert designers.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </>
-  );
-}
-
 /**
  * @param {{
  *   collection: CuratedCollectionFragment;
  * }}
  */
-function CuratedCollectionSplit({collection}) {
+function CuratedCollection({collection}) {
   console.log(collection, 'curated collection data');
 
   // Create a ref for each collection's container and track
-  const collectionRefs = useRef(collection.map(() => ({
-    containerRef: React.createRef(),
-    trackRef: React.createRef(),
-    isDragging: false,
-    startPosition: 0
-  })));
+  const collectionRefs = useRef(
+    collection.map(() => ({
+      containerRef: React.createRef(),
+      trackRef: React.createRef(),
+      isDragging: false,
+      startPosition: 0,
+    })),
+  );
 
   // Track width and position state for each collection
   const [scrollStates, setScrollStates] = useState(
-    collection.map(() => ({ trackWidth: 40, position: 0 }))
+    collection.map(() => ({trackWidth: 40, position: 0})),
   );
 
   // Calculate track width and set initial position for each collection
@@ -500,14 +457,15 @@ function CuratedCollectionSplit({collection}) {
         const {scrollWidth, clientWidth, scrollLeft} = container;
         // Calculate the track width as a percentage of visible content
         const newTrackWidth = (clientWidth / scrollWidth) * 100;
-        
+
         // Calculate the track position
         const maxScroll = scrollWidth - clientWidth;
-        const newPosition = maxScroll > 0 ? (scrollLeft / maxScroll) * (100 - newTrackWidth) : 0;
-        
-        setScrollStates(prevStates => {
+        const newPosition =
+          maxScroll > 0 ? (scrollLeft / maxScroll) * (100 - newTrackWidth) : 0;
+
+        setScrollStates((prevStates) => {
           const newStates = [...prevStates];
-          newStates[index] = { trackWidth: newTrackWidth, position: newPosition };
+          newStates[index] = {trackWidth: newTrackWidth, position: newPosition};
           return newStates;
         });
       };
@@ -535,7 +493,8 @@ function CuratedCollectionSplit({collection}) {
 
       const handleMouseMove = (e) => {
         const collectionRef = collectionRefs.current[index];
-        if (!collectionRef.isDragging || !collectionRef.containerRef.current) return;
+        if (!collectionRef.isDragging || !collectionRef.containerRef.current)
+          return;
 
         const container = collectionRef.containerRef.current;
         const {scrollWidth, clientWidth} = container;
@@ -640,7 +599,10 @@ function CuratedCollectionSplit({collection}) {
                       {/* Products */}
                       {collection.products.nodes.map(
                         (product, productIndex) => (
-                          <div className="custom-product-card" key={productIndex}>
+                          <div
+                            className="custom-product-card"
+                            key={productIndex}
+                          >
                             <div className="custom-product-wrapper">
                               <ProductCardQuickAdd
                                 product={product}
@@ -655,7 +617,10 @@ function CuratedCollectionSplit({collection}) {
                     </div>
 
                     {/* Custom horizontal scrollbar */}
-                    <div className="custom-horizontal-scrollbar " data-custom-horizontal-scrollbar="">
+                    <div
+                      className="custom-horizontal-scrollbar "
+                      data-custom-horizontal-scrollbar=""
+                    >
                       <div
                         ref={collectionRefs.current[collectionIndex].trackRef}
                         className="custom-horizontal-scrollbar-tracker"
@@ -677,420 +642,206 @@ function CuratedCollectionSplit({collection}) {
   );
 }
 
+/**
+ * @param {{
+ *   collection: TheLookCollectionFragment;
+ * }}
+ */
 
-function HotspotSection () {
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const sliderRef = useRef(null);
-  const flickityRef = useRef(null);
+// Hotspot Component (unchanged)
+const Hotspot = ({hotspot, index, isSelected, onClick}) => {
+  return (
+    <button
+      className={`absolute transform -translate-x-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-white border-2 ${
+        isSelected ? 'border-black' : 'border-gray-300'
+      } flex items-center justify-center`}
+      style={{
+        top: hotspot.topMobile,
+        left: hotspot.leftMobile,
+        zIndex: 10,
+      }}
+      onClick={onClick}
+      aria-label={`Hotspot ${index + 1}`}
+    >
+      <span className="w-3 h-3 bg-black rounded-full"></span>
+    </button>
+  );
+};
 
-  // Product data
-  const products = [
+function TheLookCollection({products, collection}) {
+  const [selectedHotspot, setSelectedHotspot] = useState(0);
+
+  const handleHotspotClick = (index) => {
+    setSelectedHotspot(index);
+  };
+
+  const hotspots = [
     {
-      id: 1,
-      title: "The Cei Sueded Ribbon Top",
-      price: "£304.00",
-      color: "Taos Taupe",
-      images: [
-        GirlImage1,
-        GirlImage1Portrait,
-        GirlImage1Landscape
-      ],
-      variants: [
-        { size: "XS", id: "xs1" },
-        { size: "S", id: "s1" },
-        { size: "M", id: "m1" },
-        { size: "L", id: "l1" }
-      ],
-      hotspotPosition: { top: "34%", left: "45%", mobileTop: "39%", mobileLeft: "50%" }
+      top: '34%',
+      left: '45%',
+      topMobile: '39%',
+      leftMobile: '50%',
+      productIndex: 0,
     },
     {
-      id: 2,
-      title: "The Adel Pant",
-      price: "£281.00",
-      color: "Latte Melange",
-      images: [
-        GirlImage1,
-        GirlImage1Portrait,
-        GirlImage1Landscape
-      ],
-      variants: [
-        { size: "XS", id: "xs2" },
-        { size: "S", id: "s2" },
-        { size: "M", id: "m2" },
-        { size: "L", id: "l2" }
-      ],
-      hotspotPosition: { top: "57%", left: "38%", mobileTop: "60%", mobileLeft: "55%" }
+      top: '57%',
+      left: '38%',
+      topMobile: '60%',
+      leftMobile: '55%',
+      productIndex: 1,
     },
     {
-      id: 3,
-      title: "The Marfa Suede Ankle Boot",
-      price: "£381.00",
-      color: "Antler",
-      images: [
-        GirlImage1,
-        GirlImage1Portrait,
-        GirlImage1Landscape
-      ],
-      variants: [
-        { size: "6", id: "6" },
-        { size: "7", id: "7" },
-        { size: "8", id: "8" },
-        { size: "9", id: "9" }
-      ],
-      hotspotPosition: { top: "70%", left: "14%", mobileTop: "65%", mobileLeft: "20%" }
-    }
+      top: '70%',
+      left: '14%',
+      topMobile: '65%',
+      leftMobile: '20%',
+      productIndex: 2,
+    },
   ];
 
-  // Initialize Flickity slider (you'll need to install flickity package)
-  useEffect(() => {
-    let flickityInstance;
-  
-    const loadFlickity = async () => {
-      const Flickity = (await import('flickity')).default;
-      flickityRef.current = new Flickity(sliderRef.current, {
-        cellAlign: 'left',
-        contain: true,
-        pageDots: true,
-        prevNextButtons: true,
-        selectedAttraction: 0.03,
-        friction: 0.15,
-        wrapAround: false
-      });
-  
-      flickityRef.current.on('select', () => {
-        setSelectedIndex(flickityRef.current.selectedIndex);
-      });
-  
-      flickityInstance = flickityRef.current;
-    };
-  
-    loadFlickity();
-  
-    return () => {
-      if (flickityInstance) {
-        flickityInstance.destroy();
-      }
-    };
-  }, []);
-  
-
-  // Handle hotspot click
-  const handleHotspotClick = (index) => {
-    setSelectedIndex(index);
-    if (flickityRef.current) {
-      flickityRef.current.select(index);
-    }
-  };
-
   return (
-    <div className="hotspot-section">
-      <div className="section-header">
-        <h3 className="section-kicker">Shop the look</h3>
-      </div>
-
-      <div className="hotspot-container">
-        {/* Product Slider */}
-        <div className="product-slider-container">
-          <div className="product-slider" ref={sliderRef}>
-            {products.map((product, index) => (
-              <div key={product.id} className="product-slide">
-                <ProductCard 
-                  product={product} 
-                  isSelected={selectedIndex === index}
-                />
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Hotspot Image */}
-        <div className="hotspot-image-container">
-          <div className="hotspot-image-wrapper">
-            <img
-              src={HotspotGirlImg}
-              alt="Shop the look"
-              className="hotspot-image"
-            />
-            
-            {/* Hotspots */}
-            {products.map((product, index) => (
-              <button
-                key={product.id}
-                className={`hotspot-dot ${selectedIndex === index ? 'active' : ''}`}
-                style={{
-                  top: product.hotspotPosition.top,
-                  left: product.hotspotPosition.left,
-                  '--mobile-top': product.hotspotPosition.mobileTop,
-                  '--mobile-left': product.hotspotPosition.mobileLeft
-                }}
-                onClick={() => handleHotspotClick(index)}
-                aria-label={`View ${product.title}`}
-              >
-                <span className="hotspot-inner"></span>
-                <span className="hotspot-pulse"></span>
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-};
-
-const ProductCard = ({ product, isSelected }) => {
-  const [currentImageIndex, setCurrentImageIndex] = useState(0);
-
-  const handleNextImage = () => {
-    setCurrentImageIndex((prev) => (prev + 1) % product.images.length);
-  };
-
-  return (
-    <div className={`product-card ${isSelected ? 'selected' : ''}`}>
-      <div className="product-image-container">
-        <div className="product-image-wrapper">
-          <img
-            src={product.images[currentImageIndex]}
-            alt={product.title}
-            className="product-image"
-          />
-        </div>
-        <div className="product-pagination">
-          {product.images.map((_, index) => (
-            <span 
-              key={index} 
-              className={`pagination-dot ${index === currentImageIndex ? 'active' : ''}`}
-              onClick={() => setCurrentImageIndex(index)}
-            ></span>
-          ))}
-        </div>
-      </div>
-      
-      <div className="product-info">
-        <h3 className="product-title">{product.title}</h3>
-        <div className="product-price-container">
-          <span className="product-color">{product.color}</span>
-          <span className="product-price">{product.price}</span>
-        </div>
-        
-        <div className="quick-add-toolbar">
-          {product.variants.map(variant => (
-            <button key={variant.id} className="quick-add-button">
-              {variant.size}
-            </button>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-};
-
-
-
-const products = [
-  {
-    id: 1,
-    title: "The Cei Sueded Ribbon Top",
-    color: "Taos Taupe",
-    price: "£304.00",
-    sizes: ["XS", "S", "M", "L"],
-    images: [
-      "//pipeline-theme-fashion.myshopify.com/cdn/shop/products/DEL-2_DEL-2__CEI-SUEDED-RIBBON-TOP_IGD3580_TAOS-TAUPE_2.jpg?v=1639856588&width=1000",
-      "//pipeline-theme-fashion.myshopify.com/cdn/shop/products/DEL-2_DEL-2__CEI-SUEDED-RIBBON-TOP_IGD3580_TAOS-TAUPE_3.jpg?v=1639856588&width=1000",
-    ],
-    hotspot: { top: "34%", left: "45%", topMobile: "39%", leftMobile: "50%" },
-  },
-  {
-    id: 2,
-    title: "The Adel Pant",
-    color: "Latte Melange",
-    price: "£281.00",
-    sizes: ["XS", "S", "M", "L"],
-    images: [
-      "//pipeline-theme-fashion.myshopify.com/cdn/shop/products/Del.-2-_Adel-Pant-_RWS3684_Latte-Melange_3.jpg?v=1639856111&width=1000",
-      "//pipeline-theme-fashion.myshopify.com/cdn/shop/products/Del.-2-_Adel-Pant-_RWS3684_Latte-Melange_4.jpg?v=1639856111&width=1000",
-    ],
-    hotspot: { top: "57%", left: "38%", topMobile: "60%", leftMobile: "55%" },
-  },
-  {
-    id: 3,
-    title: "The Marfa Suede Ankle Boot",
-    color: "Antler",
-    price: "£381.00",
-    sizes: ["6", "7", "8", "9", "10"],
-    images: [
-      "//pipeline-theme-fashion.myshopify.com/cdn/shop/products/MarfaSuedeAnkleBoot_CHAU001_Antler_1.jpg?v=1639855989&width=1000",
-      "//pipeline-theme-fashion.myshopify.com/cdn/shop/products/MarfaSuedeAnkleBoot_CHAU001_Antler_2.jpg?v=1639855989&width=1000",
-    ],
-    hotspot: { top: "70%", left: "14%", topMobile: "65%", leftMobile: "20%" },
-  },
-];
-
-function ProductHotspot () {
-  const [selectedProductIndex, setSelectedProductIndex] = useState(0);
-  const [currentImages, setCurrentImages] = useState(products.map(() => 0));
-
-  const handleHotspotClick = (index) => {
-    setSelectedProductIndex(index);
-  };
-
-  const handlePrev = () => {
-    setSelectedProductIndex((prev) => (prev === 0 ? products.length - 1 : prev - 1));
-  };
-
-  const handleNext = () => {
-    setSelectedProductIndex((prev) => (prev === products.length - 1 ? 0 : prev + 1));
-  };
-
-  const handleImageChange = (productIndex, imageIndex) => {
-    setCurrentImages((prev) => {
-      const newImages = [...prev];
-      newImages[productIndex] = imageIndex;
-      return newImages;
-    });
-  };
-
-  return (
-    <div className="flex flex-col md:flex-row bg-gray-100 min-h-[715px]">
-      {/* Product Slider Section */}
-      <div className="w-full md:w-1/2 p-4">
-        <div className="bg-white rounded-lg shadow-lg p-6 min-h-[713px]">
-          <h3 className="text-center text-lg font-semibold mb-4">Shop the look</h3>
-          <div className="relative overflow-hidden">
-            <div
-              className="flex transition-transform duration-300 ease-in-out"
-              style={{ transform: `translateX(-${selectedProductIndex * 100}%)` }}
-            >
-              {products.map((product, index) => (
-                <div
-                  key={product.id}
-                  className="min-w-full flex-shrink-0 p-4"
-                >
-                  <div className="text-center">
-                    <div className="relative aspect-[0.9] mb-4">
-                      <img
-                        src={product.images[currentImages[index]]}
-                        alt={product.title}
-                        className="w-full h-full object-cover rounded"
-                      />
-                      <div className="absolute top-2 right-2 flex space-x-1">
-                        {product.images.map((_, imgIndex) => (
-                          <button
-                            key={imgIndex}
-                            className={`w-2 h-2 rounded-full ${
-                              currentImages[index] === imgIndex ? 'bg-black' : 'bg-gray-400'
-                            }`}
-                            onClick={() => handleImageChange(index, imgIndex)}
-                            aria-label={`View image ${imgIndex + 1}`}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                    <a
-                      href={`/products/${product.title.toLowerCase().replace(/\s+/g, '-')}`}
-                      className="text-lg font-medium hover:underline"
-                      id={`product-${product.id}`}
-                    >
-                      {product.title}
-                    </a>
-                    <p className="text-gray-600">{product.color}</p>
-                    <p className="text-xl font-bold">{product.price}</p>
-                    <div className="mt-4">
-                      <button
-                        className="bg-gray-800 text-white px-4 py-2 rounded hover:bg-gray-700 transition"
-                        onClick={() => alert('Quick add opened')}
-                        aria-label="Quick add"
-                      >
-                        Quick Add
-                      </button>
-                      <div className="mt-2 flex justify-center space-x-2">
-                        {product.sizes.map((size) => (
-                          <button
-                            key={size}
-                            className="px-3 py-1 border rounded hover:bg-gray-100 transition"
-                            onClick={() => alert(`Added ${size} to cart`)}
-                            aria-label={`Add ${size} to cart`}
-                          >
-                            {size}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
+    <div className="flex flex-col md:flex-row min-h-[715px] bg-[#f7f7f7]">
+      {/* Slider Section */}
+      <div className="w-full md:w-1/2 order-2 md:order-1 min-h-[713px] h-auto relative">
+        <div
+          className="min-h-[713px] text-[var(--text-color-42)] flex h-full ps-[var(--outer)] pe-[var(--outer)] items-center bg-[var(--bg)]"
+          style={{'--bg': '#f7f7f7'}}
+        >
+          <div className="w-full">
+            <div className="ms-auto me-auto max-w-full text-[var(--text-color-42)] !text-center">
+              <div>
+                <div className="flex w-full text-center flex-col items-center [--grid-sm:16px] [--gap:var(--grid-sm)] gap-[var(--gap)] [--content-alignment-default:center]">
+                  <div className="the-look-hero-kicker">
+                    <p role="heading" aria-level={3}>
+                      Shop the look
+                    </p>
                   </div>
                 </div>
-              ))}
-            </div>
-            <button
-              className="absolute top-1/2 left-0 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-r disabled:opacity-50"
-              onClick={handlePrev}
-              disabled={selectedProductIndex === 0}
-              aria-label="Previous product"
-            >
-              <svg className="w-6 h-6" viewBox="0 0 100 100">
-                <path d="M 10, 50 L 60, 100 L 67.5, 92.5 L 25, 50 L 67.5, 7.5 L 60, 0 Z" />
-              </svg>
-            </button>
-            <button
-              className="absolute top-1/2 right-0 transform -translate-y-1/2 bg-gray-800 text-white p-2 rounded-l disabled:opacity-50"
-              onClick={handleNext}
-              disabled={selectedProductIndex === products.length - 1}
-              aria-label="Next product"
-            >
-              <svg className="w-6 h-6" viewBox="0 0 100 100">
-                <path
-                  d="M 10, 50 L 60, 100 L 67.5, 92.5 L 25, 50 L 67.5, 7.5 L 60, 0 Z"
-                  transform="translate(100, 100) rotate(180)"
-                />
-              </svg>
-            </button>
-          </div>
-          <div className="flex justify-center mt-4 space-x-2">
-            {products.map((_, index) => (
-              <button
-                key={index}
-                className={`w-3 h-3 rounded-full ${
-                  selectedProductIndex === index ? 'bg-black' : 'bg-gray-400'
-                }`}
-                onClick={() => setSelectedProductIndex(index)}
-                aria-label={`View product ${index + 1}`}
-                aria-current={selectedProductIndex === index ? 'step' : undefined}
+              </div>
+              <CustomFlickitySlider
+                products={products}
+                setSelectedHotspot={setSelectedHotspot}
               />
-            ))}
+            </div>
           </div>
         </div>
       </div>
-
-      {/* Hotspot Image Section */}
-      
-      <div className="w-full md:w-1/2 relative min-h-[713px]">
+      {/* Hotspots Section */}
+      <div className="w-full md:w-1/2 order-1 md:order-2 relative min-h-[713px]">
         <img
-          src={HotspotGirlImg}
+          src={collection?.image?.url || ''}
           alt="Look showcase"
           className="w-full h-full object-cover"
         />
-        {products.map((product, index) => (
-          <button
-            key={product.id}
-            className={` products-hotspot-button ${selectedProductIndex === index ? 'is-selected' : ''}`}
-            style={{
-              top: window.innerWidth < 768 ? product.hotspot.topMobile : product.hotspot.top,
-              left: window.innerWidth < 768 ? product.hotspot.leftMobile : product.hotspot.left,
-            }}
-            onClick={() => handleHotspotClick(index)}
-            aria-label={`Hotspot for ${product.title}`}
-            aria-labelledby={`product-${product.id}`}
-          >
-            <span className={`products-hotspot-dot ${selectedProductIndex === index ? 'is-selected' : ''} `}></span>
-            <span className={`products-hotspot-pulse ${selectedProductIndex === index ? 'is-selected' : ''}`}></span>
-          </button> 
-        ))}
+        {hotspots && Array.isArray(hotspots) ? (
+          hotspots.map((hotspot, index) => (
+            <div key={index}>
+              {typeof window !== 'undefined' && (
+                <button
+                  className={`products-hotspot-button ${
+                    selectedHotspot === index ? 'is-selected' : ''
+                  }`}
+                  style={{
+                    top:
+                      window.innerWidth < 768 ? hotspot.topMobile : hotspot.top,
+                    left:
+                      window.innerWidth < 768
+                        ? hotspot.leftMobile
+                        : hotspot.left,
+                    position: 'absolute',
+                  }}
+                  onClick={() => handleHotspotClick(index)}
+                >
+                  <span
+                    className={`products-hotspot-dot ${
+                      selectedHotspot === index ? 'is-selected' : ''
+                    }`}
+                  ></span>
+                  <span
+                    className={`products-hotspot-pulse ${
+                      selectedHotspot === index ? 'is-selected' : ''
+                    }`}
+                  ></span>
+                </button>
+              )}
+            </div>
+          ))
+        ) : (
+          <div>No hotspots available</div>
+        )}
       </div>
-        
     </div>
   );
-};
+}
 
+/**
+ * @param {{
+ *   collection: WayfarerCollectionFragment;
+ * }}
+ */
 
-
+function WayfarerCollection({products, collection}) {
+  return (
+    <div className="flex flex-col md:flex-row min-h-[715px] bg-[#f7f7f7]">
+      {/* Slider Section */}
+      <div className="w-full md:w-1/2 order-2 md:order-2 min-h-[713px] h-auto relative">
+        <div
+          className="min-h-[713px] text-[var(--text-color-42)] flex h-full ps-[var(--outer)] pe-[var(--outer)] items-center bg-[var(--bg)]"
+          style={{'--bg': '#f7f7f7'}}
+        >
+          <div className="w-full">
+            <div className="ms-auto me-auto max-w-full text-[var(--text-color-42)] !text-center">
+              <div>
+                <div className="flex w-full text-center flex-col items-center [--grid-sm:16px] [--gap:var(--grid-sm)] gap-[var(--gap)] [--content-alignment-default:center]">
+                  <div className="the-look-hero-kicker">
+                    <p role="heading" aria-level={3}>
+                      Shop Wayfarer
+                    </p>
+                  </div>
+                </div>
+              </div>
+              <CustomFlickitySlider
+                products={products}
+                options={{
+                  // Keep any existing flickity options or add new ones
+                  cellAlign: 'center',
+                  contain: true,
+                  pageDots: false,
+                  prevNextButtons: true,
+                  // Add any other Flickity options you need
+                }}
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* Image Section - Full width on mobile, half on desktop */}
+      {/* Image Section with Text Overlay */}
+      <div className="w-full md:w-1/2 order-1 md:order-1 relative min-h-[713px]">
+        <div className="relative h-full w-full">
+          <img
+            src={collection?.image?.url || ''}
+            alt="Wayfarer collection showcase"
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 flex items-center justify-center text-center p-8">
+            <div className="custom-collection-hero-text text-white">
+              <div>
+                <p className="custom-collection-kicker">{collection.title}</p>
+                <h2 className="custom-collection-title mt-1">
+                  {collection.description}
+                </h2>
+                <Link to="#" className="custom-collection-btn">
+                  View The Lookbook
+                </Link>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 const FEATURED_COLLECTION_QUERY = `#graphql
   fragment FeaturedCollection on Collection {
@@ -1798,9 +1549,491 @@ const BEST_SELLING_PRODUCTS_QUERY = `#graphql
   }
 `;
 
+const THE_LOOK_COLLECTION = `#graphql
+  fragment TheLookCollection on Collection {
+    id
+    title
+    image {
+      id
+      url
+      altText
+      width
+      height
+    }
+    handle
+    description
+    products(first: 3, sortKey: CREATED,){
+        nodes{
+          id
+          title
+          availableForSale
+          vendor
+          handle  
+          descriptionHtml
+          description
+          encodedVariantExistence
+          encodedVariantAvailability
+          media(first:100){
+            nodes{
+              alt
+              id
+              mediaContentType
+              previewImage{
+                url
+                id
+                altText
+                height
+                width
+              }
+            }
+          }
+          images(first:100){
+            edges{
+              node{
+                id
+                url
+                altText
+                width
+                height
+              }
+            }
+          }
+          totalInventory
+          selectedOrFirstAvailableVariant{
+            availableForSale
+            compareAtPrice {
+              amount
+              currencyCode
+            }
+            id
+            image {
+              __typename
+              id
+              url
+              altText
+              width
+              height
+            }
+            price {
+              amount
+              currencyCode
+            }
+            product {
+              title
+              handle
+            }
+            selectedOptions {
+              name
+              value
+            }
+            sku
+            title
+            unitPrice {
+              amount
+              currencyCode
+            }
+            metafield(namespace:"meta" , key:"swatch_images"){
+                value
+                id  
+                type
+              }
+          }
+          adjacentVariants{
+            availableForSale
+            id
+            sku
+            title
+            compareAtPrice{
+              amount
+              currencyCode
+            }
+            image{
+              __typename
+              id
+              url
+              altText
+              height
+              width
+            }
+            price{
+              amount
+              currencyCode
+            }
+            product{
+              title
+              handle
+            }
+            selectedOptions{
+              name
+              value
+            }
+            unitPrice{
+              amount
+              currencyCode
+            }
+            metafield(namespace:"meta" , key:"swatch_images"){
+                value
+                id  
+                type
+              }
+          }
+          seo{
+            description
+            title
+          }
+          options{
+            id
+            name
+            optionValues{
+              id
+              name
+              firstSelectableVariant{
+                availableForSale
+                compareAtPrice {
+                  amount
+                  currencyCode
+                }
+                id
+                image {
+                  __typename
+                  id
+                  url
+                  altText
+                  width
+                  height
+                }
+                price {
+                  amount
+                  currencyCode
+                }
+                product {
+                  title
+                  handle
+                }
+                selectedOptions {
+                  name
+                  value
+                }
+                sku
+                title
+                unitPrice {
+                  amount
+                  currencyCode
+                }
+                metafield(namespace:"meta" , key:"swatch_images"){
+                value
+                id  
+                type
+              }
+              }
+              swatch{
+                color
+                image{
+                  alt
+                  id
+                  previewImage{
+                    id
+                    altText
+                    url
+                  }
+                } 
+              } 
+            } 
+          }
+          variants(first:100){
+            nodes{
+              id
+              title
+              image{
+                url
+                altText
+                id
+                height
+                width
+              }
+              availableForSale
+              price {
+                  amount
+                  currencyCode
+                }
+              selectedOptions{
+                name
+                value
+              }
+              metafield(namespace:"meta" , key:"swatch_images"){
+                value
+                id  
+                type
+              }
+            }  
+          }
+          variantsCount{
+            count
+            precision
+          }
+          metafield(namespace:"meta" , key:"swatch_images"){
+            value
+            id  
+            type
+          }
+        }
+      }
+  }
+  query TheLookCollection($country: CountryCode, $language: LanguageCode)
+    @inContext(country: $country, language: $language) {
+    collections(first: 100,  query: "title:'The Look'" , reverse:true) {
+      nodes {
+        ...TheLookCollection
+      }
+    }
+  }
+`;
+
+const WAYFARER_COLLECTION = `#graphql
+  fragment WayfarerCollection on Collection {
+    id
+    title
+    image {
+      id
+      url
+      altText
+      width
+      height
+    }
+    handle
+    description
+    products(first: 3, sortKey: CREATED,){
+        nodes{
+          id
+          title
+          availableForSale
+          vendor
+          handle  
+          descriptionHtml
+          description
+          encodedVariantExistence
+          encodedVariantAvailability
+          media(first:100){
+            nodes{
+              alt
+              id
+              mediaContentType
+              previewImage{
+                url
+                id
+                altText
+                height
+                width
+              }
+            }
+          }
+          images(first:100){
+            edges{
+              node{
+                id
+                url
+                altText
+                width
+                height
+              }
+            }
+          }
+          totalInventory
+          selectedOrFirstAvailableVariant{
+            availableForSale
+            compareAtPrice {
+              amount
+              currencyCode
+            }
+            id
+            image {
+              __typename
+              id
+              url
+              altText
+              width
+              height
+            }
+            price {
+              amount
+              currencyCode
+            }
+            product {
+              title
+              handle
+            }
+            selectedOptions {
+              name
+              value
+            }
+            sku
+            title
+            unitPrice {
+              amount
+              currencyCode
+            }
+            metafield(namespace:"meta" , key:"swatch_images"){
+                value
+                id  
+                type
+              }
+          }
+          adjacentVariants{
+            availableForSale
+            id
+            sku
+            title
+            compareAtPrice{
+              amount
+              currencyCode
+            }
+            image{
+              __typename
+              id
+              url
+              altText
+              height
+              width
+            }
+            price{
+              amount
+              currencyCode
+            }
+            product{
+              title
+              handle
+            }
+            selectedOptions{
+              name
+              value
+            }
+            unitPrice{
+              amount
+              currencyCode
+            }
+            metafield(namespace:"meta" , key:"swatch_images"){
+                value
+                id  
+                type
+              }
+          }
+          seo{
+            description
+            title
+          }
+          options{
+            id
+            name
+            optionValues{
+              id
+              name
+              firstSelectableVariant{
+                availableForSale
+                compareAtPrice {
+                  amount
+                  currencyCode
+                }
+                id
+                image {
+                  __typename
+                  id
+                  url
+                  altText
+                  width
+                  height
+                }
+                price {
+                  amount
+                  currencyCode
+                }
+                product {
+                  title
+                  handle
+                }
+                selectedOptions {
+                  name
+                  value
+                }
+                sku
+                title
+                unitPrice {
+                  amount
+                  currencyCode
+                }
+                metafield(namespace:"meta" , key:"swatch_images"){
+                value
+                id  
+                type
+              }
+              }
+              swatch{
+                color
+                image{
+                  alt
+                  id
+                  previewImage{
+                    id
+                    altText
+                    url
+                  }
+                } 
+              } 
+            } 
+          }
+          variants(first:100){
+            nodes{
+              id
+              title
+              image{
+                url
+                altText
+                id
+                height
+                width
+              }
+              availableForSale
+              price {
+                  amount
+                  currencyCode
+                }
+              selectedOptions{
+                name
+                value
+              }
+              metafield(namespace:"meta" , key:"swatch_images"){
+                value
+                id  
+                type
+              }
+            }  
+          }
+          variantsCount{
+            count
+            precision
+          }
+          metafield(namespace:"meta" , key:"swatch_images"){
+            value
+            id  
+            type
+          }
+        }
+      }
+  }
+  query WayfarerCollection($country: CountryCode, $language: LanguageCode)
+    @inContext(country: $country, language: $language) {
+    collections(first: 100,  query: "title:'Wayfarer Collection'" , reverse:true) {
+      nodes {
+        ...WayfarerCollection
+      }
+    }
+  }
+`;
+
 /** @typedef {import('@shopify/remix-oxygen').LoaderFunctionArgs} LoaderFunctionArgs */
 /** @template T @typedef {import('@remix-run/react').MetaFunction<T>} MetaFunction */
 /** @typedef {import('storefrontapi.generated').FeaturedCollectionFragment} FeaturedCollectionFragment */
 /** @typedef {import('storefrontapi.generated').CuratedCollectionFragment} CuratedCollectionFragment */
+/** @typedef {import('storefrontapi.generated').TheLookCollectionFragment} TheLookCollectionFragment */
+/** @typedef {import('storefrontapi.generated').WayfarerCollectionFragment} WayfarerCollectionFragment */
 /** @typedef {import('storefrontapi.generated').BestSellingProductsQuery} BestSellingProductsQuery */
 /** @typedef {import('@shopify/remix-oxygen').SerializeFrom<typeof loader>} LoaderReturnData */

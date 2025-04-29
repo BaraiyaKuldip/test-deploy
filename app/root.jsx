@@ -186,13 +186,13 @@ export function Layout({children}) {
         <link rel="stylesheet" href={resetStyles}></link>
         <link rel="stylesheet" href={appStyles}></link>
         {/* <!-- Flickity CSS --> */}
-        <link
+        {/* <link
           href="https://unpkg.com/flickity@2.2.2/dist/flickity.min.css"
           rel="stylesheet"
-        />
+        /> */}
 
         {/* <!-- Flickity JS --> */}
-        <script src="https://unpkg.com/flickity@2.2.2/dist/flickity.pkgd.min.js"></script>
+        {/* <script src="https://unpkg.com/flickity@2.2.2/dist/flickity.pkgd.min.js"></script> */}
 
         <Meta />
         <Links />

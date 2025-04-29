@@ -22,17 +22,37 @@ export default async function handleRequest(
       checkoutDomain: context.env.PUBLIC_CHECKOUT_DOMAIN,
       storeDomain: context.env.PUBLIC_STORE_DOMAIN,
     },
-    styleSrc:[
-        "'self'",
-        'https://cdn.shopify.com',
+    styleSrc: [
+      "'self'",
+      "'unsafe-inline'",
+      'https://cdn.shopify.com',
+      'https://fonts.googleapis.com',
+      'https://unpkg.com',
     ],
-    
+    fontSrc: [
+      "'self'",
+      'https://fonts.gstatic.com',
+    ],
+    scriptSrc: [
+      "'self'",
+      "'unsafe-inline'",
+      'https://cdn.shopify.com',
+      'https://unpkg.com',
+    ],
+    connectSrc: [
+      "'self'",
+      'https://cdn.shopify.com',
+    ],
+    imgSrc: [
+      "'self'",
+      'https://cdn.shopify.com',
+      'data:',
+      'http:',  
+    ],
   });
 
-  
-
   const body = await renderToReadableStream(
-    <NonceProvider>   
+    <NonceProvider>
       <RemixServer context={remixContext} url={request.url} nonce={nonce} />
     </NonceProvider>,
     {

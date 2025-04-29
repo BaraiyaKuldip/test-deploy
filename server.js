@@ -33,8 +33,9 @@ export default {
         getLoadContext: () => appLoadContext,
       });
 
-      const response = await handleRequest(request);
+      let response = await handleRequest(request);
 
+      // Set session cookie if needed
       if (appLoadContext.session.isPending) {
         response.headers.set(
           'Set-Cookie',
@@ -42,18 +43,28 @@ export default {
         );
       }
 
+      // Handle 404 with Shopify storefront redirects
       if (response.status === 404) {
-        /**
-         * Check for redirects only when there's a 404 from the app.
-         * If the redirect doesn't exist, then `storefrontRedirect`
-         * will pass through the 404 response.
-         */
         return storefrontRedirect({
           request,
           response,
           storefront: appLoadContext.storefront,
         });
       }
+
+      // ✅ Inject Content Security Policy headers
+      const cspHeader = `
+        default-src 'self';
+        script-src 'self' 'unsafe-inline' 'unsafe-eval';
+        style-src 'self' 'unsafe-inline' https://cdn.shopify.com https://fonts.googleapis.com https://unpkg.com http://localhost:*;
+        font-src 'self' https://fonts.gstatic.com;
+        connect-src *;
+        img-src 'self' data: https:;
+        object-src 'none';
+        frame-ancestors 'none';
+      `.replace(/\s{2,}/g, ' ').trim();
+
+      response.headers.set('Content-Security-Policy', cspHeader);
 
       return response;
     } catch (error) {
