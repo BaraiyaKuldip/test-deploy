@@ -156,6 +156,7 @@ export default function Homepage() {
         products={data.WayfarerCollection[0].products.nodes}
         collection={data.WayfarerCollection[0]}
       />
+      
     </div>
   );
 }
