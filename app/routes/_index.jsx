@@ -28,6 +28,9 @@ import {AddToCartButton} from '~/components/AddToCartButton';
 import {useAside} from '~/components/Aside';
 import ProductCardQuickAdd from '~/components/ProductCardQuickAdd';
 
+import Flickity from 'flickity';
+import 'flickity/css/flickity.css';
+
 /**
  * @type {MetaFunction}
  */
@@ -60,11 +63,13 @@ async function loadCriticalData({context}) {
     curatedResults,
     theLookCollectionResults,
     wayfarerCollectionResults,
+    topCollectionsResults,
   ] = await Promise.all([
     context.storefront.query(FEATURED_COLLECTION_QUERY),
     context.storefront.query(CURATED_COLLECTION_QUERY),
     context.storefront.query(THE_LOOK_COLLECTION),
     context.storefront.query(WAYFARER_COLLECTION),
+    context.storefront.query(TOP_COLLECTIONS),
   ]);
 
   return {
@@ -72,6 +77,7 @@ async function loadCriticalData({context}) {
     curatedCollection: curatedResults.collections.nodes,
     TheLookCollection: theLookCollectionResults.collections.nodes,
     WayfarerCollection: wayfarerCollectionResults.collections.nodes,
+    TopCollections: topCollectionsResults.collections.nodes,
   };
 }
 
@@ -156,7 +162,12 @@ export default function Homepage() {
         products={data.WayfarerCollection[0].products.nodes}
         collection={data.WayfarerCollection[0]}
       />
-      
+
+      <TopCollections collections={data.TopCollections}/>
+      <FeatureSectionBottom/>
+
+      {console.log(data.TopCollections,"top collections")}
+
     </div>
   );
 }
@@ -376,6 +387,7 @@ function FeaturedCollection({collection}) {
 
 import React from 'react';
 import CustomFlickitySlider from '~/components/CustomFlickitySlider';
+import FeatureSectionBottom from '~/components/FeatureSectionBottom';
 
 function BestSellers({products}) {
   return (
@@ -671,9 +683,118 @@ const Hotspot = ({hotspot, index, isSelected, onClick}) => {
 
 function TheLookCollection({products, collection}) {
   const [selectedHotspot, setSelectedHotspot] = useState(0);
+  const [isQuickAddOpen, setIsQuickAddOpen] = useState(null);
+  const flickityRef = useRef(null);
+  const sliderRef = useRef(null);
+
+  // Track if Flickity should be active (desktop vs. mobile)
+  const [isDesktop, setIsDesktop] = useState(
+    typeof window !== 'undefined' && window.innerWidth >= 768,
+  );
+
+  useEffect(() => {
+    let isMounted = true;
+
+    // Update isDesktop state on resize
+    const handleResize = () => {
+      const isCurrentlyDesktop = window.innerWidth >= 768;
+      setIsDesktop(isCurrentlyDesktop);
+    };
+    window.addEventListener('resize', handleResize);
+
+    const initFlickity = () => {
+      if (!sliderRef.current || !products || products.length === 0) {
+        console.log(
+          'Cannot initialize Flickity: sliderRef or products missing',
+          {
+            sliderRef: sliderRef.current,
+            productsLength: products ? products.length : 'undefined',
+          },
+        );
+        return;
+      }
+
+      // Only initialize Flickity on desktop
+      if (!isDesktop) {
+        console.log('Mobile view: Skipping Flickity initialization');
+        // Ensure any existing Flickity instance is destroyed
+        if (flickityRef.current) {
+          flickityRef.current.destroy();
+          flickityRef.current = null;
+        }
+        return;
+      }
+
+      console.log('Attempting to initialize Flickity (desktop)');
+      try {
+        // Ensure carousel cells are rendered
+        const cells = sliderRef.current.querySelectorAll('.carousel-cell');
+        console.log('Carousel cells found:', cells.length);
+
+        flickityRef.current = new Flickity(sliderRef.current, {
+          cellAlign: 'center',
+          contain: true,
+          pageDots: true,
+          prevNextButtons: true,
+          wrapAround: false,
+          freeScroll: true,
+          watchCSS: false, // Disabled to avoid Chrome issues
+          arrowShape:
+            'M 10, 50 L 60, 100 L 67.5, 92.5 L 25, 50 L 67.5, 7.5 L 60, 0 Z',
+          on: {
+            ready: () => console.log('Flickity ready'),
+            resize: () => console.log('Flickity resized'),
+            change: (index) => {
+              console.log('Flickity change:', index);
+              setSelectedHotspot(index);
+            },
+          },
+        });
+        console.log('Flickity initialized successfully');
+
+        // Force layout recalculation
+        flickityRef.current.reloadCells();
+        flickityRef.current.resize();
+
+        // Manually trigger resize after a delay
+        setTimeout(() => {
+          if (isMounted && flickityRef.current) {
+            console.log('Manually triggering Flickity resize');
+            flickityRef.current.resize();
+          }
+        }, 200);
+      } catch (error) {
+        console.error('Flickity initialization failed:', error);
+      }
+    };
+
+    // Defer initialization until DOM is fully loaded
+    if (document.readyState === 'complete') {
+      console.log('DOM ready, initializing Flickity');
+      initFlickity();
+    } else {
+      console.log('Waiting for DOM to load');
+      window.addEventListener('load', initFlickity);
+    }
+
+    // Cleanup
+    return () => {
+      isMounted = false;
+      console.log('Destroying Flickity');
+      if (flickityRef.current) {
+        flickityRef.current.destroy();
+        flickityRef.current = null;
+      }
+      window.removeEventListener('resize', handleResize);
+      window.removeEventListener('load', initFlickity);
+    };
+  }, [products, isDesktop]);
 
   const handleHotspotClick = (index) => {
     setSelectedHotspot(index);
+    if (flickityRef.current && isDesktop) {
+      flickityRef.current.select(index);
+    }
   };
 
   const hotspots = [
@@ -719,10 +840,34 @@ function TheLookCollection({products, collection}) {
                   </div>
                 </div>
               </div>
-              <CustomFlickitySlider
-                products={products}
-                setSelectedHotspot={setSelectedHotspot}
-              />
+              <div
+                ref={sliderRef}
+                className={`carousel custom-slider-container ${
+                  !isDesktop ? 'static-carousel' : ''
+                }`}
+                style={{minHeight: '200px'}}
+              >
+                {products && Array.isArray(products) ? (
+                  products.map((product, index) => (
+                    <div
+                      key={index}
+                      className="carousel-cell"
+                      style={{minWidth: '350px', minHeight: '200px'}}
+                    >
+                      <div className="the-look-product">
+                        <ProductCardQuickAdd
+                          product={product}
+                          productIndex={index}
+                          collectionIndex={3}
+                          usePrefix="the-look-collection"
+                        />
+                      </div>
+                    </div>
+                  ))
+                ) : (
+                  <div>No products available</div>
+                )}
+              </div>
             </div>
           </div>
         </div>
@@ -843,6 +988,73 @@ function WayfarerCollection({products, collection}) {
     </div>
   );
 }
+
+
+function TopCollections ({ collections }) {
+  return (
+    <div 
+      className="top-collections-wrapper"
+      style={{
+        '--PT': '36px',
+        '--PB': '36px'
+      }}
+    >
+      <div className="top-collections-container">
+        <h2 className="top-collections-title mb-r11">Top collections</h2>
+
+        <div className="top-collections-grid">
+          {collections.map((collection, index) => (
+            <div key={index} className="top-collections-item">
+              <a 
+                href={collection.handle} 
+                className="top-collections-item-link"
+                aria-label={collection.title}
+              >
+                <div className="top-collections-item-content">
+                  <div>
+                    <p className="top-collections-item-count">
+                      {collection.metafield.value} products
+                    </p>
+                    <p className="top-collections-item-title">
+                      {collection.title}
+                    </p>
+                  </div>
+                  <span className="top-collections-item-btn">
+                    View the collection
+                  </span>
+                </div>
+              </a>
+
+              <div 
+                className="top-collections-item-overlay" 
+                style={{
+                  '--overlay-opacity': collection.overlayOpacity || 0,
+                  '--overlay-bg': collection.overlayColor || '#000000'
+                }}
+              ></div>
+              
+              <div className="top-collections-item-image-container">
+                <img 
+                  src={collection.image.url} 
+                  alt="" 
+                  className="top-collections-item-image"
+                  loading="lazy"
+                  fetchPriority='high'
+                />
+              </div>
+            </div>
+          ))}
+        </div>
+
+        <div className="top-collections-scrollbar">
+          <div className="top-collections-scrollbar-track"></div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+
 
 const FEATURED_COLLECTION_QUERY = `#graphql
   fragment FeaturedCollection on Collection {
@@ -1076,7 +1288,7 @@ const FEATURED_COLLECTION_QUERY = `#graphql
   }
   query FeaturedCollection($country: CountryCode, $language: LanguageCode)
     @inContext(country: $country, language: $language) {
-    collections(first: 100, query: "title:'boot' OR title:'Perfumes' OR title:'Veggies' OR title:'test2' OR title:'test1' OR title:'Empty collection' OR title:'mens chinos'" , sortKey: TITLE) {
+    collections(first: 250, query: "title:'boot' OR title:'Perfumes' OR title:'Veggies' OR title:'test2' OR title:'test1' OR title:'Empty collection' OR title:'mens chinos'" , sortKey: TITLE) {
       nodes {
         ...FeaturedCollection
       }
@@ -1316,7 +1528,7 @@ const CURATED_COLLECTION_QUERY = `#graphql
   }
   query CuratedCollection($country: CountryCode, $language: LanguageCode)
     @inContext(country: $country, language: $language) {
-    collections(first: 100,  query: "title:'holiday collection' OR title:'fringe collection'" , reverse:true) {
+    collections(first: 250,  query: "title:'holiday collection' OR title:'fringe collection'" , reverse:true) {
       nodes {
         ...CuratedCollection
       }
@@ -1782,7 +1994,7 @@ const THE_LOOK_COLLECTION = `#graphql
   }
   query TheLookCollection($country: CountryCode, $language: LanguageCode)
     @inContext(country: $country, language: $language) {
-    collections(first: 100,  query: "title:'The Look'" , reverse:true) {
+    collections(first: 250,  query: "title:'The Look'" , reverse:true) {
       nodes {
         ...TheLookCollection
       }
@@ -2022,9 +2234,254 @@ const WAYFARER_COLLECTION = `#graphql
   }
   query WayfarerCollection($country: CountryCode, $language: LanguageCode)
     @inContext(country: $country, language: $language) {
-    collections(first: 100,  query: "title:'Wayfarer Collection'" , reverse:true) {
+    collections(first: 250,  query: "title:'Wayfarer Collection'") {
       nodes {
         ...WayfarerCollection
+      }
+    }
+  }
+`;
+
+const TOP_COLLECTIONS = `#graphql
+  fragment TopCollections on Collection {
+    id
+    title
+    image {
+      id
+      url
+      altText
+      width
+      height
+    }
+    handle
+    description
+    metafield(namespace:"custom", key:"total_products_count"){
+    	id
+    	key
+      value
+    }
+    products(first: 250, sortKey: CREATED,){
+        nodes{
+          id
+          title
+          availableForSale
+          vendor
+          handle  
+          descriptionHtml
+          description
+          encodedVariantExistence
+          encodedVariantAvailability
+          media(first:100){
+            nodes{
+              alt
+              id
+              mediaContentType
+              previewImage{
+                url
+                id
+                altText
+                height
+                width
+              }
+            }
+          }
+          images(first:100){
+            edges{
+              node{
+                id
+                url
+                altText
+                width
+                height
+              }
+            }
+          }
+          totalInventory
+          selectedOrFirstAvailableVariant{
+            availableForSale
+            compareAtPrice {
+              amount
+              currencyCode
+            }
+            id
+            image {
+              __typename
+              id
+              url
+              altText
+              width
+              height
+            }
+            price {
+              amount
+              currencyCode
+            }
+            product {
+              title
+              handle
+            }
+            selectedOptions {
+              name
+              value
+            }
+            sku
+            title
+            unitPrice {
+              amount
+              currencyCode
+            }
+            metafield(namespace:"meta" , key:"swatch_images"){
+                value
+                id  
+                type
+              }
+          }
+          adjacentVariants{
+            availableForSale
+            id
+            sku
+            title
+            compareAtPrice{
+              amount
+              currencyCode
+            }
+            image{
+              __typename
+              id
+              url
+              altText
+              height
+              width
+            }
+            price{
+              amount
+              currencyCode
+            }
+            product{
+              title
+              handle
+            }
+            selectedOptions{
+              name
+              value
+            }
+            unitPrice{
+              amount
+              currencyCode
+            }
+            metafield(namespace:"meta" , key:"swatch_images"){
+                value
+                id  
+                type
+              }
+          }
+          seo{
+            description
+            title
+          }
+          options{
+            id
+            name
+            optionValues{
+              id
+              name
+              firstSelectableVariant{
+                availableForSale
+                compareAtPrice {
+                  amount
+                  currencyCode
+                }
+                id
+                image {
+                  __typename
+                  id
+                  url
+                  altText
+                  width
+                  height
+                }
+                price {
+                  amount
+                  currencyCode
+                }
+                product {
+                  title
+                  handle
+                }
+                selectedOptions {
+                  name
+                  value
+                }
+                sku
+                title
+                unitPrice {
+                  amount
+                  currencyCode
+                }
+                metafield(namespace:"meta" , key:"swatch_images"){
+                value
+                id  
+                type
+              }
+              }
+              swatch{
+                color
+                image{
+                  alt
+                  id
+                  previewImage{
+                    id
+                    altText
+                    url
+                  }
+                } 
+              } 
+            } 
+          }
+          variants(first:100){
+            nodes{
+              id
+              title
+              image{
+                url
+                altText
+                id
+                height
+                width
+              }
+              availableForSale
+              price {
+                  amount
+                  currencyCode
+                }
+              selectedOptions{
+                name
+                value
+              }
+              metafield(namespace:"meta" , key:"swatch_images"){
+                value
+                id  
+                type
+              }
+            }  
+          }
+          variantsCount{
+            count
+            precision
+          }
+          metafield(namespace:"meta" , key:"swatch_images"){
+            value
+            id  
+            type
+          }
+        }
+      }
+  }
+  query TopCollections($country: CountryCode, $language: LanguageCode)
+    @inContext(country: $country, language: $language) {
+    collections(first: 250,  query: "title:'fringe collection' OR title:'holiday collection' OR title:'Wayfarer Collection' OR title:'The Look'" , reverse:true) {
+      nodes {
+        ...TopCollections
       }
     }
   }
@@ -2034,7 +2491,8 @@ const WAYFARER_COLLECTION = `#graphql
 /** @template T @typedef {import('@remix-run/react').MetaFunction<T>} MetaFunction */
 /** @typedef {import('storefrontapi.generated').FeaturedCollectionFragment} FeaturedCollectionFragment */
 /** @typedef {import('storefrontapi.generated').CuratedCollectionFragment} CuratedCollectionFragment */
+/** @typedef {import('storefrontapi.generated').BestSellingProductsQuery} BestSellingProductsQuery */
 /** @typedef {import('storefrontapi.generated').TheLookCollectionFragment} TheLookCollectionFragment */
 /** @typedef {import('storefrontapi.generated').WayfarerCollectionFragment} WayfarerCollectionFragment */
-/** @typedef {import('storefrontapi.generated').BestSellingProductsQuery} BestSellingProductsQuery */
+/** @typedef {import('storefrontapi.generated').TopCollectionsFragment} TopCollectionsFragment */
 /** @typedef {import('@shopify/remix-oxygen').SerializeFrom<typeof loader>} LoaderReturnData */
