@@ -28,7 +28,7 @@ import {AddToCartButton} from '~/components/AddToCartButton';
 import {useAside} from '~/components/Aside';
 import ProductCardQuickAdd from '~/components/ProductCardQuickAdd';
 
-import Flickity from 'flickity';
+// import Flickity from 'flickity';
 import 'flickity/css/flickity.css';
 
 /**

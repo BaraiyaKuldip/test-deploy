@@ -1,6 +1,6 @@
 import react, { useEffect, useRef, useState } from 'react';
 
-import Flickity from 'flickity';
+// import Flickity from 'flickity';
 import 'flickity/css/flickity.css';
 import ProductCardQuickAdd from './ProductCardQuickAdd';
 
@@ -120,6 +120,7 @@ export default function CustomFlickitySlider ({products , setSelectedHotspot}) {
   };
   return (
     <>
+
       <div
         ref={sliderRef}
         className={`carousel custom-slider-container ${
@@ -148,6 +149,7 @@ export default function CustomFlickitySlider ({products , setSelectedHotspot}) {
           <div>No products available</div>
         )}
       </div>
+ 
     </>
   );
 }
