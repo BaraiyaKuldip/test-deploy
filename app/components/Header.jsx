@@ -9,7 +9,7 @@ import SiteLogoIconBlack from '/images/site_logo_mezzo_black.png?url';
 import {SearchForm} from './SearchForm';
 import {SearchFormPredictive} from './SearchFormPredictive';
 import { SearchResultsPredictive } from './SearchResultsPredictive';
-import { P } from 'dist/client/assets/ProductPrice-kwE0Sy2X';
+// import { P } from 'dist/client/assets/ProductPrice-kwE0Sy2X';
 
 /**
  * @param {HeaderProps}

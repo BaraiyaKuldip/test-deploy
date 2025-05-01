@@ -4909,10 +4909,11 @@ Search Page CSS
 
   @media only screen and (max-width: 768px) {
     .custom-slider-container {
+      --outer-minus: 50px;
       padding: 0 0 0 var(--outer);
       width: calc(100% + var(--outer) * 2) !important;
-      margin-left: calc(- var(--outer));
-      margin-right: calc(- var(--outer));
+      margin-left: var(--outer-minus);
+      margin-right: var(--outer-minus);
       max-width: none;
 
       scroll-snap-type: x mandatory;
