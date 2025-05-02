@@ -163,11 +163,11 @@ export default function Homepage() {
         collection={data.WayfarerCollection[0]}
       />
 
-      <TopCollections collections={data.TopCollections}/>
-      <FeatureSectionBottom/>
+      <TopCollections collections={data.TopCollections} />
+      <FeatureSectionBottom />
 
-      {console.log(data.TopCollections,"top collections")}
-
+      {console.log(data.TopCollections, 'top collections')}
+      <div> demo </div>
     </div>
   );
 }
@@ -388,6 +388,7 @@ function FeaturedCollection({collection}) {
 import React from 'react';
 import CustomFlickitySlider from '~/components/CustomFlickitySlider';
 import FeatureSectionBottom from '~/components/FeatureSectionBottom';
+import CustomSlickSlider from '~/components/CustomFlickitySlider';
 
 function BestSellers({products}) {
   return (
@@ -661,6 +662,10 @@ function CuratedCollection({collection}) {
  * }}
  */
 
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+
 // Hotspot Component (unchanged)
 const Hotspot = ({hotspot, index, isSelected, onClick}) => {
   return (
@@ -682,121 +687,6 @@ const Hotspot = ({hotspot, index, isSelected, onClick}) => {
 };
 
 function TheLookCollection({products, collection}) {
-  const [selectedHotspot, setSelectedHotspot] = useState(0);
-  const [isQuickAddOpen, setIsQuickAddOpen] = useState(null);
-  const flickityRef = useRef(null);
-  const sliderRef = useRef(null);
-
-  // Track if Flickity should be active (desktop vs. mobile)
-  const [isDesktop, setIsDesktop] = useState(
-    typeof window !== 'undefined' && window.innerWidth >= 768,
-  );
-
-  useEffect(() => {
-    let isMounted = true;
-
-    // Update isDesktop state on resize
-    const handleResize = () => {
-      const isCurrentlyDesktop = window.innerWidth >= 768;
-      setIsDesktop(isCurrentlyDesktop);
-    };
-    window.addEventListener('resize', handleResize);
-
-    const initFlickity = () => {
-      if (!sliderRef.current || !products || products.length === 0) {
-        console.log(
-          'Cannot initialize Flickity: sliderRef or products missing',
-          {
-            sliderRef: sliderRef.current,
-            productsLength: products ? products.length : 'undefined',
-          },
-        );
-        return;
-      }
-
-      // Only initialize Flickity on desktop
-      if (!isDesktop) {
-        console.log('Mobile view: Skipping Flickity initialization');
-        // Ensure any existing Flickity instance is destroyed
-        if (flickityRef.current) {
-          flickityRef.current.destroy();
-          flickityRef.current = null;
-        }
-        return;
-      }
-
-      console.log('Attempting to initialize Flickity (desktop)');
-      try {
-        // Ensure carousel cells are rendered
-        const cells = sliderRef.current.querySelectorAll('.carousel-cell');
-        console.log('Carousel cells found:', cells.length);
-
-        flickityRef.current = new Flickity(sliderRef.current, {
-          cellAlign: 'center',
-          contain: true,
-          pageDots: true,
-          prevNextButtons: true,
-          wrapAround: false,
-          freeScroll: true,
-          watchCSS: false, // Disabled to avoid Chrome issues
-          arrowShape:
-            'M 10, 50 L 60, 100 L 67.5, 92.5 L 25, 50 L 67.5, 7.5 L 60, 0 Z',
-          on: {
-            ready: () => console.log('Flickity ready'),
-            resize: () => console.log('Flickity resized'),
-            change: (index) => {
-              console.log('Flickity change:', index);
-              setSelectedHotspot(index);
-            },
-          },
-        });
-        console.log('Flickity initialized successfully');
-
-        // Force layout recalculation
-        flickityRef.current.reloadCells();
-        flickityRef.current.resize();
-
-        // Manually trigger resize after a delay
-        setTimeout(() => {
-          if (isMounted && flickityRef.current) {
-            console.log('Manually triggering Flickity resize');
-            flickityRef.current.resize();
-          }
-        }, 200);
-      } catch (error) {
-        console.error('Flickity initialization failed:', error);
-      }
-    };
-
-    // Defer initialization until DOM is fully loaded
-    if (document.readyState === 'complete') {
-      console.log('DOM ready, initializing Flickity');
-      initFlickity();
-    } else {
-      console.log('Waiting for DOM to load');
-      window.addEventListener('load', initFlickity);
-    }
-
-    // Cleanup
-    return () => {
-      isMounted = false;
-      console.log('Destroying Flickity');
-      if (flickityRef.current) {
-        flickityRef.current.destroy();
-        flickityRef.current = null;
-      }
-      window.removeEventListener('resize', handleResize);
-      window.removeEventListener('load', initFlickity);
-    };
-  }, [products, isDesktop]);
-
-  const handleHotspotClick = (index) => {
-    setSelectedHotspot(index);
-    if (flickityRef.current && isDesktop) {
-      flickityRef.current.select(index);
-    }
-  };
-
   const hotspots = [
     {
       top: '34%',
@@ -821,18 +711,117 @@ function TheLookCollection({products, collection}) {
     },
   ];
 
+  const [selectedHotspot, setSelectedHotspot] = useState(0);
+  const [isQuickAddOpen, setIsQuickAddOpen] = useState(null);
+  const sliderRef = useRef(null);
+
+  // Track if slider should use mobile or desktop settings
+  const [isDesktop, setIsDesktop] = useState(
+    typeof window !== 'undefined' && window.innerWidth >= 768,
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      const isCurrentlyDesktop = window.innerWidth >= 768;
+      setIsDesktop(isCurrentlyDesktop);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, []);
+
+  const handleHotspotClick = (index) => {
+    setSelectedHotspot(index);
+    if (sliderRef.current) {
+      sliderRef.current.slickGoTo(index);
+    }
+  };
+
+  const CustomNextArrow = ({className, style, onClick}) => (
+    <button
+      className={`${className} custom-slick-arrow custom-slick-next`}
+      style={{...style}}
+      onClick={onClick}
+      type="button"
+    >
+      <svg className="slick-slider-button-icon" viewBox="0 0 100 100">
+        <title>Next</title>
+        <path
+          d="M 10, 50
+             L 60, 100
+             L 67.5, 92.5
+             L 25, 50
+             L 67.5, 7.5
+             L 60, 0
+             Z"
+          className="arrow"
+          transform="translate(100, 100) rotate(180)"
+        />
+      </svg>
+    </button>
+  );
+
+  const CustomPrevArrow = ({className, style, onClick}) => (
+    <button
+      className={`${className} custom-slick-arrow custom-slick-prev`}
+      style={{...style}}
+      onClick={onClick}
+      type="button"
+    >
+      <svg class="slick-slider-button-icon" viewBox="0 0 100 100">
+        <title>Previous</title>
+        <path
+          d="M 10, 50 L 60, 100 L 67.5, 92.5 L 25, 50 L 67.5, 7.5 L 60, 0 Z"
+          class="arrow"
+        ></path>
+      </svg>
+    </button>
+  );
+
+  // Slick settings for desktop view
+  const slickSettings = {
+    dots: true,
+    infinite: false,
+    swipeToSlide: true,
+    touchMove: true,
+    draggable: true,
+    speed: 500,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+    centerMode: true,
+    centerPadding: '0px',
+    arrows: true,
+    nextArrow: <CustomNextArrow />,
+    prevArrow: <CustomPrevArrow />,
+    focusOnSelect: true,
+    beforeChange: (current, next) => setSelectedHotspot(next),
+    afterChange: (index) => setSelectedHotspot(index),
+
+    responsive: [
+      {
+        breakpoint: 768,
+        settings: {
+          slidesToShow: 1,
+          slidesToScroll: 1,
+          centerMode: false,
+          arrows: false,
+        },
+      },
+    ],
+  };
+
   return (
     <div className="flex flex-col md:flex-row min-h-[715px] bg-[#f7f7f7]">
       {/* Slider Section */}
       <div className="w-full md:w-1/2 order-2 md:order-1 min-h-[713px] h-auto relative">
-        <div
-          className="min-h-[713px] text-[var(--text-color-42)] flex h-full ps-[var(--outer)] pe-[var(--outer)] items-center bg-[var(--bg)]"
-          style={{'--bg': '#f7f7f7'}}
-        >
+        <div className="min-h-[713px] text-[#333] flex h-full px-4 items-center bg-[#f7f7f7]">
           <div className="w-full">
-            <div className="ms-auto me-auto max-w-full text-[var(--text-color-42)] !text-center">
+            <div className="mx-auto max-w-full text-center">
               <div>
-                <div className="flex w-full text-center flex-col items-center [--grid-sm:16px] [--gap:var(--grid-sm)] gap-[var(--gap)] [--content-alignment-default:center]">
+                <div className="flex w-full text-center flex-col items-center gap-4">
                   <div className="the-look-hero-kicker">
                     <p role="heading" aria-level={3}>
                       Shop the look
@@ -840,21 +829,11 @@ function TheLookCollection({products, collection}) {
                   </div>
                 </div>
               </div>
-              <div
-                ref={sliderRef}
-                className={`carousel custom-slider-container ${
-                  !isDesktop ? 'static-carousel' : ''
-                }`}
-                style={{minHeight: '200px'}}
-              >
+              <div className="custom-slider-container">
                 {products && Array.isArray(products) ? (
-                  products.map((product, index) => (
-                    <div
-                      key={index}
-                      className="carousel-cell"
-                      style={{minWidth: '350px', minHeight: '200px'}}
-                    >
-                      <div className="the-look-product">
+                  <Slider ref={sliderRef} {...slickSettings}>
+                    {products.map((product, index) => (
+                      <div key={index} className="the-look-product">
                         <ProductCardQuickAdd
                           product={product}
                           productIndex={index}
@@ -862,8 +841,8 @@ function TheLookCollection({products, collection}) {
                           usePrefix="the-look-collection"
                         />
                       </div>
-                    </div>
-                  ))
+                    ))}
+                  </Slider>
                 ) : (
                   <div>No products available</div>
                 )}
@@ -872,44 +851,39 @@ function TheLookCollection({products, collection}) {
           </div>
         </div>
       </div>
+
       {/* Hotspots Section */}
       <div className="w-full md:w-1/2 order-1 md:order-2 relative min-h-[713px]">
         <img
-          src={collection?.image?.url || ''}
+          src={collection?.image?.url || '/api/placeholder/400/320'}
           alt="Look showcase"
           className="w-full h-full object-cover"
         />
         {hotspots && Array.isArray(hotspots) ? (
           hotspots.map((hotspot, index) => (
             <div key={index}>
-              {typeof window !== 'undefined' && (
-                <button
-                  className={`products-hotspot-button ${
+              <button
+                className={`products-hotspot-button ${
+                  selectedHotspot === index ? 'is-selected' : ''
+                }`}
+                style={{
+                  top: isDesktop ? hotspot.top : hotspot.topMobile,
+                  left: isDesktop ? hotspot.left : hotspot.leftMobile,
+                  position: 'absolute',
+                }}
+                onClick={() => handleHotspotClick(index)}
+              >
+                <span
+                  className={`products-hotspot-dot ${
                     selectedHotspot === index ? 'is-selected' : ''
                   }`}
-                  style={{
-                    top:
-                      window.innerWidth < 768 ? hotspot.topMobile : hotspot.top,
-                    left:
-                      window.innerWidth < 768
-                        ? hotspot.leftMobile
-                        : hotspot.left,
-                    position: 'absolute',
-                  }}
-                  onClick={() => handleHotspotClick(index)}
-                >
-                  <span
-                    className={`products-hotspot-dot ${
-                      selectedHotspot === index ? 'is-selected' : ''
-                    }`}
-                  ></span>
-                  <span
-                    className={`products-hotspot-pulse ${
-                      selectedHotspot === index ? 'is-selected' : ''
-                    }`}
-                  ></span>
-                </button>
-              )}
+                ></span>
+                <span
+                  className={`products-hotspot-pulse ${
+                    selectedHotspot === index ? 'is-selected' : ''
+                  }`}
+                ></span>
+              </button>
             </div>
           ))
         ) : (
@@ -946,16 +920,9 @@ function WayfarerCollection({products, collection}) {
                   </div>
                 </div>
               </div>
-              <CustomFlickitySlider
+              <CustomSlickSlider
                 products={products}
-                options={{
-                  // Keep any existing flickity options or add new ones
-                  cellAlign: 'center',
-                  contain: true,
-                  pageDots: false,
-                  prevNextButtons: true,
-                  // Add any other Flickity options you need
-                }}
+                // setSelectedHotspot={setSelectedHotspot}
               />
             </div>
           </div>
@@ -989,58 +956,81 @@ function WayfarerCollection({products, collection}) {
   );
 }
 
-
-function TopCollections ({ collections }) {
+function TopCollections({collections}) {
   return (
-    <div 
+    <div
       className="top-collections-wrapper"
-      style={{
-        '--PT': '36px',
-        '--PB': '36px'
-      }}
+      style={{'--PT': '36px','--PB': '36px' , "--aspect-ratio": "66.66666666666666%"}}
     >
-      <div className="top-collections-container">
+      <div className="top-collections-container fixed_padding_page">
         <h2 className="top-collections-title mb-r11">Top collections</h2>
 
-        <div className="top-collections-grid">
+        <div
+          className="top-collections-grid"
+          style={{
+            '--grid-large-items': '2',
+            '--grid-medium-items': '2',
+            '--grid-small-items': '1.5',
+          }}
+        >
           {collections.map((collection, index) => (
             <div key={index} className="top-collections-item">
-              <a 
-                href={collection.handle} 
-                className="top-collections-item-link"
-                aria-label={collection.title}
-              >
-                <div className="top-collections-item-content">
-                  <div>
+              <div className="top-collections-item-inner white--text">
+                <Link
+                  to={`/collections/${collection.handle}`}
+                  className="top-collections-item-link"
+                  aria-label={collection.title}
+                >
+                  <div className="top-collections-item-content">
                     <p className="top-collections-item-count">
                       {collection.metafield.value} products
                     </p>
                     <p className="top-collections-item-title">
                       {collection.title}
                     </p>
-                  </div>
-                  <span className="top-collections-item-btn">
-                    View the collection
-                  </span>
-                </div>
-              </a>
 
-              <div 
-                className="top-collections-item-overlay" 
-                style={{
-                  '--overlay-opacity': collection.overlayOpacity || 0,
-                  '--overlay-bg': collection.overlayColor || '#000000'
-                }}
-              ></div>
-              
-              <div className="top-collections-item-image-container">
-                <img 
-                  src={collection.image.url} 
-                  alt="" 
-                  className="top-collections-item-image"
-                  loading="lazy"
-                  fetchPriority='high'
-                />
+                    <span className="top-collections-item-btn">
+                      View the collection
+                    </span>
+                  </div>
+                </Link>
+
+                <div
+                  className="top-collections-item-overlay"
+                  style={{
+                    '--overlay-opacity': collection.overlayOpacity || 0.1,
+                    '--overlay-bg': collection.overlayColor || '#000000',
+                  }}
+                ></div>
+                
+                <div className="top-collections-item-image-frame fade-in-child aspect-[--wh-ratio-mobile] md:aspect-[--wh-ratio] none">
+                  <div className="top-collections-item-image-pane">
+                    <div className="top-collections-item-image-scale h-[--height-mobile] md:h-[--height]" style={{"--height": "66.66666666666666vw" ,"--height-mobile": "66.66666666666666vw"}}>
+                      <div className="top-collections-item-image-container relative block w-full h-full overflow-hidden aspect-[--wh-ratio]" style={{"--wh-ratio": "1.5"}}>
+                        <img
+                          src={collection.image.url}
+                          alt={collection.image.altText || collection.title}
+                          className="top-collections-item-image"
+                          loading="lazy"
+                          fetchPriority="auto"
+                          sizes='100vw'
+                          style={{objectPosition: "center center"}}
+                          srcSet={`
+                            ${collection.image.url}&width=${352} ${352}w,
+                            ${collection.image.url}&width=${400} ${400}w,
+                            ${collection.image.url}&width=${768} ${768}w,
+                            ${collection.image.url}&width=${932} ${932}w,
+                            ${collection.image.url}&width=${1024} ${1024}w,
+                            ${collection.image.url}&width=${1200} ${1200}w,
+                            ${collection.image.url}&width=${1920} ${1920}w,
+                            ${collection.image.url}&width=${3000} ${3000}w,
+                            `}
+                          
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           ))}
@@ -1052,9 +1042,7 @@ function TopCollections ({ collections }) {
       </div>
     </div>
   );
-};
-
-
+}
 
 const FEATURED_COLLECTION_QUERY = `#graphql
   fragment FeaturedCollection on Collection {
