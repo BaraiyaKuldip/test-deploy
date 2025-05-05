@@ -164,10 +164,12 @@ export default function Homepage() {
       />
 
       <TopCollections collections={data.TopCollections} />
+      <NewsletterComponent/>
       <FeatureSectionBottom />
 
+
       {console.log(data.TopCollections, 'top collections')}
-      <div> demo </div>
+      <div> heyy </div>
     </div>
   );
 }
@@ -665,6 +667,7 @@ function CuratedCollection({collection}) {
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import { Settings } from 'lucide-react';
 
 // Hotspot Component (unchanged)
 const Hotspot = ({hotspot, index, isSelected, onClick}) => {
@@ -686,7 +689,9 @@ const Hotspot = ({hotspot, index, isSelected, onClick}) => {
   );
 };
 
-function TheLookCollection({products, collection}) {
+
+
+function TheLookCollection({ products, collection }) {
   const hotspots = [
     {
       top: '34%',
@@ -712,51 +717,164 @@ function TheLookCollection({products, collection}) {
   ];
 
   const [selectedHotspot, setSelectedHotspot] = useState(0);
-  const [isQuickAddOpen, setIsQuickAddOpen] = useState(null);
-  const sliderRef = useRef(null);
-
-  // Track if slider should use mobile or desktop settings
   const [isDesktop, setIsDesktop] = useState(
     typeof window !== 'undefined' && window.innerWidth >= 768,
   );
+  
+  // Drag scroll state
+  // We no longer need these state variables as we'll use local variables instead
+  // for better performance
+
+  const sliderRef = useRef(null);
+  const productRefs = useRef([]);
+  const scrollContainerRef = useRef(null);
 
   useEffect(() => {
     const handleResize = () => {
-      const isCurrentlyDesktop = window.innerWidth >= 768;
-      setIsDesktop(isCurrentlyDesktop);
+      setIsDesktop(window.innerWidth >= 768);
     };
-
     window.addEventListener('resize', handleResize);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  // Add drag scroll functionality for mobile view - optimized version
+  useEffect(() => {
+    // Only apply drag scroll on mobile view
+    if (isDesktop || !scrollContainerRef.current) return;
+
+    const scrollContainer = scrollContainerRef.current;
+    let isDown = false;
+    let startX;
+    let scrollLeft;
+    
+    // Prevent text selection during drag
+    const preventDefault = (e) => {
+      e.preventDefault();
+      return false;
+    };
+
+    const handleMouseDown = (e) => {
+      isDown = true;
+      // Add no-select class to prevent text selection during drag
+      scrollContainer.classList.add('no-select');
+      scrollContainer.style.cursor = 'grabbing';
+      startX = e.pageX - scrollContainer.offsetLeft;
+      scrollLeft = scrollContainer.scrollLeft;
+      // Prevent default behavior to avoid text selection
+      e.preventDefault();
+    };
+
+    const handleMouseMove = (e) => {
+      if (!isDown) return;
+      e.preventDefault();
+      const x = e.pageX - scrollContainer.offsetLeft;
+      const walk = (x - startX) * 2; // Increased for smoother feel
+      requestAnimationFrame(() => {
+        scrollContainer.scrollLeft = scrollLeft - walk;
+      });
+    };
+
+    const handleMouseUp = () => {
+      isDown = false;
+      scrollContainer.classList.remove('no-select');
+      scrollContainer.style.cursor = 'grab';
+    };
+
+    const handleMouseLeave = () => {
+      if (isDown) {
+        isDown = false;
+        scrollContainer.classList.remove('no-select');
+        scrollContainer.style.cursor = 'grab';
+      }
+    };
+
+    // Touch events for mobile - optimized
+    const handleTouchStart = (e) => {
+      isDown = true;
+      scrollContainer.classList.add('no-select');
+      startX = e.touches[0].pageX - scrollContainer.offsetLeft;
+      scrollLeft = scrollContainer.scrollLeft;
+      // Don't prevent default completely as it breaks scrolling on some devices
+    };
+
+    const handleTouchMove = (e) => {
+      if (!isDown) return;
+      const x = e.touches[0].pageX - scrollContainer.offsetLeft;
+      const walk = (x - startX) * 2;
+      requestAnimationFrame(() => {
+        scrollContainer.scrollLeft = scrollLeft - walk;
+      });
+    };
+
+    const handleTouchEnd = () => {
+      isDown = false;
+      scrollContainer.classList.remove('no-select');
+    };
+
+    // Add listeners for selection prevention during drag
+    scrollContainer.addEventListener('dragstart', preventDefault);
+    scrollContainer.addEventListener('selectstart', preventDefault);
+    
+    // Add event listeners
+    scrollContainer.addEventListener('mousedown', handleMouseDown);
+    scrollContainer.addEventListener('mousemove', handleMouseMove);
+    scrollContainer.addEventListener('mouseup', handleMouseUp);
+    scrollContainer.addEventListener('mouseleave', handleMouseLeave);
+    scrollContainer.addEventListener('touchstart', handleTouchStart);
+    scrollContainer.addEventListener('touchmove', handleTouchMove);
+    scrollContainer.addEventListener('touchend', handleTouchEnd);
+
+    // Add user-select: none CSS to the container in JavaScript
+    const originalUserSelect = scrollContainer.style.userSelect;
+    const originalWebkitUserSelect = scrollContainer.style.webkitUserSelect;
+    const originalMsUserSelect = scrollContainer.style.msUserSelect;
+    
+    scrollContainer.style.userSelect = 'none';
+    scrollContainer.style.webkitUserSelect = 'none';
+    scrollContainer.style.msUserSelect = 'none';
+
+    // Clean up event listeners
+    return () => {
+      scrollContainer.removeEventListener('dragstart', preventDefault);
+      scrollContainer.removeEventListener('selectstart', preventDefault);
+      scrollContainer.removeEventListener('mousedown', handleMouseDown);
+      scrollContainer.removeEventListener('mousemove', handleMouseMove);
+      scrollContainer.removeEventListener('mouseup', handleMouseUp);
+      scrollContainer.removeEventListener('mouseleave', handleMouseLeave);
+      scrollContainer.removeEventListener('touchstart', handleTouchStart);
+      scrollContainer.removeEventListener('touchmove', handleTouchMove);
+      scrollContainer.removeEventListener('touchend', handleTouchEnd);
+      
+      // Restore original user-select values
+      scrollContainer.style.userSelect = originalUserSelect;
+      scrollContainer.style.webkitUserSelect = originalWebkitUserSelect;
+      scrollContainer.style.msUserSelect = originalMsUserSelect;
+    };
+  }, [isDesktop]);
 
   const handleHotspotClick = (index) => {
     setSelectedHotspot(index);
-    if (sliderRef.current) {
+    if (isDesktop && sliderRef.current) {
       sliderRef.current.slickGoTo(index);
+    } else if (productRefs.current[index]) {
+      productRefs.current[index].scrollIntoView({
+        behavior: 'smooth',
+        inline: 'center',
+      });
     }
   };
 
-  const CustomNextArrow = ({className, style, onClick}) => (
+  const CustomNextArrow = ({ className, style, onClick }) => (
     <button
-      className={`${className} custom-slick-arrow custom-slick-next`}
-      style={{...style}}
+      className={`${className} custom-slick-arrow hidden md:block`}
+      style={{ ...style }}
       onClick={onClick}
       type="button"
     >
       <svg className="slick-slider-button-icon" viewBox="0 0 100 100">
         <title>Next</title>
         <path
-          d="M 10, 50
-             L 60, 100
-             L 67.5, 92.5
-             L 25, 50
-             L 67.5, 7.5
-             L 60, 0
-             Z"
+          d="M 10, 50 L 60, 100 L 67.5, 92.5 L 25, 50 L 67.5, 7.5 L 60, 0 Z"
           className="arrow"
           transform="translate(100, 100) rotate(180)"
         />
@@ -764,26 +882,25 @@ function TheLookCollection({products, collection}) {
     </button>
   );
 
-  const CustomPrevArrow = ({className, style, onClick}) => (
+  const CustomPrevArrow = ({ className, style, onClick }) => (
     <button
-      className={`${className} custom-slick-arrow custom-slick-prev`}
-      style={{...style}}
+      className={`${className} custom-slick-arrow hidden md:block`}
+      style={{ ...style }}
       onClick={onClick}
       type="button"
     >
-      <svg class="slick-slider-button-icon" viewBox="0 0 100 100">
+      <svg className="slick-slider-button-icon" viewBox="0 0 100 100">
         <title>Previous</title>
         <path
           d="M 10, 50 L 60, 100 L 67.5, 92.5 L 25, 50 L 67.5, 7.5 L 60, 0 Z"
-          class="arrow"
-        ></path>
+          className="arrow"
+        />
       </svg>
     </button>
   );
 
-  // Slick settings for desktop view
   const slickSettings = {
-    dots: true,
+    dots: isDesktop,
     infinite: false,
     swipeToSlide: true,
     touchMove: true,
@@ -793,56 +910,75 @@ function TheLookCollection({products, collection}) {
     slidesToScroll: 1,
     centerMode: true,
     centerPadding: '0px',
-    arrows: true,
+    arrows: isDesktop,
     nextArrow: <CustomNextArrow />,
     prevArrow: <CustomPrevArrow />,
     focusOnSelect: true,
     beforeChange: (current, next) => setSelectedHotspot(next),
     afterChange: (index) => setSelectedHotspot(index),
-
     responsive: [
       {
         breakpoint: 768,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-          centerMode: false,
-          arrows: false,
-        },
+        settings: 'unslick',
       },
     ],
   };
 
   return (
     <div className="flex flex-col md:flex-row min-h-[715px] bg-[#f7f7f7]">
-      {/* Slider Section */}
+      {/* Product/Slider Section */}
       <div className="w-full md:w-1/2 order-2 md:order-1 min-h-[713px] h-auto relative">
         <div className="min-h-[713px] text-[#333] flex h-full px-4 items-center bg-[#f7f7f7]">
           <div className="w-full">
             <div className="mx-auto max-w-full text-center">
-              <div>
-                <div className="flex w-full text-center flex-col items-center gap-4">
-                  <div className="the-look-hero-kicker">
-                    <p role="heading" aria-level={3}>
-                      Shop the look
-                    </p>
-                  </div>
+              <div className="flex w-full text-center flex-col items-center gap-4">
+                <div className="the-look-hero-kicker">
+                  <p role="heading" aria-level={3}>Shop the look</p>
                 </div>
               </div>
+
               <div className="custom-slider-container">
                 {products && Array.isArray(products) ? (
-                  <Slider ref={sliderRef} {...slickSettings}>
-                    {products.map((product, index) => (
-                      <div key={index} className="the-look-product">
-                        <ProductCardQuickAdd
-                          product={product}
-                          productIndex={index}
-                          collectionIndex={3}
-                          usePrefix="the-look-collection"
-                        />
-                      </div>
-                    ))}
-                  </Slider>
+                  isDesktop ? (
+                    <Slider ref={sliderRef} {...slickSettings}>
+                      {products.map((product, index) => (
+                        <div key={index} className="the-look-product" style={{ width: '350px' }}>
+                          <ProductCardQuickAdd
+                            product={product}
+                            productIndex={index}
+                            collectionIndex={3}
+                            usePrefix="the-look-collection"
+                          />
+                        </div>
+                      ))}
+                    </Slider>
+                  ) : (
+                    <div 
+                      ref={scrollContainerRef}
+                      className="slider-mobile-container flex overflow-x-auto scroll-smooth snap-x px-2 cursor-grab"
+                      style={{ 
+                        scrollbarWidth: 'none', 
+                        msOverflowStyle: 'none',
+                        WebkitUserSelect: 'none',
+                        userSelect: 'none' 
+                      }} // Hide scrollbar and prevent text selection
+                    >
+                      {products.map((product, index) => (
+                        <div
+                          key={index}
+                          ref={(el) => (productRefs.current[index] = el)}
+                          className={`the-look-product min-w-[300px] snap-center `}
+                        >
+                          <ProductCardQuickAdd
+                            product={product}
+                            productIndex={index}
+                            collectionIndex={3}
+                            usePrefix="the-look-collection"
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  )
                 ) : (
                   <div>No products available</div>
                 )}
@@ -850,6 +986,8 @@ function TheLookCollection({products, collection}) {
             </div>
           </div>
         </div>
+
+        
       </div>
 
       {/* Hotspots Section */}
@@ -859,40 +997,31 @@ function TheLookCollection({products, collection}) {
           alt="Look showcase"
           className="w-full h-full object-cover"
         />
-        {hotspots && Array.isArray(hotspots) ? (
-          hotspots.map((hotspot, index) => (
-            <div key={index}>
-              <button
-                className={`products-hotspot-button ${
-                  selectedHotspot === index ? 'is-selected' : ''
-                }`}
-                style={{
-                  top: isDesktop ? hotspot.top : hotspot.topMobile,
-                  left: isDesktop ? hotspot.left : hotspot.leftMobile,
-                  position: 'absolute',
-                }}
-                onClick={() => handleHotspotClick(index)}
-              >
-                <span
-                  className={`products-hotspot-dot ${
-                    selectedHotspot === index ? 'is-selected' : ''
-                  }`}
-                ></span>
-                <span
-                  className={`products-hotspot-pulse ${
-                    selectedHotspot === index ? 'is-selected' : ''
-                  }`}
-                ></span>
-              </button>
-            </div>
-          ))
-        ) : (
-          <div>No hotspots available</div>
-        )}
+        {hotspots.map((hotspot, index) => (
+          <div key={index}>
+            <button
+              className={`products-hotspot-button ${selectedHotspot === index ? 'is-selected' : ''}`}
+              style={{
+                top: isDesktop ? hotspot.top : hotspot.topMobile,
+                left: isDesktop ? hotspot.left : hotspot.leftMobile,
+                position: 'absolute',
+              }}
+              onClick={() => handleHotspotClick(index)}
+            >
+              <span
+                className={`products-hotspot-dot ${selectedHotspot === index ? 'is-selected' : ''}`}
+              ></span>
+              <span
+                className={`products-hotspot-pulse ${selectedHotspot === index ? 'is-selected' : ''}`}
+              ></span>
+            </button>
+          </div>
+        ))}
       </div>
     </div>
   );
 }
+
 
 /**
  * @param {{
@@ -960,7 +1089,11 @@ function TopCollections({collections}) {
   return (
     <div
       className="top-collections-wrapper"
-      style={{'--PT': '36px','--PB': '36px' , "--aspect-ratio": "66.66666666666666%"}}
+      style={{
+        '--PT': '36px',
+        '--PB': '36px',
+        '--aspect-ratio': '66.66666666666666%',
+      }}
     >
       <div className="top-collections-container fixed_padding_page">
         <h2 className="top-collections-title mb-r11">Top collections</h2>
@@ -1002,19 +1135,28 @@ function TopCollections({collections}) {
                     '--overlay-bg': collection.overlayColor || '#000000',
                   }}
                 ></div>
-                
+
                 <div className="top-collections-item-image-frame fade-in-child aspect-[--wh-ratio-mobile] md:aspect-[--wh-ratio] none">
                   <div className="top-collections-item-image-pane">
-                    <div className="top-collections-item-image-scale h-[--height-mobile] md:h-[--height]" style={{"--height": "66.66666666666666vw" ,"--height-mobile": "66.66666666666666vw"}}>
-                      <div className="top-collections-item-image-container relative block w-full h-full overflow-hidden aspect-[--wh-ratio]" style={{"--wh-ratio": "1.5"}}>
+                    <div
+                      className="top-collections-item-image-scale h-[--height-mobile] md:h-[--height]"
+                      style={{
+                        '--height': '66.66666666666666vw',
+                        '--height-mobile': '66.66666666666666vw',
+                      }}
+                    >
+                      <div
+                        className="top-collections-item-image-container relative block w-full h-full overflow-hidden aspect-[--wh-ratio]"
+                        style={{'--wh-ratio': '1.5'}}
+                      >
                         <img
                           src={collection.image.url}
                           alt={collection.image.altText || collection.title}
                           className="top-collections-item-image"
                           loading="lazy"
                           fetchPriority="auto"
-                          sizes='100vw'
-                          style={{objectPosition: "center center"}}
+                          sizes="100vw"
+                          style={{objectPosition: 'center center'}}
                           srcSet={`
                             ${collection.image.url}&width=${352} ${352}w,
                             ${collection.image.url}&width=${400} ${400}w,
@@ -1025,7 +1167,6 @@ function TopCollections({collections}) {
                             ${collection.image.url}&width=${1920} ${1920}w,
                             ${collection.image.url}&width=${3000} ${3000}w,
                             `}
-                          
                         />
                       </div>
                     </div>
@@ -1043,6 +1184,40 @@ function TopCollections({collections}) {
     </div>
   );
 }
+
+function NewsletterComponent  ()  {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    alert("Subscribed successfully!");
+  };
+
+  return (
+    <div className="newsletter-wrapper">
+      <div className="newsletter-content">
+        <h2 className="newsletter-heading">Always In The Know</h2>
+        <p className="newsletter-description">
+          Join our newsletter to get special offers, free giveaways, and once-in-a-lifetime deals.
+        </p>
+        <form className="newsletter-form-container" onSubmit={handleSubmit}>
+          <input
+            type="email"
+            className="newsletter-input"
+            placeholder="your-email@example.com"
+            aria-label="your-email@example.com"
+            required
+          />
+          <button
+            type="submit"
+            className="newsletter-button"
+            aria-label="Join"
+          >
+            Join
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+};
 
 const FEATURED_COLLECTION_QUERY = `#graphql
   fragment FeaturedCollection on Collection {

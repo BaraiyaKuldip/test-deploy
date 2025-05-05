@@ -4904,9 +4904,10 @@ Search Page CSS
 
   @media only screen and (max-width: 768px) {
     .custom-slider-container {
-      --outer-minus: 50px;
-      padding: 0 0 0 var(--outer);
-      width: calc(100% + var(--outer) * 2) !important;
+      --outer-minus: -30px;
+      --outer: 30px;
+      padding: 0 14px 0 40px !important;
+      width: calc(100% + 46px) !important;
       margin-left: var(--outer-minus);
       margin-right: var(--outer-minus);
       max-width: none;
@@ -4923,6 +4924,30 @@ Search Page CSS
       touch-action: auto;
       scroll-padding: 0 0 0 var(--outer);
     }
+    
+    .slider-mobile-container {
+      --outer-minus: -30px;
+      --outer: 30px;
+      padding: 0 14px 0 40px !important;
+      width: calc(100% + 46px) !important;
+      margin-left: var(--outer-minus);
+      margin-right: var(--outer-minus);
+      max-width: none;
+
+      scroll-snap-type: x mandatory;
+      overflow: hidden !important;
+      overflow-x: hidden !important;
+      overflow-x: auto !important;
+      display: flex;
+      flex-flow: row nowrap !important;
+      scroll-behavior: smooth;
+      -ms-overflow-style: none;
+      scrollbar-width: none;
+      touch-action: auto;
+      scroll-padding: 0 0 0 var(--outer);
+    }
+
+
   }
 
   .slick-dots li {
@@ -4931,6 +4956,11 @@ Search Page CSS
 
   .slick-dots li button::before {
     font-size: 3px !important;
+  }
+
+  .slick-dots li button:hover:before,
+  .slick-dots li button:focus:before {
+    opacity: 0.3 !important;
   }
 
   .slick-dots li.slick-active button::before {
@@ -4993,12 +5023,66 @@ Search Page CSS
     line-height: 1;
   }
 
-  /* .custom-slider-container .slick-slide{
-  width: 80%;
-  margin-left: 0;
-  margin-right: calc(24px * .6);
- } */
 
+  @media only screen and (max-width:768px) {
+    .custom-slider-container .slick-track {
+      display: flex !important;
+      width: auto !important;
+    }
+
+    .custom-slider-container .slick-slide {
+      padding: 0 0px !important;
+      width: 100% !important;
+      /* max-width: 350px; */
+      /* text-align: left !important; */
+    }
+
+      /* .custom-slider-container .slick-slider{
+        width: 100% !important;
+      } */
+       
+  }
+
+  .scroll-smooth {
+    scroll-behavior: smooth;
+  }
+  
+
+  /* drag-scroll.css */
+
+/* Disable text selection during drag */
+.no-select {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Safari */
+  -khtml-user-select: none;    /* Konqueror HTML */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* Internet Explorer/Edge */
+  user-select: none;           /* Non-prefixed version, currently supported by Chrome and Opera */
+}
+
+/* Prevent the blue highlight/selection on mobile when tapping */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Make images non-draggable */
+.the-look-product img {
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  user-drag: none;
+  pointer-events: none; /* This prevents image dragging */
+}
+
+/* Ensure the cursor styles are enforced */
+.cursor-grab {
+  cursor: grab !important;
+}
+
+.cursor-grabbing {
+  cursor: grabbing !important;
+}
 
   .carousel {
     width: 100%;
@@ -5007,7 +5091,7 @@ Search Page CSS
 
   .slick-slide {
     width: 100%;
-    padding: 0 10px;
+    padding: 0 20px;
   }
 
   .slick-arrow.slick-disabled {
@@ -5102,13 +5186,81 @@ Search Page CSS
 
   @media only screen and (max-width : 768px) {
     .the-look-product {
-      width: 80%;
+      width: 350px !important;
       margin-left: 0;
       margin-right: calc(24px * .6);
       flex: 0 0 auto;
       scroll-snap-align: start;
+      padding: 16px;
     }
   }
+
+
+
+  .custom-scrollbar-snpt-wrapper {
+    display: flex;
+    overflow-x: auto;
+    gap: 1rem;
+    padding: 1rem;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .custom-scrollbar-snpt-wrapper::-webkit-scrollbar {
+    display: none;
+  }
+  .custom-scrollbar-snpt-item {
+    flex: 0 0 auto;
+    width: 200px;
+    text-align: left;
+  }
+  .custom-scrollbar-snpt-item img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    background-color: #f5f5f5;
+  }
+  .custom-scrollbar-snpt-item h3 {
+    font-size: 1rem;
+    font-weight: 500;
+    margin-top: 0.5rem;
+  }
+  .custom-scrollbar-snpt-item p {
+    font-size: 0.875rem;
+    color: #666;
+    margin-top: 0.25rem;
+  }
+  .custom-scrollbar-snpt-item .price {
+    font-size: 1rem;
+    font-weight: 600;
+    margin-top: 0.25rem;
+  }
+  .custom-scrollbar-snpt-track-wrapper {
+    position: relative;
+    height: 2px;
+    background-color: #e5e5e5;
+    margin: 0 1rem;
+  }
+  .custom-scrollbar-snpt-track {
+    position: absolute;
+    height: 100%;
+    background-color: #000;
+    transition: width 0.3s ease;
+  }
+  .section-title {
+    text-align: center;
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin: 1rem 0;
+  }
+  .section-divider {
+    width: 50px;
+    height: 2px;
+    background-color: #e5e5e5;
+    margin: 0 auto 1rem;
+  }
+  
+
+
 
   .hotspot-section {
     position: relative;
@@ -5753,7 +5905,7 @@ Search Page CSS
 
     transform: translateY(calc(100% + var(--image-bottom)));
     opacity: 0;
-    transition: transform .6s cubic-bezier(.215,.61,.355,1), opacity .6s cubic-bezier(.215,.61,.355,1) 0s;
+    transition: transform .6s cubic-bezier(.215, .61, .355, 1), opacity .6s cubic-bezier(.215, .61, .355, 1) 0s;
 
     font-family: var(--font-family-ms);
     font-style: var(--font-style-nrml);
@@ -5785,12 +5937,15 @@ Search Page CSS
   }
 
   @keyframes move-right {
-    0%, 100% {
+
+    0%,
+    100% {
       transform: translate(0) translateY(-50%) rotate(45deg);
-  }
-  50% {
+    }
+
+    50% {
       transform: translate(3px) translateY(-50%) rotate(45deg);
-  }
+    }
   }
 
   .top-collections-item-link:hover .top-collections-item-btn::after {
@@ -5811,7 +5966,7 @@ Search Page CSS
 
   /* Image container */
 
-  .top-collections-item-image-frame{
+  .top-collections-item-image-frame {
     padding-top: var(--aspect-ratio);
 
     position: relative;
@@ -5819,7 +5974,7 @@ Search Page CSS
     max-width: 100%;
   }
 
-  .top-collections-item-image-pane{
+  .top-collections-item-image-pane {
     display: flex;
     align-items: center;
 
@@ -5830,16 +5985,16 @@ Search Page CSS
     height: 100%;
   }
 
-  .top-collections-item-image-scale{
+  .top-collections-item-image-scale {
     transition: transform 1.1s ease-out;
-    
+
     min-height: 110%;
     max-height: 120%;
-    
+
     position: relative;
     display: block;
     width: 100%;
-    
+
     --placeholder-bg: #ffffff;
     --placeholder-fill: #eeeeee;
   }
@@ -5985,3 +6140,75 @@ Search Page CSS
       max-width: 100%;
     }
   }
+
+
+
+
+  /* --- newss-letter-component-css --- */
+
+  .newsletter-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 255px;
+    background-color: #ffffff;
+    padding: 20px;
+  }
+  
+  .newsletter-content {
+    text-align: center;
+    max-width: 600px;
+    width: 100%;
+  }
+  
+  .newsletter-heading {
+    font-size: 2.5rem;
+    font-weight: 400;
+    margin-bottom: 10px;
+    color: #333;
+    font-family: 'Times New Roman', Times, serif;
+  }
+  
+  .newsletter-description {
+    font-size: 1.1rem;
+    margin-bottom: 20px;
+    color: #666;
+    font-family: Arial, sans-serif;
+  }
+  
+  .newsletter-form-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    max-width: 400px;
+    margin: 0 auto;
+  }
+  
+  .newsletter-input {
+    padding: 10px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 5px 0 0 5px;
+    width: 70%;
+    outline: none;
+    font-family: Arial, sans-serif;
+  }
+  
+  .newsletter-button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    border-left: none;
+    border-radius: 0 5px 5px 0;
+    background-color: #f5f5f5;
+    color: #333;
+    cursor: pointer;
+    text-transform: uppercase;
+    font-family: Arial, sans-serif;
+    transition: background-color 0.3s;
+  }
+  
+  .newsletter-button:hover {
+    background-color: #e0e0e0;
+  }
+  
