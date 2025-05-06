@@ -1,0 +1,352 @@
+
+
+.custom-slider-container {
+  max-width: 500px;
+  padding: 0 75px 50px;
+  margin: 0 auto;
+}
+
+
+
+
+.carousel.custom-slider-container {
+  /* Desktop: Flickity handles styling */
+  position: relative;
+  width: 100%;
+}
+
+/* Mobile: Static layout */
+@media (max-width: 768px) {
+  .carousel.custom-slider-container.static-carousel {
+    display: flex;
+    flex-direction: column;
+    /* Stack items vertically */
+    gap: 16px;
+    /* Space between items */
+    overflow: visible;
+    /* Allow all items to be visible */
+  }
+
+  .carousel.custom-slider-container.static-carousel .slick-slide {
+    width: 100%;
+    /* Full width for each item */
+    min-width: unset;
+    /* Remove min-width constraint */
+    margin: 0;
+    /* Remove Flickity margins */
+    position: static;
+    /* Prevent Flickity positioning */
+  }
+}
+
+/* Ensure cells are visible */
+.slick-slide {
+  display: block;
+  box-sizing: border-box;
+}
+
+/* Optional: Style for ProductCardQuickAdd */
+.the-look-product {
+  width: 100%;
+  height: 100%;
+}
+
+@media only screen and (max-width: 768px) {
+  .custom-slider-container {
+    --outer-minus: -30px;
+    --outer: 30px;
+    padding: 0 14px 0 40px !important;
+    width: calc(100% + 46px) !important;
+    margin-left: var(--outer-minus);
+    margin-right: var(--outer-minus);
+    max-width: none;
+
+    scroll-snap-type: x mandatory;
+    overflow: hidden !important;
+    overflow-x: hidden !important;
+    overflow-x: auto !important;
+    display: flex;
+    flex-flow: row nowrap !important;
+    scroll-behavior: smooth;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    touch-action: auto;
+    scroll-padding: 0 0 0 var(--outer);
+  }
+
+  .slider-mobile-container {
+    --outer-minus: -30px;
+    --outer: 30px;
+    padding: 0 14px 0 40px !important;
+    width: calc(100% + 46px) !important;
+    margin-left: var(--outer-minus);
+    margin-right: var(--outer-minus);
+    max-width: none;
+
+    scroll-snap-type: x mandatory;
+    overflow: hidden !important;
+    overflow-x: hidden !important;
+    overflow-x: auto !important;
+    display: flex;
+    flex-flow: row nowrap !important;
+    scroll-behavior: smooth;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+    touch-action: auto;
+    scroll-padding: 0 0 0 var(--outer);
+  }
+
+
+}
+
+.slick-dots li {
+  margin: 0 !important;
+}
+
+.slick-dots li button::before {
+  font-size: 3px !important;
+}
+
+.slick-dots li button:hover:before,
+.slick-dots li button:focus:before {
+  opacity: 0.3 !important;
+}
+
+.slick-dots li.slick-active button::before {
+  opacity: 1 !important;
+  color: var(--text-color-42) !important;
+}
+
+.custom-slider-container .slick-dots {
+  left: 50% !important;
+  transform: translate(-50%) !important;
+}
+
+.slick-dots>li>button:focus {
+  box-shadow: none !important;
+}
+
+.slick-dots>.slick-active>button {
+  opacity: 1 !important;
+}
+
+.custom-slider-container .slick-dots {
+  background: #ffffff;
+  /* bottom: 10px; */
+}
+
+.product__mobile--slideshow .slick-dots,
+.slick-dots {
+  text-align: right;
+  padding: 4.5px 11.5px !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: flex-end;
+  width: auto !important;
+  border-radius: 20px;
+  overflow: hidden;
+  gap: 4px;
+}
+
+.product__mobile--slideshow .slick-dots>li>button,
+.slick-dots>li>button {
+  display: inline-block;
+  position: relative;
+  z-index: 5;
+  width: 3px;
+  height: 3px;
+  background: var(--bg);
+  border-radius: 50%;
+  opacity: .25;
+  cursor: pointer;
+}
+
+.slick-dots {
+  position: absolute;
+  width: 100%;
+  bottom: -50px !important;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+  text-align: center;
+  line-height: 1;
+}
+
+
+@media only screen and (max-width:768px) {
+  .custom-slider-container .slick-track {
+    display: flex !important;
+    width: auto !important;
+  }
+
+  .custom-slider-container .slick-slide {
+    padding: 0 0px !important;
+    width: 100% !important;
+    /* max-width: 350px; */
+    /* text-align: left !important; */
+  }
+
+  /* .custom-slider-container .slick-slider{
+      width: 100% !important;
+    } */
+
+}
+
+.scroll-smooth {
+  scroll-behavior: smooth;
+}
+
+
+/* drag-scroll.css */
+
+/* Disable text selection during drag */
+.no-select {
+  -webkit-touch-callout: none;
+  /* iOS Safari */
+  -webkit-user-select: none;
+  /* Safari */
+  -khtml-user-select: none;
+  /* Konqueror HTML */
+  -moz-user-select: none;
+  /* Firefox */
+  -ms-user-select: none;
+  /* Internet Explorer/Edge */
+  user-select: none;
+  /* Non-prefixed version, currently supported by Chrome and Opera */
+}
+
+/* Prevent the blue highlight/selection on mobile when tapping */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Make images non-draggable */
+.the-look-product img {
+  -webkit-user-drag: none;
+  -khtml-user-drag: none;
+  -moz-user-drag: none;
+  -o-user-drag: none;
+  /* user-drag: none; */
+  pointer-events: none;
+  /* This prevents image dragging */
+}
+
+/* Ensure the cursor styles are enforced */
+.cursor-grab {
+  cursor: grab !important;
+}
+
+.cursor-grabbing {
+  cursor: grabbing !important;
+}
+
+.carousel {
+  width: 100%;
+  height: 100%;
+}
+
+.slick-slide {
+  width: 100%;
+  padding: 0 20px;
+}
+
+.slick-arrow.slick-disabled {
+  opacity: .3 !important;
+}
+
+.slick-next {
+  right: -55px !important;
+  color: #333 !important;
+  background: #fff !important;
+}
+
+.slick-arrow.slick-next.custom-slick-arrow.custom-slick-next .slick-slider-button-icon {
+  position: absolute;
+  left: 33% !important;
+  top: 33% !important;
+  width: 35% !important;
+  height: 35% !important;
+}
+
+.slick-arrow.slick-next.custom-slick-arrow.custom-slick-next {
+  top: 50%;
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50%;
+  transform: translateY(-50%);
+}
+
+
+.slick-prev {
+  left: -55px !important;
+  color: #333 !important;
+  background: #fff !important;
+}
+
+.slick-arrow.slick-prev.custom-slick-arrow.custom-slick-prev .slick-slider-button-icon {
+  position: absolute;
+  left: 33% !important;
+  top: 33% !important;
+  width: 35% !important;
+  height: 35% !important;
+}
+
+.slick-arrow.slick-prev.custom-slick-arrow.custom-slick-prev {
+  top: 50%;
+  width: 36px !important;
+  height: 36px !important;
+  border-radius: 50%;
+  transform: translateY(-50%);
+}
+
+
+.flickity-button:focus {
+  box-shadow: none !important;
+}
+
+.flickity-button {
+  position: absolute;
+  background: #ffffff !important;
+  border: none;
+  color: #333;
+}
+
+.slick-dots>li>button {
+  position: relative;
+  overflow: visible;
+  /* Important if you want ::before to overflow */
+}
+
+.slick-dots>li>button::before {
+  content: "";
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  bottom: -8px;
+  left: -8px;
+  cursor: inherit;
+  z-index: 0;
+}
+
+
+.the-look-product {
+  background-color: #ffffff;
+  width: 100%;
+  margin-left: var(--outer);
+
+  padding: 20px;
+  display: block;
+  max-width: 350px;
+  margin: var(--outer) auto 0 auto;
+}
+
+@media only screen and (max-width : 768px) {
+  .the-look-product {
+    width: 350px !important;
+    margin-left: 0;
+    margin-right: calc(24px * .6);
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+    padding: 16px;
+  }
+}

@@ -1,4 +1,4 @@
-import react, {useState, useRef, useEffect} from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 import {defer} from '@shopify/remix-oxygen';
 import {Await, useLoaderData, Link} from '@remix-run/react';
 import {Suspense} from 'react';
@@ -17,7 +17,6 @@ import 'swiper/css/navigation';
 import {EffectFade, Autoplay, Pagination, Navigation} from 'swiper/modules';
 import {Swiper, SwiperSlide} from 'swiper/react';
 import SwiperComponent from '~/components/ProductCard';
-
 import useEmblaCarousel from 'embla-carousel-react';
 import {
   PrevButton,
@@ -28,8 +27,15 @@ import {AddToCartButton} from '~/components/AddToCartButton';
 import {useAside} from '~/components/Aside';
 import ProductCardQuickAdd from '~/components/ProductCardQuickAdd';
 
-// import Flickity from 'flickity';
-import 'flickity/css/flickity.css';
+import FeatureSectionBottom from '~/components/FeatureSectionBottom';
+
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import {Settings} from 'lucide-react';
+import CustomSlickSlider from '~/components/CustomProductSliderSlick';
+
+import CustomSwiperSlider from '~/components/CustomProductSliderSwiper';
 
 /**
  * @type {MetaFunction}
@@ -164,9 +170,8 @@ export default function Homepage() {
       />
 
       <TopCollections collections={data.TopCollections} />
-      <NewsletterComponent/>
+      <NewsletterComponent />
       <FeatureSectionBottom />
-
 
       {console.log(data.TopCollections, 'top collections')}
       <div> heyy </div>
@@ -386,11 +391,6 @@ function FeaturedCollection({collection}) {
  *   products: Promise<BestSellingProductsQuery | null>;
  * }}
  */
-
-import React from 'react';
-import CustomFlickitySlider from '~/components/CustomFlickitySlider';
-import FeatureSectionBottom from '~/components/FeatureSectionBottom';
-import CustomSlickSlider from '~/components/CustomFlickitySlider';
 
 function BestSellers({products}) {
   return (
@@ -664,12 +664,6 @@ function CuratedCollection({collection}) {
  * }}
  */
 
-import Slider from 'react-slick';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
-import { Settings } from 'lucide-react';
-
-// Hotspot Component (unchanged)
 const Hotspot = ({hotspot, index, isSelected, onClick}) => {
   return (
     <button
@@ -689,9 +683,7 @@ const Hotspot = ({hotspot, index, isSelected, onClick}) => {
   );
 };
 
-
-
-function TheLookCollection({ products, collection }) {
+function TheLookCollection({products, collection}) {
   const hotspots = [
     {
       top: '34%',
@@ -720,7 +712,7 @@ function TheLookCollection({ products, collection }) {
   const [isDesktop, setIsDesktop] = useState(
     typeof window !== 'undefined' && window.innerWidth >= 768,
   );
-  
+
   // Drag scroll state
   // We no longer need these state variables as we'll use local variables instead
   // for better performance
@@ -746,7 +738,7 @@ function TheLookCollection({ products, collection }) {
     let isDown = false;
     let startX;
     let scrollLeft;
-    
+
     // Prevent text selection during drag
     const preventDefault = (e) => {
       e.preventDefault();
@@ -814,7 +806,7 @@ function TheLookCollection({ products, collection }) {
     // Add listeners for selection prevention during drag
     scrollContainer.addEventListener('dragstart', preventDefault);
     scrollContainer.addEventListener('selectstart', preventDefault);
-    
+
     // Add event listeners
     scrollContainer.addEventListener('mousedown', handleMouseDown);
     scrollContainer.addEventListener('mousemove', handleMouseMove);
@@ -828,7 +820,7 @@ function TheLookCollection({ products, collection }) {
     const originalUserSelect = scrollContainer.style.userSelect;
     const originalWebkitUserSelect = scrollContainer.style.webkitUserSelect;
     const originalMsUserSelect = scrollContainer.style.msUserSelect;
-    
+
     scrollContainer.style.userSelect = 'none';
     scrollContainer.style.webkitUserSelect = 'none';
     scrollContainer.style.msUserSelect = 'none';
@@ -844,7 +836,7 @@ function TheLookCollection({ products, collection }) {
       scrollContainer.removeEventListener('touchstart', handleTouchStart);
       scrollContainer.removeEventListener('touchmove', handleTouchMove);
       scrollContainer.removeEventListener('touchend', handleTouchEnd);
-      
+
       // Restore original user-select values
       scrollContainer.style.userSelect = originalUserSelect;
       scrollContainer.style.webkitUserSelect = originalWebkitUserSelect;
@@ -864,10 +856,10 @@ function TheLookCollection({ products, collection }) {
     }
   };
 
-  const CustomNextArrow = ({ className, style, onClick }) => (
+  const CustomNextArrow = ({className, style, onClick}) => (
     <button
-      className={`${className} custom-slick-arrow hidden md:block`}
-      style={{ ...style }}
+      className={`${className} custom-slick-arrow custom-slick-next hidden md:block`}
+      style={{...style}}
       onClick={onClick}
       type="button"
     >
@@ -882,10 +874,10 @@ function TheLookCollection({ products, collection }) {
     </button>
   );
 
-  const CustomPrevArrow = ({ className, style, onClick }) => (
+  const CustomPrevArrow = ({className, style, onClick}) => (
     <button
-      className={`${className} custom-slick-arrow hidden md:block`}
-      style={{ ...style }}
+      className={`${className} custom-slick-arrow custom-slick-prev hidden md:block`}
+      style={{...style}}
       onClick={onClick}
       type="button"
     >
@@ -933,7 +925,9 @@ function TheLookCollection({ products, collection }) {
             <div className="mx-auto max-w-full text-center">
               <div className="flex w-full text-center flex-col items-center gap-4">
                 <div className="the-look-hero-kicker">
-                  <p role="heading" aria-level={3}>Shop the look</p>
+                  <p role="heading" aria-level={3}>
+                    Shop the look
+                  </p>
                 </div>
               </div>
 
@@ -942,7 +936,11 @@ function TheLookCollection({ products, collection }) {
                   isDesktop ? (
                     <Slider ref={sliderRef} {...slickSettings}>
                       {products.map((product, index) => (
-                        <div key={index} className="the-look-product" style={{ width: '350px' }}>
+                        <div
+                          key={index}
+                          className="the-look-product"
+                          style={{width: '350px'}}
+                        >
                           <ProductCardQuickAdd
                             product={product}
                             productIndex={index}
@@ -953,14 +951,14 @@ function TheLookCollection({ products, collection }) {
                       ))}
                     </Slider>
                   ) : (
-                    <div 
+                    <div
                       ref={scrollContainerRef}
                       className="slider-mobile-container flex overflow-x-auto scroll-smooth snap-x px-2 cursor-grab"
-                      style={{ 
-                        scrollbarWidth: 'none', 
+                      style={{
+                        scrollbarWidth: 'none',
                         msOverflowStyle: 'none',
                         WebkitUserSelect: 'none',
-                        userSelect: 'none' 
+                        userSelect: 'none',
                       }} // Hide scrollbar and prevent text selection
                     >
                       {products.map((product, index) => (
@@ -986,8 +984,6 @@ function TheLookCollection({ products, collection }) {
             </div>
           </div>
         </div>
-
-        
       </div>
 
       {/* Hotspots Section */}
@@ -1000,7 +996,9 @@ function TheLookCollection({ products, collection }) {
         {hotspots.map((hotspot, index) => (
           <div key={index}>
             <button
-              className={`products-hotspot-button ${selectedHotspot === index ? 'is-selected' : ''}`}
+              className={`products-hotspot-button ${
+                selectedHotspot === index ? 'is-selected' : ''
+              }`}
               style={{
                 top: isDesktop ? hotspot.top : hotspot.topMobile,
                 left: isDesktop ? hotspot.left : hotspot.leftMobile,
@@ -1009,10 +1007,14 @@ function TheLookCollection({ products, collection }) {
               onClick={() => handleHotspotClick(index)}
             >
               <span
-                className={`products-hotspot-dot ${selectedHotspot === index ? 'is-selected' : ''}`}
+                className={`products-hotspot-dot ${
+                  selectedHotspot === index ? 'is-selected' : ''
+                }`}
               ></span>
               <span
-                className={`products-hotspot-pulse ${selectedHotspot === index ? 'is-selected' : ''}`}
+                className={`products-hotspot-pulse ${
+                  selectedHotspot === index ? 'is-selected' : ''
+                }`}
               ></span>
             </button>
           </div>
@@ -1022,7 +1024,6 @@ function TheLookCollection({ products, collection }) {
   );
 }
 
-
 /**
  * @param {{
  *   collection: WayfarerCollectionFragment;
@@ -1030,6 +1031,14 @@ function TheLookCollection({ products, collection }) {
  */
 
 function WayfarerCollection({products, collection}) {
+  const [selectedHotspot, setSelectedHotspot] = useState(0);
+  const [isDesktop, setIsDesktop] = useState(
+    typeof window !== 'undefined' && window.innerWidth >= 768,
+  );
+  const sliderRef = useRef(null);
+  const scrollContainerRef = useRef(null);
+  const productRefs = useRef([]);
+
   return (
     <div className="flex flex-col md:flex-row min-h-[715px] bg-[#f7f7f7]">
       {/* Slider Section */}
@@ -1049,10 +1058,9 @@ function WayfarerCollection({products, collection}) {
                   </div>
                 </div>
               </div>
-              <CustomSlickSlider
-                products={products}
-                // setSelectedHotspot={setSelectedHotspot}
-              />
+              <CustomSlickSlider products={products} />
+
+              {/* <CustomSwiperSlider products={products}/> */}
             </div>
           </div>
         </div>
@@ -1185,39 +1193,110 @@ function TopCollections({collections}) {
   );
 }
 
-function NewsletterComponent  ()  {
+function NewsletterComponent() {
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   alert('Subscribed successfully!');
+  // };
+
+  const [email, setEmail] = useState('');
+  const [isSubscribed, setIsSubscribed] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    alert("Subscribed successfully!");
+    setIsSubmitted(true);
+    // Here you would typically validate or send the email to your backend
+    // For demonstration, we'll simulate an existing subscription
+    if (email === 'existing@example.com') {
+      setIsSubscribed(true);
+    }
   };
 
   return (
-    <div className="newsletter-wrapper">
-      <div className="newsletter-content">
-        <h2 className="newsletter-heading">Always In The Know</h2>
-        <p className="newsletter-description">
-          Join our newsletter to get special offers, free giveaways, and once-in-a-lifetime deals.
-        </p>
-        <form className="newsletter-form-container" onSubmit={handleSubmit}>
-          <input
-            type="email"
-            className="newsletter-input"
-            placeholder="your-email@example.com"
-            aria-label="your-email@example.com"
-            required
-          />
-          <button
-            type="submit"
-            className="newsletter-button"
-            aria-label="Join"
+    <div
+      className="newsletter-wrapper"
+      style={{'--PT': '60px', '--PB': '22px', '--BRICK-GUTTER': '0px'}}
+    >
+      <div className="newsletter-section" style={{minHeight: '255px'}}>
+        <div className="newsletter-block">
+          <div
+            className="newsletter-text-block"
+            style={{'--bg': '#fffffff', minHeight: '253px'}}
           >
-            Join
-          </button>
-        </form>
+            <div className="newsletter-text-block-inner">
+              <div className="newsletter-content">
+                <h2 className="newsletter-heading">Always In The Know</h2>
+                <p className="newsletter-description">
+                  Join our newsletter to get special offers, free giveaways, and
+                  once-in-a-lifetime deals.
+                </p>
+                <div className='newsletter-input-holder'>
+                  <form className="newsletter-form" onSubmit={handleSubmit}>
+                    {/* Hidden fields for form processing */}
+                    <input type="hidden" name="form_type" value="customer" />
+                    <input
+                      type="hidden"
+                      name="contact[tags]"
+                      value="newsletter"
+                    />
+                    <input
+                      type="hidden"
+                      name="contact[accepts_marketing]"
+                      value="true"
+                    />
+
+                    {/* Error message for existing subscriptions */}
+                    {isSubmitted && isSubscribed && (
+                      <p className="newsletter-form__error-message">
+                        This email is already subscribed
+                      </p>
+                    )}
+
+                    {/* Success message could be added here */}
+                    {isSubmitted && !isSubscribed && (
+                      <p className="newsletter-form__success-message">
+                        <em>Thank you for joining our mailing list!</em>
+                      </p>
+                    )}
+
+                    <div className="newsletter-form__input-group">
+                      <label
+                        htmlFor="newsletter-email-input"
+                        className="newsletter-form__label"
+                      >
+                        Email
+                      </label>
+                      <input
+                        type="email"
+                        className="newsletter-form__input"
+                        id="newsletter-email-input"
+                        placeholder="your-email@example.com"
+                        aria-label="Enter your email to subscribe"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                      />
+                      <span className="newsletter-button-wrapper">
+                        <button
+                          type="submit"
+                          className="newsletter-form__button"
+                          aria-label="Subscribe to newsletter"
+                        >
+                          Join
+                        </button>
+                      </span>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
-};
+}
 
 const FEATURED_COLLECTION_QUERY = `#graphql
   fragment FeaturedCollection on Collection {
