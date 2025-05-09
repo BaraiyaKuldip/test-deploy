@@ -69,7 +69,7 @@ const Hero = () => {
             </div>
 
             <div
-              className="image__hero__frame fade-in-child aspect-[--pc-ratio-mobile] md:aspect-[--wh-ratio] use_screen_three_quarters"
+              className="image__hero__frame fade-in-child aspect-[--pc_ratio_mobile] md:aspect-[--wh-ratio] use_screen_three_quarters"
               data-overflow-background=""
               data-parallax-wrapper=""
               style={{ minHeight: 'calc(397px + var(--menu-height))' }}
