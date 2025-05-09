@@ -39,7 +39,7 @@
     --font-size-13: 13px;
     --font-size-14: 14px;
     --font-size-14-5: 14.5px;
-    --font-size-39: 39px;
+    --font-size-29: 29px;--font-size-39: 39px;
     --line-height-1-5: 1.5;
     --line-height-1-6: 1.625;
 
@@ -1259,6 +1259,17 @@
 
   }
 
+  .header-menu-item-text{
+    font-family: var(--font-family-ms);
+    font-style: var(--font-style-nrml);
+    font-weight: var(--font-weight-6);
+    text-transform: var(--text-transform-up);
+    letter-spacing: var(--letter-spacing-9);
+    font-size: calc(11.5px * var(--font-adjust));
+    white-space: nowrap;
+    display: block;
+  }
+
   .header-ctas {
     align-items: center;
     display: flex;
@@ -2119,10 +2130,10 @@ Search Page CSS
 
 
   .search-page-wrapper {
-    padding: 36px 0 !important;
+    padding: 36px !important;
 
     @media only screen and (max-width: 768px) {
-      padding: 21.6px 0 !important;
+      padding: 21.6px !important;
     }
   }
 
@@ -2695,7 +2706,7 @@ Search Page CSS
   .search-result-image img {
     max-width: 70px;
     /* height: 93px; */
-    border-radius: 3px;
+    /* border-radius: 3px; */
     object-fit: cover;
   }
 
@@ -4404,7 +4415,7 @@ Search Page CSS
   .custom-collection-image-pane,
   .custom-collection-image-scale,
   .custom-collection-image-wrapper {
-    --wh-ratio: 0.7726136931534233;
+    --pc-ratio: 0.7726136931534233;
     width: 100%;
     height: 100%;
   }
@@ -4858,356 +4869,810 @@ Search Page CSS
     opacity: .2;
   }
 
-
-  .custom-slider-container {
-    max-width: 500px;
-    padding: 0 75px 50px;
-    margin: 0 auto;
-  }
-
-
-
-
-  .carousel.custom-slider-container {
-    /* Desktop: Flickity handles styling */
-    position: relative;
-    width: 100%;
-  }
-
-  /* Mobile: Static layout */
-  @media (max-width: 768px) {
-    .carousel.custom-slider-container.static-carousel {
-      display: flex;
-      flex-direction: column;
-      /* Stack items vertically */
-      gap: 16px;
-      /* Space between items */
-      overflow: visible;
-      /* Allow all items to be visible */
-    }
-
-    .carousel.custom-slider-container.static-carousel .slick-slide {
-      width: 100%;
-      /* Full width for each item */
-      min-width: unset;
-      /* Remove min-width constraint */
-      margin: 0;
-      /* Remove Flickity margins */
-      position: static;
-      /* Prevent Flickity positioning */
-    }
-  }
-
-  /* Ensure cells are visible */
-  .slick-slide {
-    display: block;
-    box-sizing: border-box;
-  }
-
-  /* Optional: Style for ProductCardQuickAdd */
-  .the-look-product {
-    width: 100%;
-    height: 100%;
-  }
-
-  @media only screen and (max-width: 768px) {
+  .swiper-slider-147 {
     .custom-slider-container {
-      --outer-minus: -30px;
-      --outer: 30px;
-      padding: 0 14px 0 40px !important;
-      width: calc(100% + 46px) !important;
-      margin-left: var(--outer-minus);
-      margin-right: var(--outer-minus);
-      max-width: none;
-
-      scroll-snap-type: x mandatory;
-      overflow: hidden !important;
-      overflow-x: hidden !important;
-      overflow-x: auto !important;
-      display: flex;
-      flex-flow: row nowrap !important;
-      scroll-behavior: smooth;
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-      touch-action: auto;
-      scroll-padding: 0 0 0 var(--outer);
+      max-width: 500px;
+      padding: 0 75px 50px;
+      margin: 0 auto;
+      min-height: 200px;
+      position: relative;
     }
 
-    .slider-mobile-container {
-      --outer-minus: -30px;
-      --outer: 30px;
-      padding: 0 14px 0 40px !important;
-      width: calc(100% + 46px) !important;
-      margin-left: var(--outer-minus);
-      margin-right: var(--outer-minus);
-      max-width: none;
-
-      scroll-snap-type: x mandatory;
-      overflow: hidden !important;
-      overflow-x: hidden !important;
-      overflow-x: auto !important;
-      display: flex;
-      flex-flow: row nowrap !important;
-      scroll-behavior: smooth;
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-      touch-action: auto;
-      scroll-padding: 0 0 0 var(--outer);
+    .swiper-container {
+      width: 100%;
+      height: 100%;
     }
 
-
-  }
-
-  .slick-dots li {
-    margin: 0 !important;
-  }
-
-  .slick-dots li button::before {
-    font-size: 3px !important;
-  }
-
-  .slick-dots li button:hover:before,
-  .slick-dots li button:focus:before {
-    opacity: 0.3 !important;
-  }
-
-  .slick-dots li.slick-active button::before {
-    opacity: 1 !important;
-    color: var(--text-color-42) !important;
-  }
-
-  .custom-slider-container .slick-dots {
-    left: 50% !important;
-    transform: translate(-50%) !important;
-  }
-
-  .slick-dots>li>button:focus {
-    box-shadow: none !important;
-  }
-
-  .slick-dots>.slick-active>button {
-    opacity: 1 !important;
-  }
-
-  .custom-slider-container .slick-dots {
-    background: #ffffff;
-    /* bottom: 10px; */
-  }
-
-  .product__mobile--slideshow .slick-dots,
-  .slick-dots {
-    text-align: right;
-    padding: 4.5px 11.5px !important;
-    display: flex !important;
-    align-items: center;
-    justify-content: flex-end;
-    width: auto !important;
-    border-radius: 20px;
-    overflow: hidden;
-    gap: 4px;
-  }
-
-  .product__mobile--slideshow .slick-dots>li>button,
-  .slick-dots>li>button {
-    display: inline-block;
-    position: relative;
-    z-index: 5;
-    width: 3px;
-    height: 3px;
-    background: var(--bg);
-    border-radius: 50%;
-    opacity: .25;
-    cursor: pointer;
-  }
-
-  .slick-dots {
-    position: absolute;
-    width: 100%;
-    bottom: -50px !important;
-    padding: 0;
-    margin: 0;
-    list-style: none;
-    text-align: center;
-    line-height: 1;
-  }
-
-
-  @media only screen and (max-width:768px) {
-    .custom-slider-container .slick-track {
-      display: flex !important;
+    .carousel-cell {
+      min-width: 200px;
+      min-height: 200px;
       width: auto !important;
+      display: flex;
+      justify-content: center;
     }
 
-    .custom-slider-container .slick-slide {
-      padding: 0 0px !important;
-      width: 100% !important;
-      /* max-width: 350px; */
-      /* text-align: left !important; */
+    .the-look-product {
+      width: 100%;
+      height: 100%;
+      background-color: #ffffff;
+      padding: 20px;
+      max-width: 350px;
+      margin: 0 auto;
     }
 
-    /* .custom-slider-container .slick-slider{
+    /* Pagination styles */
+    .swiper-pagination {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #ffffff;
+      padding: 13px !important;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: auto !important;
+      border-radius: 20px;
+      overflow: hidden;
+      gap: 4px;
+    }
+
+    .swiper-pagination-bullet {
+      width: 3px;
+      height: 3px;
+      background: var(--text-color-42);
+      opacity: 0.25;
+      border-radius: 50%;
+      cursor: pointer;
+      position: relative;
+      overflow: visible;
+    }
+
+    .swiper-pagination-bullet::before {
+      content: "";
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      bottom: -8px;
+      left: -8px;
+      cursor: inherit;
+      z-index: 0;
+    }
+
+    .swiper-pagination-bullet-active {
+      opacity: 1 !important;
+    }
+
+    /* Navigation buttons */
+    .swiper-button-prev,
+    .swiper-button-next {
+      top: 50%;
+      width: 36px !important;
+      height: 36px !important;
+      border-radius: 50%;
+      transform: translateY(-50%);
+      background: #ffffff !important;
+      color: #333;
+    }
+
+    .swiper-button-prev::after,
+    .swiper-button-next::after {
+      font-size: 14px;
+      font-weight: bold;
+    }
+
+    /* Mobile styles */
+    @media (max-width: 768px) {
+      .custom-slider-container {
+        --outer-minus: 50px;
+        padding: 0 0 0 var(--outer);
+        width: calc(100% + var(--outer) * 2) !important;
+        margin-left: var(--outer-minus);
+        margin-right: var(--outer-minus);
+        max-width: none;
+        scroll-snap-type: x mandatory;
+        overflow-x: auto !important;
+        display: flex;
+        flex-flow: row nowrap !important;
+        scroll-behavior: smooth;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+        touch-action: auto;
+        scroll-padding: 0 0 0 var(--outer);
+      }
+
+      .mobile-carousel {
+        display: flex;
+        flex-direction: row;
+        gap: calc(24px * 0.6);
+        width: 100%;
+      }
+
+      .the-look-product {
+        width: 80%;
+        margin-left: 0;
+        margin-right: calc(24px * 0.6);
+        flex: 0 0 auto;
+        scroll-snap-align: start;
+      }
+    }
+
+    /* Arrow shape - similar to Flickity */
+    .swiper-button-prev::after,
+    .swiper-button-next::after {
+      content: '';
+      width: 20px;
+      height: 20px;
+      background: currentColor;
+      clip-path: polygon(10% 50%,
+          60% 100%,
+          67.5% 92.5%,
+          25% 50%,
+          67.5% 7.5%,
+          60% 0);
+    }
+  }
+
+
+    .custom-slider-container {
+      max-width: 500px;
+      padding: 0 75px 50px;
+      margin: 0 auto;
+    }
+
+
+
+
+    .carousel.custom-slider-container {
+      /* Desktop: Flickity handles styling */
+      position: relative;
+      width: 100%;
+    }
+
+    /* Mobile: Static layout */
+    @media (max-width: 768px) {
+      .carousel.custom-slider-container.static-carousel {
+        display: flex;
+        flex-direction: column;
+        /* Stack items vertically */
+        gap: 16px;
+        /* Space between items */
+        overflow: visible;
+        /* Allow all items to be visible */
+      }
+
+      .carousel.custom-slider-container.static-carousel .slick-slide {
+        width: 100%;
+        /* Full width for each item */
+        min-width: unset;
+        /* Remove min-width constraint */
+        margin: 0;
+        /* Remove Flickity margins */
+        position: static;
+        /* Prevent Flickity positioning */
+      }
+    }
+
+    /* Ensure cells are visible */
+    .slick-slide {
+      display: block;
+      box-sizing: border-box;
+    }
+
+    /* Optional: Style for ProductCardQuickAdd */
+    .the-look-product {
+      width: 100%;
+      height: 100%;
+    }
+
+    @media only screen and (max-width: 768px) {
+      .custom-slider-container {
+        --outer-minus: -30px;
+        --outer: 30px;
+        padding: 0 14px 0 40px !important;
+        width: calc(100% + 46px) !important;
+        margin-left: var(--outer-minus);
+        margin-right: var(--outer-minus);
+        max-width: none;
+
+        scroll-snap-type: x mandatory;
+        overflow: hidden !important;
+        overflow-x: hidden !important;
+        overflow-x: auto !important;
+        display: flex;
+        flex-flow: row nowrap !important;
+        scroll-behavior: smooth;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+        touch-action: auto;
+        scroll-padding: 0 0 0 var(--outer);
+      }
+
+      .slider-mobile-container {
+        --outer-minus: -30px;
+        --outer: 30px;
+        padding: 0 14px 0 40px !important;
+        width: calc(100% + 46px) !important;
+        margin-left: var(--outer-minus);
+        margin-right: var(--outer-minus);
+        max-width: none;
+
+        scroll-snap-type: x mandatory;
+        overflow: hidden !important;
+        overflow-x: hidden !important;
+        overflow-x: auto !important;
+        display: flex;
+        flex-flow: row nowrap !important;
+        scroll-behavior: smooth;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+        touch-action: auto;
+        scroll-padding: 0 0 0 var(--outer);
+      }
+
+
+    }
+
+    .slick-dots li {
+      margin: 0 !important;
+    }
+
+    .slick-dots li button::before {
+      font-size: 3px !important;
+    }
+
+    .slick-dots li button:hover:before,
+    .slick-dots li button:focus:before {
+      opacity: 0.3 !important;
+    }
+
+    .slick-dots li.slick-active button::before {
+      opacity: 1 !important;
+      color: var(--text-color-42) !important;
+    }
+
+    .custom-slider-container .slick-dots {
+      left: 50% !important;
+      transform: translate(-50%) !important;
+    }
+
+    .slick-dots>li>button:focus {
+      box-shadow: none !important;
+    }
+
+    .slick-dots>.slick-active>button {
+      opacity: 1 !important;
+    }
+
+    .custom-slider-container .slick-dots {
+      background: #ffffff;
+      /* bottom: 10px; */
+    }
+
+    .product__mobile--slideshow .slick-dots,
+    .slick-dots {
+      text-align: right;
+      padding: 4.5px 11.5px !important;
+      display: flex !important;
+      align-items: center;
+      justify-content: flex-end;
+      width: auto !important;
+      border-radius: 20px;
+      overflow: hidden;
+      gap: 4px;
+    }
+
+    .product__mobile--slideshow .slick-dots>li>button,
+    .slick-dots>li>button {
+      display: inline-block;
+      position: relative;
+      z-index: 5;
+      width: 3px;
+      height: 3px;
+      background: var(--bg);
+      border-radius: 50%;
+      opacity: .25;
+      cursor: pointer;
+    }
+
+    .slick-dots {
+      position: absolute;
+      width: 100%;
+      bottom: -50px !important;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+      text-align: center;
+      line-height: 1;
+    }
+
+
+    @media only screen and (max-width:768px) {
+      .custom-slider-container .slick-track {
+        display: flex !important;
+        width: auto !important;
+      }
+
+      .custom-slider-container .slick-slide {
+        padding: 0 0px !important;
+        width: 100% !important;
+        /* max-width: 350px; */
+        /* text-align: left !important; */
+      }
+
+      /* .custom-slider-container .slick-slider{
         width: 100% !important;
       } */
 
-  }
-
-  .scroll-smooth {
-    scroll-behavior: smooth;
-  }
-
-
-  /* drag-scroll.css */
-
-  /* Disable text selection during drag */
-  .no-select {
-    -webkit-touch-callout: none;
-    /* iOS Safari */
-    -webkit-user-select: none;
-    /* Safari */
-    -khtml-user-select: none;
-    /* Konqueror HTML */
-    -moz-user-select: none;
-    /* Firefox */
-    -ms-user-select: none;
-    /* Internet Explorer/Edge */
-    user-select: none;
-    /* Non-prefixed version, currently supported by Chrome and Opera */
-  }
-
-  /* Prevent the blue highlight/selection on mobile when tapping */
-  * {
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  /* Make images non-draggable */
-  .the-look-product img {
-    -webkit-user-drag: none;
-    -khtml-user-drag: none;
-    -moz-user-drag: none;
-    -o-user-drag: none;
-    /* user-drag: none; */
-    pointer-events: none;
-    /* This prevents image dragging */
-  }
-
-  /* Ensure the cursor styles are enforced */
-  .cursor-grab {
-    cursor: grab !important;
-  }
-
-  .cursor-grabbing {
-    cursor: grabbing !important;
-  }
-
-  .carousel {
-    width: 100%;
-    height: 100%;
-  }
-
-  .slick-slide {
-    width: 100%;
-    padding: 0 20px;
-  }
-
-  .slick-arrow.slick-disabled {
-    opacity: .3 !important;
-  }
-
-  .slick-next {
-    right: -55px !important;
-    color: #333 !important;
-    background: #fff !important;
-  }
-
-  .slick-arrow.slick-next.custom-slick-arrow.custom-slick-next .slick-slider-button-icon {
-    position: absolute;
-    left: 33% !important;
-    top: 33% !important;
-    width: 35% !important;
-    height: 35% !important;
-  }
-
-  .slick-arrow.slick-next.custom-slick-arrow.custom-slick-next {
-    top: 50%;
-    width: 36px !important;
-    height: 36px !important;
-    border-radius: 50%;
-    transform: translateY(-50%);
-  }
-
-
-  .slick-prev {
-    left: -55px !important;
-    color: #333 !important;
-    background: #fff !important;
-  }
-
-  .slick-arrow.slick-prev.custom-slick-arrow.custom-slick-prev .slick-slider-button-icon {
-    position: absolute;
-    left: 33% !important;
-    top: 33% !important;
-    width: 35% !important;
-    height: 35% !important;
-  }
-
-  .slick-arrow.slick-prev.custom-slick-arrow.custom-slick-prev {
-    top: 50%;
-    width: 36px !important;
-    height: 36px !important;
-    border-radius: 50%;
-    transform: translateY(-50%);
-  }
-
-
-  .flickity-button:focus {
-    box-shadow: none !important;
-  }
-
-  .flickity-button {
-    position: absolute;
-    background: #ffffff !important;
-    border: none;
-    color: #333;
-  }
-
-  .slick-dots>li>button {
-    position: relative;
-    overflow: visible;
-    /* Important if you want ::before to overflow */
-  }
-
-  .slick-dots>li>button::before {
-    content: "";
-    position: absolute;
-    top: -8px;
-    right: -8px;
-    bottom: -8px;
-    left: -8px;
-    cursor: inherit;
-    z-index: 0;
-  }
-
-
-  .the-look-product {
-    background-color: #ffffff;
-    width: 100%;
-    margin-left: var(--outer);
-
-    padding: 20px;
-    display: block;
-    max-width: 350px;
-    margin: var(--outer) auto 0 auto;
-  }
-
-  @media only screen and (max-width : 768px) {
-    .the-look-product {
-      width: 350px !important;
-      margin-left: 0;
-      margin-right: calc(24px * .6);
-      flex: 0 0 auto;
-      scroll-snap-align: start;
-      padding: 16px;
     }
+
+    .scroll-smooth {
+      scroll-behavior: smooth;
+    }
+
+
+    /* drag-scroll.css */
+
+    /* Disable text selection during drag */
+    .no-select {
+      -webkit-touch-callout: none;
+      /* iOS Safari */
+      -webkit-user-select: none;
+      /* Safari */
+      -khtml-user-select: none;
+      /* Konqueror HTML */
+      -moz-user-select: none;
+      /* Firefox */
+      -ms-user-select: none;
+      /* Internet Explorer/Edge */
+      user-select: none;
+      /* Non-prefixed version, currently supported by Chrome and Opera */
+    }
+
+    /* Prevent the blue highlight/selection on mobile when tapping */
+    * {
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Make images non-draggable */
+    .the-look-product img {
+      -webkit-user-drag: none;
+      -khtml-user-drag: none;
+      -moz-user-drag: none;
+      -o-user-drag: none;
+      /* user-drag: none; */
+      pointer-events: none;
+      /* This prevents image dragging */
+    }
+
+    /* Ensure the cursor styles are enforced */
+    .cursor-grab {
+      cursor: grab !important;
+    }
+
+    .cursor-grabbing {
+      cursor: grabbing !important;
+    }
+
+    .carousel {
+      width: 100%;
+      height: 100%;
+    }
+
+    .slick-slide {
+      width: 100%;
+      padding: 0 20px;
+    }
+
+    .slick-arrow.slick-disabled {
+      opacity: .3 !important;
+    }
+
+    .slick-next {
+      right: -55px !important;
+      color: #333 !important;
+      background: #fff !important;
+    }
+
+    .slick-arrow.slick-next.custom-slick-arrow.custom-slick-next .slick-slider-button-icon {
+      position: absolute;
+      left: 33% !important;
+      top: 33% !important;
+      width: 35% !important;
+      height: 35% !important;
+    }
+
+    .slick-arrow.slick-next.custom-slick-arrow.custom-slick-next {
+      top: 50%;
+      width: 36px !important;
+      height: 36px !important;
+      border-radius: 50%;
+      transform: translateY(-50%);
+    }
+
+
+    .slick-prev {
+      left: -55px !important;
+      color: #333 !important;
+      background: #fff !important;
+    }
+
+    .slick-arrow.slick-prev.custom-slick-arrow.custom-slick-prev .slick-slider-button-icon {
+      position: absolute;
+      left: 33% !important;
+      top: 33% !important;
+      width: 35% !important;
+      height: 35% !important;
+    }
+
+    .slick-arrow.slick-prev.custom-slick-arrow.custom-slick-prev {
+      top: 50%;
+      width: 36px !important;
+      height: 36px !important;
+      border-radius: 50%;
+      transform: translateY(-50%);
+    }
+
+
+    .flickity-button:focus {
+      box-shadow: none !important;
+    }
+
+    .flickity-button {
+      position: absolute;
+      background: #ffffff !important;
+      border: none;
+      color: #333;
+    }
+
+    .slick-dots>li>button {
+      position: relative;
+      overflow: visible;
+      /* Important if you want ::before to overflow */
+    }
+
+    .slick-dots>li>button::before {
+      content: "";
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      bottom: -8px;
+      left: -8px;
+      cursor: inherit;
+      z-index: 0;
+    }
+
+
+    .the-look-product {
+      background-color: #ffffff;
+      width: 100%;
+      margin-left: var(--outer);
+
+      padding: 20px;
+      display: block;
+      max-width: 350px;
+      margin: var(--outer) auto 0 auto;
+    }
+
+    @media only screen and (max-width : 768px) {
+      .the-look-product {
+        width: 350px !important;
+        margin-left: 0;
+        margin-right: calc(24px * .6);
+        flex: 0 0 auto;
+        scroll-snap-align: start;
+        padding: 16px;
+      }
+    }
+
+  
+
+
+  .flickity-flickty {
+    .custom-slider-container {
+      max-width: 500px;
+      padding: 0 75px 50px;
+      margin: 0 auto;
+    }
+
+
+
+
+    .carousel.custom-slider-container {
+      /* Desktop: Flickity handles styling */
+      position: relative;
+      width: 100%;
+    }
+
+    /* Mobile: Static layout */
+    @media (max-width: 768px) {
+      .carousel.custom-slider-container.static-carousel {
+        display: flex;
+        flex-direction: column;
+        /* Stack items vertically */
+        gap: 16px;
+        /* Space between items */
+        overflow: visible;
+        /* Allow all items to be visible */
+      }
+
+      .carousel.custom-slider-container.static-carousel .carousel-cell {
+        width: 100%;
+        /* Full width for each item */
+        min-width: unset;
+        /* Remove min-width constraint */
+        margin: 0;
+        /* Remove Flickity margins */
+        position: static;
+        /* Prevent Flickity positioning */
+      }
+    }
+
+    /* Ensure cells are visible */
+    .carousel-cell {
+      display: block;
+      box-sizing: border-box;
+    }
+
+    /* Optional: Style for ProductCardQuickAdd */
+    .the-look-product {
+      width: 100%;
+      height: 100%;
+    }
+
+
+
+
+
+
+
+    @media only screen and (max-width: 768px) {
+      .custom-slider-container {
+        --outer-minus: 50px;
+        padding: 0 0 0 var(--outer);
+        width: calc(100% + var(--outer) * 2) !important;
+        margin-left: var(--outer-minus);
+        margin-right: var(--outer-minus);
+        max-width: none;
+
+        scroll-snap-type: x mandatory;
+        overflow: hidden !important;
+        overflow-x: hidden !important;
+        overflow-x: auto !important;
+        display: flex;
+        flex-flow: row nowrap !important;
+        scroll-behavior: smooth;
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+        touch-action: auto;
+        scroll-padding: 0 0 0 var(--outer);
+      }
+    }
+
+    /* .carousel:after {
+    content: '' !important; 
+  }
+  @media screen and (min-width: 768px) {
+    .carousel:after {
+      content: 'flickity' !important; 
+      display: none !important  ;
+    }
+  } */
+
+    .custom-slider-container .flickity-page-dots {
+      left: 50% !important;
+      transform: translate(-50%) !important;
+    }
+
+    .custom-slider-container .flickity-page-dots .flickity-page-dot {
+      background: var(--text-color-42);
+    }
+
+    .flickity-page-dots .flickity-page-dot:focus {
+      box-shadow: none !important;
+    }
+
+    .flickity-page-dots .flickity-page-dot.is-selected {
+      opacity: 1 !important;
+    }
+
+    .custom-slider-container .flickity-page-dots {
+      background: #ffffff;
+      bottom: 10px;
+    }
+
+    .product__mobile--slideshow .flickity-page-dots,
+    .flickity-page-dots {
+      text-align: right;
+      padding: 13px !important;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      width: auto !important;
+      border-radius: 20px;
+      overflow: hidden;
+      gap: 4px;
+    }
+
+    .product__mobile--slideshow .flickity-page-dots .flickity-page-dot,
+    .flickity-page-dots .flickity-page-dot {
+      display: inline-block;
+      position: relative;
+      z-index: 5;
+      width: 3px;
+      height: 3px;
+      background: var(--bg);
+      border-radius: 50%;
+      opacity: .25;
+      cursor: pointer;
+    }
+
+    .flickity-page-dots {
+      position: absolute;
+      width: 100%;
+      bottom: -25px;
+      padding: 0;
+      margin: 0;
+      list-style: none;
+      text-align: center;
+      line-height: 1;
+    }
+
+    /* .custom-slider-container .carousel-cell{
+  width: 80%;
+  margin-left: 0;
+  margin-right: calc(24px * .6);
+ } */
+
+
+    .carousel {
+      width: 100%;
+      height: 100%;
+    }
+
+    .carousel-cell {
+      width: 100%;
+      padding: 0 10px;
+    }
+
+    .flickity-prev-next-button .flickity-button-icon {
+      position: absolute;
+      left: 33% !important;
+      top: 33% !important;
+      width: 35% !important;
+      height: 35% !important;
+    }
+
+    .flickity-prev-next-button {
+      top: 50%;
+      width: 36px !important;
+      height: 36px !important;
+      border-radius: 50%;
+      transform: translateY(-50%);
+    }
+
+    .flickity-button:focus {
+      box-shadow: none !important;
+    }
+
+    .flickity-button {
+      position: absolute;
+      background: #ffffff !important;
+      border: none;
+      color: #333;
+    }
+
+    .flickity-page-dots .flickity-page-dot {
+      position: relative;
+      overflow: visible;
+      /* Important if you want ::before to overflow */
+    }
+
+    .flickity-page-dots .flickity-page-dot::before {
+      content: "";
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      bottom: -8px;
+      left: -8px;
+      cursor: inherit;
+      z-index: 0;
+    }
+
+
+    .the-look-product {
+      background-color: #ffffff;
+      width: 100%;
+      margin-left: var(--outer);
+
+      padding: 20px;
+      display: block;
+      max-width: 350px;
+      margin: var(--outer) auto 0 auto;
+    }
+
+    @media only screen and (max-width : 768px) {
+      .the-look-product {
+        width: 80%;
+        margin-left: 0;
+        margin-right: calc(24px * .6);
+        flex: 0 0 auto;
+        scroll-snap-align: start;
+      }
+    }
+
+  }
+
+  .wayfarer-collection-slider-container {
+
+    /* Smooth transitions */
+    .wayfarer-collection-swiper {
+      transition-timing-function: cubic-bezier(0.17, 0.67, 0.21, 0.99);
+    }
+
+    /* Custom navigation arrows */
+    .swiper-button-next,
+    .swiper-button-prev {
+      color: #000;
+      background: rgba(255, 255, 255, 0.7);
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      transition: all 0.3s ease;
+    }
+
+    .swiper-button-next:hover,
+    .swiper-button-prev:hover {
+      background: rgba(255, 255, 255, 0.9);
+      transform: scale(1.1);
+    }
+
+    .swiper-button-next::after,
+    .swiper-button-prev::after {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    /* Adjust navigation arrows for mobile */
+    @media (max-width: 768px) {
+
+      .swiper-button-next,
+      .swiper-button-prev {
+        display: none;
+        /* Hide arrows on mobile if desired */
+      }
+    }
+
+    /* Smooth transitions between states */
+    .wayfarer-collection-swiper {
+      transition: all 0.3s ease;
+    }
+
+    .swiper-button-prev::after,
+    .swiper-rtl .swiper-button-next::after {
+      content: '' !important;
+    }
+
+    .swiper-button-next::after,
+    .swiper-rtl .swiper-button-prev::after {
+      content: '' !important;
+    }
+
+    .custom-swiper-buttons {
+      top: 50%;
+      transform: translateY(-50%);
+      width: 36px !important;
+      height: 36px !important;
+      border-radius: 50%;
+    }
+
+    .swiper-button-next.custom-swiper-button-next {
+      right: -55px !important;
+      color: #333 !important;
+      background: #fff !important;
+    }
+
+
   }
 
   .swiper-swiper-swiper {
@@ -6429,6 +6894,7 @@ Search Page CSS
       --brick-gutter: calc(var(--BRICK-GUTTER) * 0.8);
     }
   }
+
   @media only screen and (max-width: 767px) {
     .newsletter-section {
       --brick-gutter: calc(var(--BRICK-GUTTER) * 0.6);
@@ -6436,10 +6902,11 @@ Search Page CSS
       height: auto;
     }
   }
+
   @media only screen and (max-width: 479px) {
     .newsletter-section {
       --brick-gutter-trimmed: calc(var(--BRICK-GUTTER) * 0.6);
-      --brick-gutter: min(var(--brick-gutter-trimmed),16px);
+      --brick-gutter: min(var(--brick-gutter-trimmed), 16px);
     }
   }
 
@@ -6491,7 +6958,7 @@ Search Page CSS
     letter-spacing: normal;
     text-transform: none;
 
-    font-size: calc(var(--font-size-39) * 1.0);
+    font-size: calc(var(--font-size-29) * 1.0);
     line-height: 1.25;
   }
 
@@ -6662,3 +7129,9 @@ Search Page CSS
     color: var(--text-color-42);
     background-color: rgba(66, 66, 66, 0.1);
   }
+
+
+
+
+
+  

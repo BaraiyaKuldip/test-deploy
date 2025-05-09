@@ -65,7 +65,7 @@ export function Header({header, isLoggedIn, cart, publicStoreDomain}) {
 
       <div className={`main_header_top text-white w-full fixed_padding_page`}>
         <div className="scrolling_infinite_animation_wrapper">
-          <div className=" text-center announcebar_border_color scrolling_infinite_animation_strip h-7.5">
+          <div className=" text-center fixed_padding_page announcebar_border_color scrolling_infinite_animation_strip h-7.5">
             <div className="scrolling_infinite_animation_item">
               <p>Fall collection is out now</p>
               <b>&nbsp; | &nbsp;</b>
@@ -465,7 +465,7 @@ export function HeaderMenu({
                 )}
                 {viewport !== 'mobile' && (
                   <NavLink
-                    className={`header-menu-item link-hover-effect-nav `}
+                    className={`header-menu-item`}
                     end
                     key={item.id}
                     onClick={close}
@@ -477,7 +477,9 @@ export function HeaderMenu({
                     }
                     to={url}
                   >
+                    <span className='header-menu-item-text link-hover-effect-nav'>
                     {item.title}
+                    </span>
                   </NavLink>
                 )}
                 {/* </div> */}

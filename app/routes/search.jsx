@@ -216,7 +216,7 @@ function SearchPageContent() {
 
   return (
     <section
-      className="search-page-wrapper"
+      className="search-page-wrapper fixed_padding_page"
       style={{paddingTop: '36px', paddingBottom: '36px'}}
     >
       <div className="search-page-heading">

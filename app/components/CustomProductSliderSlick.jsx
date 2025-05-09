@@ -122,7 +122,7 @@ const CustomSlickSlider = ({
   };
 
   return (
-    <div className="custom-slider-container">
+    <div className="custom-slider-container slick-slick-slick">
       {isDesktop ? (
         <Slider ref={sliderRef} {...slickSettings}>
           {products.map((product, index) => (

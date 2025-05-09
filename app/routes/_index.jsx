@@ -3,6 +3,7 @@ import {defer} from '@shopify/remix-oxygen';
 import {Await, useLoaderData, Link} from '@remix-run/react';
 import {Suspense} from 'react';
 import {Image, Money} from '@shopify/hydrogen';
+import HeroSectionImage from '/images/home-section-hero-img.webp?url';
 import GirlImage1Landscape from '/images/GirlImage1Landscape.png?url';
 import GirlImage1Portrait from '/images/GirlImage1Portrait.png?url';
 import GirlImage1 from '/images/girl-1134567_1280.jpg?url';
@@ -36,6 +37,9 @@ import {Settings} from 'lucide-react';
 import CustomSlickSlider from '~/components/CustomProductSliderSlick';
 
 import CustomSwiperSlider from '~/components/CustomProductSliderSwiper';
+import CustomSwiperSlider147 from '~/components/CustomSwiper';
+import { data } from 'flickity';
+// import CustomFlickitySlider from '~/components/CustomFlickitySlider';
 
 /**
  * @type {MetaFunction}
@@ -70,12 +74,14 @@ async function loadCriticalData({context}) {
     theLookCollectionResults,
     wayfarerCollectionResults,
     topCollectionsResults,
+    heroImageHome
   ] = await Promise.all([
     context.storefront.query(FEATURED_COLLECTION_QUERY),
     context.storefront.query(CURATED_COLLECTION_QUERY),
     context.storefront.query(THE_LOOK_COLLECTION),
     context.storefront.query(WAYFARER_COLLECTION),
     context.storefront.query(TOP_COLLECTIONS),
+    context.storefront.query(HERO_IMAGE_HOME_QUERY),
   ]);
 
   return {
@@ -84,6 +90,7 @@ async function loadCriticalData({context}) {
     TheLookCollection: theLookCollectionResults.collections.nodes,
     WayfarerCollection: wayfarerCollectionResults.collections.nodes,
     TopCollections: topCollectionsResults.collections.nodes,
+    heroImageHome: heroImageHome.node
   };
 }
 
@@ -97,15 +104,23 @@ function loadDeferredData({context}) {
   const bestSellingProducts = context.storefront
     .query(BEST_SELLING_PRODUCTS_QUERY)
     .catch((error) => {
-      // Log query errors, but don't throw them so the page can still render
-      console.error(error);
+      console.error('Best selling products query error:', error);
       return null;
     });
 
+  // const heroImageHome = context.storefront
+  //   .query(HERO_IMAGE_HOME_QUERY)
+  //   .catch((error) => {
+  //     console.error('Hero image home query error:', error);
+  //     return { node: null }; // Maintain consistent structure even on error
+  //   });
+
   return {
     bestSellingProducts,
+    // heroImageHome,
   };
 }
+
 
 export default function Homepage() {
   /** @type {LoaderReturnData} */
@@ -115,44 +130,7 @@ export default function Homepage() {
   }
   return (
     <div className="home">
-      <div
-        style={{backgroundImage: `url(${GirlImage1Landscape})`}}
-        className="div_bg_image"
-      >
-        <div className="mx-6 mt-20 p-12.5">
-          <div style={{zIndex: 1}}>
-            <p className="font-semibold normal-font-style ">
-              A CONSCIOUS WARDROBE
-            </p>
-            <p className="alegreya-font-style">
-              Timeless Style <br /> Sustainable Design{' '}
-            </p>
-            {/* <p className='alegreya-font-style'></p> */}
-            <div className="div_bg_hero_div">
-              <button
-                style={{
-                  fontSize: '13px',
-                  fontWeight: 'bold',
-                  width: '200px',
-                  height: '50px',
-                  padding: '10px 20px',
-                  backgroundColor: 'white',
-                  color: 'black',
-                  border: 'none',
-                  borderRadius: '1px',
-                  cursor: 'pointer',
-                  margin: '5px',
-                }}
-              >
-                VIEW PRODUCTS
-              </button>
-              <a href="#" className="div_bg_hero_a">
-                LEARN MORE
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
+      <HeroSectionHome heroImageHome={data.heroImageHome}/>
       <FeaturedCollection collection={data.featuredCollection} />
 
       <CuratedCollection collection={data.curatedCollection} />
@@ -174,8 +152,158 @@ export default function Homepage() {
       <FeatureSectionBottom />
 
       {console.log(data.TopCollections, 'top collections')}
-      <div> heyy </div>
+      <div> Lorem </div>
     </div>
+  );
+}
+
+function HeroSectionHome({heroImageHome}) {
+  
+
+  console.log(heroImageHome ,"hero image data")
+
+
+  const dta = (
+    <div
+      style={{backgroundImage: `url(${HeroSectionImage})`}}
+      className="div_bg_image"
+    >
+      <div className="mx-6 mt-20 p-12.5">
+        <div style={{zIndex: 1}}>
+          <p className="font-semibold normal-font-style ">
+            A CONSCIOUS WARDROBE
+          </p>
+          <p className="alegreya-font-style">
+            Timeless Style <br /> Sustainable Design{' '}
+          </p>
+          {/* <p className='alegreya-font-style'></p> */}
+          <div className="div_bg_hero_div">
+            <button
+              style={{
+                fontSize: '13px',
+                fontWeight: 'bold',
+                width: '200px',
+                height: '50px',
+                padding: '10px 20px',
+                backgroundColor: 'white',
+                color: 'black',
+                border: 'none',
+                borderRadius: '1px',
+                cursor: 'pointer',
+                margin: '5px',
+              }}
+            >
+              VIEW PRODUCTS
+            </button>
+            <a href="#" className="div_bg_hero_a">
+              LEARN MORE
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+
+  const imgData = `https://cdn.shopify.com/s/files/1/0668/9144/8501/files/home-section-hero-img.webp?v=1746702766`;
+
+  return (
+    <>
+      <div
+        className="film_section_home_image fade-in-child jjs"
+        style={{'--PT': '0px', '--PB': '0px', '--CONTENT-WIDTH': '600px'}}
+      >
+        <div className="fixed_wrapper fixed_y_padding">
+          <div className="film_section_home_inner">
+            <div className="film_section_content_wrapper text_align_justify_center">
+              <div className="film_section_content film_section_home_content_transparent jjs">
+                <div
+                  className="common_text_use text_color_white film_section_home_backdrop"
+                  style={{'--bg': '#000000', '--opacity': '0.1'}}
+                >
+                  <div className="film_brand_text_1 common_size_four ">
+                    <p>A Conscious Wardrobe</p>
+                  </div>
+                  <div className="film_section_title common_heading_size_ten">
+                    <p>Timeless Style Sustainable Design</p>
+                  </div>
+                  <div className="film_cta_wrapper">
+                    <a
+                      className="common_cta film_button b_t_n uppercase button_style_white button_style_long"
+                      href="collections/all.html"
+                    >
+                      View products
+                    </a>
+                    <a
+                      className="common_cta film_button button_text_thick_line button_style_neutral button_style_long"
+                      href="pages/about.html"
+                    >
+                      Learn more
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="image_film_frame fade-in-child aspect-[--pc-ratio-mobile] md:aspect-[--pc-ratio] screen_3_quarters ">
+              <div className="image_film_pane">
+                <div
+                  className="image_film_scale h-[--pc-height-mobile] md:h-[--pc-height]"
+                  style={{
+                    '--pc-height': '66.65714285714284vw',
+                    '--pc-height-mobile': '129.39545202440377vw',
+                  }}
+                >
+                  <picture
+                    className="relative block w-full h-full overflow-hidden aspect-[--pc-ratio]"
+                    style={{
+                      '--pc-ratio': '1.5002143163309045',
+                      '--asp-ratio-mobile': '1.5002143163309045',
+                    }}
+                  >
+                    <source
+                      media="(min-width: 768px)"
+                      sizes="100vw"
+                      srcSet="
+ //https://cdn.shopify.com/s/files/1/0668/9144/8501/files/home-section-hero-img.webp?v=1746702766&width=352 352w,  //https://cdn.shopify.com/s/files/1/0668/9144/8501/files/home-section-hero-img.webp?v=1746702766&width=400 400w,  //https://cdn.shopify.com/s/files/1/0668/9144/8501/files/home-section-hero-img.webp?v=1746702766&width=768 768w,  //https://cdn.shopify.com/s/files/1/0668/9144/8501/files/home-section-hero-img.webp?v=1746702766&width=932 932w,  //https://cdn.shopify.com/s/files/1/0668/9144/8501/files/home-section-hero-img.webp?v=1746702766&width=1024 1024w,  //https://cdn.shopify.com/s/files/1/0668/9144/8501/files/home-section-hero-img.webp?v=1746702766&width=1200 1200w,  //https://cdn.shopify.com/s/files/1/0668/9144/8501/files/home-section-hero-img.webp?v=1746702766&width=1920 1920w, 
+  //https://cdn.shopify.com/s/files/1/0668/9144/8501/files/home-section-hero-img.webp?v=1746702766&width=3500 3500w"
+                    />
+                    <source
+                      media="(max-width: 767px)"
+                      sizes="100vw"
+                      srcSet="
+ //https://cdn.shopify.com/s/files/1/0668/9144/8501/files/home-section-hero-img-mobile.webp?v=1746703826&width=352 352w,  //https://cdn.shopify.com/s/files/1/0668/9144/8501/files/home-section-hero-img-mobile.webp?v=1746703826&width=400 400w,  //https://cdn.shopify.com/s/files/1/0668/9144/8501/files/home-section-hero-img-mobile.webp?v=1746703826&width=768 768w,  //https://cdn.shopify.com/s/files/1/0668/9144/8501/files/home-section-hero-img-mobile.webp?v=1746703826&width=932 932w,  //https://cdn.shopify.com/s/files/1/0668/9144/8501/files/home-section-hero-img-mobile.webp?v=1746703826&width=1024 1024w,  //https://cdn.shopify.com/s/files/1/0668/9144/8501/files/home-section-hero-img-mobile.webp?v=1746703826&width=1200 1200w, 
+  //https://cdn.shopify.com/s/files/1/0668/9144/8501/files/home-section-hero-img-mobile.webp?v=1746703826&width=1803 1803w"
+                    />
+                    <Image
+                      data={heroImageHome.image}
+                      width={2000}
+                      height={1333}
+                      loading="eager"
+                      className="block overflow-hidden w-full h-full object-cover  position_bg_mobile"
+                      srcSet={`https://cdn.shopify.com/s/files/1/0668/9144/8501/files/home-section-hero-img.webp?v=1746702766&width=352 352w, 
+                        https://cdn.shopify.com/s/files/1/0668/9144/8501/files/home-section-hero-img.webp?v=1746702766&width=400 400w, 
+                        https://cdn.shopify.com/s/files/1/0668/9144/8501/files/home-section-hero-img.webp?v=1746702766&width=768 768w, 
+                        https://cdn.shopify.com/s/files/1/0668/9144/8501/files/home-section-hero-img.webp?v=1746702766&width=932 932w, 
+                        https://cdn.shopify.com/s/files/1/0668/9144/8501/files/home-section-hero-img.webp?v=1746702766&width=1024 1024w, 
+                        https://cdn.shopify.com/s/files/1/0668/9144/8501/files/home-section-hero-img.webp?v=1746702766&width=1200 1200w, 
+                        https://cdn.shopify.com/s/files/1/0668/9144/8501/files/home-section-hero-img.webp?v=1746702766&width=1920 1920w, 
+                        https://cdn.shopify.com/s/files/1/0668/9144/8501/files/home-section-hero-img.webp?v=1746702766&width=3500 3500w`}
+                        
+                      sizes="100vw"
+                      fetchpriority="high"
+                      style={{
+                        'object-position': 'var(--focal-point, center)',
+                        '--obj-position-mobile': '49.1073% 0.0651%',
+                        '--obj-position-pc': '62.7913% 0.0%',
+                      }}
+                    />
+                  </picture>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </>
   );
 }
 
@@ -579,7 +707,7 @@ function CuratedCollection({collection}) {
                       <div className="custom-collection-image-frame">
                         <div className="custom-collection-image-pane">
                           <div className="custom-collection-image-scale">
-                            <div className="custom-collection-image-wrapper relative block w-full h-full overflow-hidden aspect-[--wh-ratio]">
+                            <div className="custom-collection-image-wrapper relative block w-full h-full overflow-hidden aspect-[--pc-ratio]">
                               {/* <Image data={collection.image}/> */}
                               <img
                                 src={collection.image.url}
@@ -931,7 +1059,7 @@ function TheLookCollection({products, collection}) {
                 </div>
               </div>
 
-              <div className="custom-slider-container">
+              <div className="custom-slider-container slick-slick-slick">
                 {products && Array.isArray(products) ? (
                   isDesktop ? (
                     <Slider ref={sliderRef} {...slickSettings}>
@@ -1058,9 +1186,9 @@ function WayfarerCollection({products, collection}) {
                   </div>
                 </div>
               </div>
-              <CustomSlickSlider products={products} />
 
               {/* <CustomSwiperSlider products={products}/> */}
+              <CustomSwiperSlider147 products={products} />
             </div>
           </div>
         </div>
@@ -1144,18 +1272,18 @@ function TopCollections({collections}) {
                   }}
                 ></div>
 
-                <div className="top-collections-item-image-frame fade-in-child aspect-[--wh-ratio-mobile] md:aspect-[--wh-ratio] none">
+                <div className="top-collections-item-image-frame fade-in-child aspect-[--pc-ratio-mobile] md:aspect-[--pc-ratio] none">
                   <div className="top-collections-item-image-pane">
                     <div
-                      className="top-collections-item-image-scale h-[--height-mobile] md:h-[--height]"
+                      className="top-collections-item-image-scale h-[--pc-height-mobile] md:h-[--pc-height]"
                       style={{
-                        '--height': '66.66666666666666vw',
-                        '--height-mobile': '66.66666666666666vw',
+                        '--pc-height': '66.66666666666666vw',
+                        '--pc-height-mobile': '66.66666666666666vw',
                       }}
                     >
                       <div
-                        className="top-collections-item-image-container relative block w-full h-full overflow-hidden aspect-[--wh-ratio]"
-                        style={{'--wh-ratio': '1.5'}}
+                        className="top-collections-item-image-container relative block w-full h-full overflow-hidden aspect-[--pc-ratio]"
+                        style={{'--pc-ratio': '1.5'}}
                       >
                         <img
                           src={collection.image.url}
@@ -1231,7 +1359,7 @@ function NewsletterComponent() {
                   Join our newsletter to get special offers, free giveaways, and
                   once-in-a-lifetime deals.
                 </p>
-                <div className='newsletter-input-holder'>
+                <div className="newsletter-input-holder">
                   <form className="newsletter-form" onSubmit={handleSubmit}>
                     {/* Hidden fields for form processing */}
                     <input type="hidden" name="form_type" value="customer" />
@@ -1297,6 +1425,24 @@ function NewsletterComponent() {
     </div>
   );
 }
+
+
+
+const HERO_IMAGE_HOME_QUERY = `#graphql
+    query HeroImageHome {
+      node(id: "gid://shopify/MediaImage/32214693216437") {
+        ... on MediaImage {
+          id
+          image {
+            url
+            altText
+            width
+            height
+          }
+        }
+      }
+    }
+`;
 
 const FEATURED_COLLECTION_QUERY = `#graphql
   fragment FeaturedCollection on Collection {

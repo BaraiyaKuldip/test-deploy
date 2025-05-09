@@ -46,6 +46,7 @@ export default async function handleRequest(
     imgSrc: [
       "'self'",
       'https://cdn.shopify.com',
+      'https://*.shopify.com',
       'data:',
       'http:',  
     ],
