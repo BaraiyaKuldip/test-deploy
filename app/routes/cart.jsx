@@ -1,6 +1,7 @@
 import {useLoaderData} from '@remix-run/react';
 import {CartForm} from '@shopify/hydrogen';
 import {json} from '@shopify/remix-oxygen';
+import { useEffect } from 'react';
 import {CartMain} from '~/components/CartMain';
 
 /**
@@ -106,7 +107,17 @@ export default function Cart() {
   /** @type {LoaderReturnData} */
   const cart = useLoaderData();
 
+  // useEffect(()=>{
+  //   if(typeof window !== 'undefined')
+  //   {
+  //     cart.totalQuantity > 0 ? document.querySelector(".cart_dot_icon").classList.add("!block") : "";
+     
+  //     console.log(cart.totalQuantity ,"cart data..");
+  //   }
+  // },[cart])
+
   return (
+    
     <div className="cart">
       <h1>Cart</h1>
       <CartMain layout="page" cart={cart} />

@@ -126,14 +126,14 @@ export default function Homepage() {
   /** @type {LoaderReturnData} */
   const data = useLoaderData();
   {
-    console.log(data, 'data');
+    // console.log(data, 'data');
   }
   return (
     <div className="home">
     
       <HeroSectionHome heroImageHome={data.heroImageHome}/>
       <FeaturedCollection collection={data.featuredCollection} />
-
+      {/* {console.log(data.featuredCollection, "data.featuredCollection")} */}
       <CuratedCollection collection={data.curatedCollection} />
       {/* <BestSellingProducts products={data.bestSellingProducts} /> */}
       <BestSellers products={data.bestSellingProducts} />
@@ -142,7 +142,7 @@ export default function Homepage() {
         products={data.TheLookCollection[0].products.nodes}
         collection={data.TheLookCollection[0]}
       />
-      {console.log(data.TheLookCollection[0], 'collectionnn')}
+      {/* {console.log(data.TheLookCollection[0], 'collectionnn')} */}
       <WayfarerCollection
         products={data.WayfarerCollection[0].products.nodes}
         collection={data.WayfarerCollection[0]}
@@ -152,7 +152,7 @@ export default function Homepage() {
       <NewsletterComponent />
       <FeatureSectionBottom />
 
-      {console.log(data.TopCollections, 'top collections')}
+      {/* {console.log(data.TopCollections, 'top collections')} */}
       <div> Lorem </div>
     </div>
   );
@@ -161,7 +161,7 @@ export default function Homepage() {
 function HeroSectionHome({heroImageHome}) {
   
 
-  console.log(HeroSectionImage ,"heroo image data")
+  // console.log(HeroSectionImage ,"heroo image data")
 
 
   const dta = (
@@ -210,8 +210,8 @@ function HeroSectionHome({heroImageHome}) {
   return (
     <>
       <div
-        className="film_section_home_image fade-in-child jjs"
-        style={{'--PT': '0px', '--PB': '0px', '--section_width': '600px', 'min-height': 'calc(397px + var(--header_top_height))'}}
+        className="film_section_home_image  jjs"
+        style={{'--PT': '0px', '--PB': '0px', '--section_width': '600px', 'min-height': 'calc(397px + var(--header_top_height))','zIndex' : '1'}}
       >
         <div className="fixed_wrapper fixed_y_padding">
           <div className="film_section_home_inner">
@@ -228,33 +228,33 @@ function HeroSectionHome({heroImageHome}) {
                     <p>Timeless Style Sustainable Design</p>
                   </div>
                   <div className="film_cta_wrapper">
-                    <a
+                    <Link
                       className="common_cta film_button b_t_n uppercase button_style_white button_style_long"
-                      href="collections/all.html"
+                      to="collections/all"
                     >
                       View products
-                    </a>
-                    <a
+                    </Link>
+                    <Link
                       className="common_cta film_button button_text_thick_line button_style_neutral button_style_long"
-                      href="pages/about.html"
+                      to="pages/about"
                     >
                       Learn more
-                    </a>
+                    </Link>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="image_film_frame fade-in-child aspect-[--pc_ratio_mobile] md:aspect-[--pc_ratio] screen_3_quarters " style={{'minHeight': 'calc(397px + var(--header_top_height)'}}>
+            <div className="image_film_frame aspect-[var(--pc_ratio_mobile)] md:aspect-[var(--pc_ratio)] screen_3_quarters " style={{'minHeight': 'calc(397px + var(--header_top_height)'}}>
               <div className="image_film_pane">
                 <div
-                  className="image_film_scale h-[--pc_height_mobile] md:h-[--pc_height]"
+                  className="image_film_scale h-[var(--pc_height_mobile)] md:h-[var(--pc_height)]"
                   style={{
                     '--pc_height': '66.65714285714284vw',
                     '--pc_height_mobile': '129.39545202440377vw',
                   }}
                 >
                   <picture
-                    className="relative block w-full h-full overflow-hidden aspect-[--pc_ratio]"
+                    className="relative block w-full h-full overflow-hidden aspect-[var(--pc_ratio)]"
                     style={{
                       '--pc_ratio': '1.5002143163309045',
                       '--asp_ratio_mobile': '1.5002143163309045',
@@ -268,7 +268,7 @@ function HeroSectionHome({heroImageHome}) {
   https://cdn.shopify.com/s/files/1/0668/9144/8501/files/home-section-hero-img.webp?v=1746702766&width=3500 3500w"
                     />
                     <source
-                      media="(max-width: 767px)"
+                      media="(max-width: 768px)"
                       sizes="100vw"
                       srcSet="
  https://cdn.shopify.com/s/files/1/0668/9144/8501/files/home-section-hero-img-mobile.webp?v=1746703826&width=352 352w,  https://cdn.shopify.com/s/files/1/0668/9144/8501/files/home-section-hero-img-mobile.webp?v=1746703826&width=400 400w,  https://cdn.shopify.com/s/files/1/0668/9144/8501/files/home-section-hero-img-mobile.webp?v=1746703826&width=768 768w,  https://cdn.shopify.com/s/files/1/0668/9144/8501/files/home-section-hero-img-mobile.webp?v=1746703826&width=932 932w,  https://cdn.shopify.com/s/files/1/0668/9144/8501/files/home-section-hero-img-mobile.webp?v=1746703826&width=1024 1024w,  https://cdn.shopify.com/s/files/1/0668/9144/8501/files/home-section-hero-img-mobile.webp?v=1746703826&width=1200 1200w, 
@@ -293,7 +293,7 @@ function HeroSectionHome({heroImageHome}) {
                       sizes="100vw"
                       fetchpriority="high"
                       style={{
-                        'object-position': 'var(--focal-point, center)',
+                        'object-position': 'var(--main_point, center)',
                         '--obj_position_mobile': '49.1073% 0.0651%',
                         '--obj_position_pc': '62.7913% 0.0%',
                       }}
@@ -319,7 +319,7 @@ function FeaturedCollection({collection}) {
 
   if (!collection) return null;
   {
-    console.log(collection, 'collection data');
+    // console.log(collection, 'collection data');
   }
   const [activeTab, setActiveTab] = useState(0);
   const tabsContainerRef = useRef(null);
@@ -407,7 +407,7 @@ function FeaturedCollection({collection}) {
 
   useEffect(() => {
     if (emblaApi) {
-      console.log(emblaApi.slideNodes(), 'embla'); // Access API
+      // console.log(emblaApi.slideNodes(), 'embla'); // Access API
     }
   }, [emblaApi]);
 
@@ -540,11 +540,11 @@ function BestSellers({products}) {
             <Await resolve={products}>
               {(response) => (
                 <>
-                  {console.log(response, 'response')}
+                  {/* {console.log(response, 'response')} */}
                   {response
                     ? response.products.nodes.map((product, productIndex) => (
                         <>
-                          {console.log(products, 'best selling products')}
+                          {/* {console.log(products, 'best selling products')} */}
                           <ProductCardQuickAdd
                             product={product}
                             productIndex={productIndex}
@@ -576,7 +576,7 @@ function BestSellers({products}) {
  * }}
  */
 function CuratedCollection({collection}) {
-  console.log(collection, 'curated collection data');
+  // console.log(collection, 'curated collection data');
 
   // Create a ref for each collection's container and track
   const collectionRefs = useRef(
@@ -675,7 +675,7 @@ function CuratedCollection({collection}) {
 
   return (
     <>
-      <div className="custom-collection">
+      <div className="custom-collection overflow-hidden">
         {collection.map((collection, collectionIndex) => {
           return (
             <div className="custom-collection-section" key={collectionIndex}>
@@ -1233,7 +1233,7 @@ function TopCollections({collections}) {
         '--aspect-ratio': '66.66666666666666%',
       }}
     >
-      <div className="top-collections-container fixed_padding_page">
+      <div className="top-collections-container overflow-hidden fixed_padding_page">
         <h2 className="top-collections-title mb-r11">Top collections</h2>
 
         <div

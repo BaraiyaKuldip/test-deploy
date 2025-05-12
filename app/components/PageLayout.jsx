@@ -38,6 +38,7 @@ export function PageLayout({
   header,
   isLoggedIn,
   publicStoreDomain,
+  collectionsListHeader
 }) {
   const [current_height, setCurrent_height] = useState(0);
   const [current_width, setCurrent_width] = useState(0);
@@ -122,6 +123,7 @@ if (typeof window !== 'undefined') {
           cart={cart}
           isLoggedIn={isLoggedIn}
           publicStoreDomain={publicStoreDomain}
+          collectionsListHeader={collectionsListHeader}
         />
       )}
       <main>

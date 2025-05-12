@@ -4,7 +4,7 @@ export const usePrevNextButtons = (emblaApi) => {
   const [prevBtnDisabled, setPrevBtnDisabled] = useState(true)
   const [nextBtnDisabled, setNextBtnDisabled] = useState(true)
 
-  console.log(emblaApi ,"embla")
+  // console.log(emblaApi ,"embla")
 
   const onPrevButtonClick = useCallback(() => {
     if (!emblaApi) return

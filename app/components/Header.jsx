@@ -1,5 +1,5 @@
 import {Suspense, useEffect, useId, useState} from 'react';
-import {Await, NavLink, useAsyncValue} from '@remix-run/react';
+import {Await, Link, NavLink, useAsyncValue, useLoaderData} from '@remix-run/react';
 import {useAnalytics, useOptimisticCart} from '@shopify/hydrogen';
 import {useAside} from '~/components/Aside';
 import {TopSide, useTopSide} from './topside';
@@ -9,12 +9,17 @@ import SiteLogoIconBlack from '/images/site_logo_mezzo_black.png?url';
 import {SearchForm} from './SearchForm';
 import {SearchFormPredictive} from './SearchFormPredictive';
 import { SearchResultsPredictive } from './SearchResultsPredictive';
+
 // import { P } from 'dist/client/assets/ProductPrice-kwE0Sy2X';
+
 
 /**
  * @param {HeaderProps}
  */
-export function Header({header, isLoggedIn, cart, publicStoreDomain}) {
+export function Header({header, isLoggedIn, cart, publicStoreDomain , collectionsListHeader}) {
+
+  console.log(collectionsListHeader.collections.nodes , "header collections list")
+
   const {shop, menu} = header;
 
   const [isScrolled, setIsSrolled] = useState(false);
@@ -28,9 +33,11 @@ export function Header({header, isLoggedIn, cart, publicStoreDomain}) {
       let currentLocation = window.location;
       if (currentLocation.pathname === '/') {
         setSiteLogo(SiteLogoIconWhite);
+        document.querySelector(".main_header_top").style.position = "absolute";
         // console.log("logo changed.. white")
       } else {
         setSiteLogo(SiteLogoIconBlack);
+        document.querySelector(".main_header_top").style.position = "relative";
         // console.log("logo changed.. black")
       }
     }
@@ -63,7 +70,14 @@ export function Header({header, isLoggedIn, cart, publicStoreDomain}) {
     <>
       {/* Announcement Bar  */}
 
-      <div className={`main_header_top text-white w-full fixed_padding_page`}>
+      <div className={`main_header_top text-white w-full fixed_padding_page`} style={{zIndex: "5"}}>
+        {/* <Suspense fallback={null}>
+  <Await resolve={data.collectionsList}>
+    {(collections) => (
+      collections && console.log(collections, "header collections list")
+    )}
+  </Await>
+</Suspense> */}
         <div className="scrolling_infinite_animation_wrapper">
           <div className=" text-center fixed_padding_page announcebar_border_color scrolling_infinite_animation_strip h-7.5">
             <div className="scrolling_infinite_animation_item">
@@ -429,6 +443,7 @@ export function HeaderMenu({
         </NavLink>
       )} */}
         <div className={`slider_type_menu ${className} `}>
+          {console.log(menu , "hh menu")}
           {(menu || FALLBACK_HEADER_MENU).items.map((item) => {
             if (!item.url) return null;
 
@@ -463,6 +478,7 @@ export function HeaderMenu({
                     <span className="font-normal">&#10095;</span>
                   </NavLink>
                 )}
+                {/* Desktop view */}
                 {viewport !== 'mobile' && (
                   <NavLink
                     className={`header-menu-item`}
@@ -577,9 +593,9 @@ function CartBadge({count}) {
   const {publish, shop, cart, prevCart} = useAnalytics();
 
   return (
-    <a
+    <Link
       className="relative lg:px-5 lg:py-1.25 md:px-5 md:py-1.25"
-      href="/cart"
+      to="/cart"
       onClick={(e) => {
         e.preventDefault();
         open('cart');
@@ -593,14 +609,14 @@ function CartBadge({count}) {
     >
       {/* <ShoppingCart className="w-5 h-5 lucide-icon-h" />   */}
       <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="w-5 h-5 lucide-icon-h" viewBox="0 0 24 24"><path d="M16.25 7.8V5.7h4.2l1.05 16.8H2.6L3.65 5.7h4.2a4.2 4.2 0 0 1 8.4 0h-8.4v2.1"></path>
-      {/* <circle class="icon-cart-full" cx="12" cy="15" r="4"></circle> */}
+      <circle class="cart_dot_icon hidden" cx="12" cy="15" r="4"></circle>
       </svg>
       {/* {count !== null && count > 0 && (
         <span className='absolute top-0 right-6 bg-orange-400 text-black text-[12px] font-medium rounded-full w-3 h-3 flex justify-center items-center'>
           {count > 9 ? '9+' : count}
         </span>
        )} */}
-    </a>
+    </Link>
   );
 }
 
@@ -694,6 +710,8 @@ function activeLinkStyleDesktop({isActive, isPending}) {
  * @property {string} publicStoreDomain
  */
 
+/** @typedef {import('@shopify/remix-oxygen').LoaderFunctionArgs} LoaderFunctionArgs */
 /** @typedef {import('@shopify/hydrogen').CartViewPayload} CartViewPayload */
 /** @typedef {import('storefrontapi.generated').HeaderQuery} HeaderQuery */
 /** @typedef {import('storefrontapi.generated').CartApiQueryFragment} CartApiQueryFragment */
+/** @typedef {import('@shopify/remix-oxygen').SerializeFrom<typeof loader>} LoaderReturnData */

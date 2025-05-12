@@ -20,6 +20,7 @@ import {
   FOOTER_QUERY,
   FOOTER_SUB_MENU_QUERY,
   HEADER_QUERY,
+  COLLECTIONS_LIST_HEADER_QUERY,
 } from '~/lib/fragments';
 
 import poppins from "@fontsource/poppins?url";
@@ -107,17 +108,19 @@ export async function loader(args) {
 async function loadCriticalData({context}) {
   const {storefront} = context;
 
-  const [header] = await Promise.all([
+  const [header , collectionsListHeader] = await Promise.all([
     storefront.query(HEADER_QUERY, {
       cache: storefront.CacheLong(),
       variables: {
         headerMenuHandle: 'main-menu', // Adjust to your header menu handle
       },
     }),
+    storefront.query(COLLECTIONS_LIST_HEADER_QUERY),
+  
     // Add other queries here, so that they are loaded in parallel
   ]);
 
-  return {header};
+  return {header , collectionsListHeader};
 }
 
 /**
@@ -175,6 +178,7 @@ export function Layout({children}) {
 
   return (
     <html lang="en">
+      {console.log(data, "data in root")}
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />

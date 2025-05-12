@@ -203,7 +203,7 @@ export default function ProductCardQuickAdd({
               </>
             ))}
 
-            {console.log(currentVariant, 'currentVariant on quick add page')}
+            {/* {console.log(currentVariant, 'currentVariant on quick add page')} */}
             <span className="tabs-products-price">
               {currentVariant?.price ? (
                 <Money data={currentVariant?.price} />

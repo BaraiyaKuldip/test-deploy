@@ -115,7 +115,7 @@
     };
 
     return (
-      <div className="quick-actions-toolbar">
+      <div className={`quick-actions-toolbar ${product?.availableForSale ? "" : "product-sold-out"}`}>
         <button
           className={`quick-add-button ${isOpen ? 'is-open' : ''} ${
             product?.options[0].name !== 'Title' ? `'variants_available' ${currentVariant.availableForSale ? 'opacity-100' : 'opacity-60'}` : ''
@@ -147,7 +147,7 @@
                   : []
               }
             >
-              {console.log(currentVariant, 'current variant quick add page')}
+              {/* {console.log(currentVariant, 'current variant quick add page')} */}
               <span
                 className={`desktop-text h-full w-full flex items-center justify-center cursor-pointer `}
               >

@@ -33,7 +33,7 @@ export function SearchForm({children, ...props}) {
   return (
     <Form method="get" {...props}>
       {children({inputRef})}
-      {console.log('inputRef', inputRef)}
+      {/* {console.log('inputRef', inputRef)} */}
     </Form>
   );
 }

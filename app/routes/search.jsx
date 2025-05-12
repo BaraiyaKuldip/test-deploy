@@ -253,7 +253,7 @@ function SearchPageContent() {
           )}
         </SearchForm>
       </div>
-      {console.log(result)}
+      {/* {console.log(result)} */}
       {term.length !== 0 && (
         <>
           <div className="search-query-note">
@@ -325,7 +325,7 @@ function SearchPageContent() {
                     </div>
                     <div className="collection-filters-inner">
                       <form className="filters-form">
-                        {console.log(result, 'result searchh')}
+                        {/* {console.log(result, 'result searchh')} */}
                         <FilterGroup
                           title="Product type"
                           options={['Dresses', 'Tops', 'Bottoms', 'Outerwear']}
@@ -670,7 +670,7 @@ export const SEARCH_QUERY = `#graphql
  * @return {Promise<RegularSearchReturn>}
  */
 async function regularSearch({request, context}) {
-  console.log(context, 'cccc');
+  // console.log(context, 'cccc');
   const {storefront} = context;
   const url = new URL(request.url);
   const variables = getPaginationVariables(request, {pageBy: 8});

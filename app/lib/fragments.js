@@ -244,3 +244,30 @@ export const FOOTER_SUB_MENU_QUERY = `#graphql
   }
   ${MENU_FRAGMENT}
 `;
+
+
+export const COLLECTIONS_LIST_HEADER_QUERY = `#graphql
+  query CollectionsListHeader {
+    collections(first: 250) {
+      nodes {
+        id
+        handle
+        title
+        description
+        image {
+          url
+          altText
+        }
+        metafields(identifiers: [
+          {namespace: "custom", key: "header_menu_main"},
+          {namespace: "custom", key: "header_menu_list"},
+        ]) {
+          key
+          namespace
+          value
+          type
+        }
+      }
+    }
+  }
+`;

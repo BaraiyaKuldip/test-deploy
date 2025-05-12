@@ -102,7 +102,7 @@ function loadDeferredData({context, params}) {
 export default function Product() {
   /** @type {LoaderReturnData} */
   const {product} = useLoaderData();
-  console.log(product, 'product all data');
+  // console.log(product, 'product all data');
 
   // Optimistically selects a variant with given available variant information
   const selectedVariant = useOptimisticVariant(
@@ -111,7 +111,7 @@ export default function Product() {
   );
 
   {
-    console.log(selectedVariant, 'selected variant');
+    // console.log(selectedVariant, 'selected variant');
   }
 
   // Sets the search param to the selected variant without navigation
@@ -119,12 +119,12 @@ export default function Product() {
   useSelectedOptionInUrlParam(selectedVariant.selectedOptions);
 
   // Get the product options array
-  console.log(product, 'product');
+  // console.log(product, 'product');
   const productOptions = getProductOptions({
     ...product,
     selectedOrFirstAvailableVariant: selectedVariant,
   });
-  console.log(productOptions, 'product options.');
+  // console.log(productOptions, 'product options.');
 
   const {title, descriptionHtml} = product;
 
@@ -132,7 +132,7 @@ export default function Product() {
     <>
       <div className="product-page-main-container">
         <div className="product-page-sub-container">
-          {console.log(selectedVariant, 'cdcd')}
+          {/* {console.log(selectedVariant, 'cdcd')} */}
 
           <div className="product-page-media-wrapper large-up--five-eighths product__mobile--carousel medium--one-half">
            

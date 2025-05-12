@@ -75,13 +75,13 @@ export function Footer({
                 <div className="footer-content">
                   <div className="footer-content-inner">
                     <div className="footer-logo-div">
-                      <a href="/">
+                      <Link to="/">
                         <img
                           src={SiteFooterLogoIcon}
                           alt="Logo"
                           style={{height: '49px', width: '230px'}}
                         />
-                      </a>
+                      </Link>
                     </div>
                     <div className="float-grid-box ">
                       <Await resolve={footerPromise}>
@@ -322,6 +322,7 @@ function FooterMenu({menu, subMenu, primaryDomainUrl, publicStoreDomain}) {
                                   'subMenuItems ',
                                   subMenuItems.menu.items,
                                 )} */}
+                                {/* {console.log(subMenuItems ,"submenuitems")} */}
 
                                 {subMenuItems.menu.items.map((subItem) => {
                                   if (

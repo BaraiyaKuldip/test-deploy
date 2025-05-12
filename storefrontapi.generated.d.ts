@@ -314,6 +314,33 @@ export type FooterSubMenuQuery = {
   >;
 };
 
+export type CollectionsListHeaderQueryVariables = StorefrontAPI.Exact<{
+  [key: string]: never;
+}>;
+
+export type CollectionsListHeaderQuery = {
+  collections: {
+    nodes: Array<
+      Pick<
+        StorefrontAPI.Collection,
+        'id' | 'handle' | 'title' | 'description'
+      > & {
+        image?: StorefrontAPI.Maybe<
+          Pick<StorefrontAPI.Image, 'url' | 'altText'>
+        >;
+        metafields: Array<
+          StorefrontAPI.Maybe<
+            Pick<
+              StorefrontAPI.Metafield,
+              'key' | 'namespace' | 'value' | 'type'
+            >
+          >
+        >;
+      }
+    >;
+  };
+};
+
 export type StoreRobotsQueryVariables = StorefrontAPI.Exact<{
   country?: StorefrontAPI.InputMaybe<StorefrontAPI.CountryCode>;
   language?: StorefrontAPI.InputMaybe<StorefrontAPI.LanguageCode>;
@@ -4204,6 +4231,10 @@ interface GeneratedQueryTypes {
   '#graphql\n  query FooterSubMenu(\n    $country: CountryCode\n    $footerSubMenuHandle: String!\n    $language: LanguageCode\n  ) @inContext(language: $language, country: $country) {\n    menu(handle: $footerSubMenuHandle) {\n      ...Menu\n    }\n  }\n  #graphql\n  fragment MenuItem on MenuItem {\n    id\n    resourceId\n    tags\n    title\n    type\n    url\n  }\n  fragment ChildMenuItem on MenuItem {\n    ...MenuItem\n  }\n  fragment ParentMenuItem on MenuItem {\n    ...MenuItem\n    items {\n      ...ChildMenuItem\n    }\n  }\n  fragment Menu on Menu {\n    id\n    items {\n      ...ParentMenuItem\n    }\n  }\n\n': {
     return: FooterSubMenuQuery;
     variables: FooterSubMenuQueryVariables;
+  };
+  '#graphql\n  query CollectionsListHeader {\n    collections(first: 250) {\n      nodes {\n        id\n        handle\n        title\n        description\n        image {\n          url\n          altText\n        }\n        metafields(identifiers: [\n          {namespace: "custom", key: "header_menu_main"},\n          {namespace: "custom", key: "header_menu_list"},\n        ]) {\n          key\n          namespace\n          value\n          type\n        }\n      }\n    }\n  }\n': {
+    return: CollectionsListHeaderQuery;
+    variables: CollectionsListHeaderQueryVariables;
   };
   '#graphql\n  query StoreRobots($country: CountryCode, $language: LanguageCode)\n   @inContext(country: $country, language: $language) {\n    shop {\n      id\n    }\n  }\n': {
     return: StoreRobotsQuery;

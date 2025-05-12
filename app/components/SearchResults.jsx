@@ -450,13 +450,14 @@ function SearchResultsProducts({term, products}) {
             </div>
             <div>
               <NextLink>
-                {isLoading ? (
+                {/* {isLoading ? (
                   'Loading...'
                 ) : (
                   <span>
                     <PaginationBoxX onPageChange={console.log("page changed..")} currentPage={1} totalPages={12} pageRangeDisplayed={3}/>
                   </span>
-                )}
+                )} */}
+                {isLoading ? 'Loading...' : <span> ↓ Load next</span>}
               </NextLink>
             </div>
           </div>
