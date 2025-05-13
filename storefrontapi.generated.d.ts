@@ -314,6 +314,32 @@ export type FooterSubMenuQuery = {
   >;
 };
 
+export type HeaderMenuCollectionsListQueryVariables = StorefrontAPI.Exact<{
+  country?: StorefrontAPI.InputMaybe<StorefrontAPI.CountryCode>;
+  headerMenuCollectionsListHandle: StorefrontAPI.Scalars['String']['input'];
+  language?: StorefrontAPI.InputMaybe<StorefrontAPI.LanguageCode>;
+}>;
+
+export type HeaderMenuCollectionsListQuery = {
+  menu?: StorefrontAPI.Maybe<
+    Pick<StorefrontAPI.Menu, 'id'> & {
+      items: Array<
+        Pick<
+          StorefrontAPI.MenuItem,
+          'id' | 'resourceId' | 'tags' | 'title' | 'type' | 'url'
+        > & {
+          items: Array<
+            Pick<
+              StorefrontAPI.MenuItem,
+              'id' | 'resourceId' | 'tags' | 'title' | 'type' | 'url'
+            >
+          >;
+        }
+      >;
+    }
+  >;
+};
+
 export type CollectionsListHeaderQueryVariables = StorefrontAPI.Exact<{
   [key: string]: never;
 }>;
@@ -4232,7 +4258,11 @@ interface GeneratedQueryTypes {
     return: FooterSubMenuQuery;
     variables: FooterSubMenuQueryVariables;
   };
-  '#graphql\n  query CollectionsListHeader {\n    collections(first: 250) {\n      nodes {\n        id\n        handle\n        title\n        description\n        image {\n          url\n          altText\n        }\n        metafields(identifiers: [\n          {namespace: "custom", key: "header_menu_main"},\n          {namespace: "custom", key: "header_menu_list"},\n        ]) {\n          key\n          namespace\n          value\n          type\n        }\n      }\n    }\n  }\n': {
+  '#graphql\n  query HeaderMenuCollectionsList(\n    $country: CountryCode\n    $headerMenuCollectionsListHandle: String!\n    $language: LanguageCode\n  ) @inContext(language: $language, country: $country) {\n    menu(handle: $headerMenuCollectionsListHandle) {\n      ...Menu\n    }\n  }\n  #graphql\n  fragment MenuItem on MenuItem {\n    id\n    resourceId\n    tags\n    title\n    type\n    url\n  }\n  fragment ChildMenuItem on MenuItem {\n    ...MenuItem\n  }\n  fragment ParentMenuItem on MenuItem {\n    ...MenuItem\n    items {\n      ...ChildMenuItem\n    }\n  }\n  fragment Menu on Menu {\n    id\n    items {\n      ...ParentMenuItem\n    }\n  }\n\n': {
+    return: HeaderMenuCollectionsListQuery;
+    variables: HeaderMenuCollectionsListQueryVariables;
+  };
+  '#graphql\n  query CollectionsListHeader {\n    collections(first: 250) {\n      nodes {\n        id\n        handle\n        title\n        description\n        image {\n          url\n          altText\n        }\n        metafields(identifiers: [\n          {namespace: "custom", key: "header_menu_main"},\n          {namespace: "custom", key: "header_menu_list"},\n          {namespace: "custom", key: "header_announcement_collection"},\n        ]) {\n          key\n          namespace\n          value\n          type\n        }\n      }\n    }\n  }\n': {
     return: CollectionsListHeaderQuery;
     variables: CollectionsListHeaderQueryVariables;
   };

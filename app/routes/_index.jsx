@@ -153,7 +153,7 @@ export default function Homepage() {
       <FeatureSectionBottom />
 
       {/* {console.log(data.TopCollections, 'top collections')} */}
-      <div> Lorem </div>
+      {/* <div> Lorem </div> */}
     </div>
   );
 }
@@ -1315,9 +1315,9 @@ function TopCollections({collections}) {
           ))}
         </div>
 
-        <div className="top-collections-scrollbar">
+        {/* <div className="top-collections-scrollbar">
           <div className="top-collections-scrollbar-track"></div>
-        </div>
+        </div> */}
       </div>
     </div>
   );
@@ -1358,8 +1358,7 @@ function NewsletterComponent() {
               <div className="newsletter-content">
                 <h2 className="newsletter-heading">Always In The Know</h2>
                 <p className="newsletter-description">
-                  Join our newsletter to get special offers, free giveaways, and
-                  once-in-a-lifetime deals.
+                  Join our newsletter to get special offers, free giveaways, and once-in-a-lifetime deals.
                 </p>
                 <div className="newsletter-input-holder">
                   <form className="newsletter-form" onSubmit={handleSubmit}>

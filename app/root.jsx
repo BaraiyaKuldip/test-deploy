@@ -21,6 +21,7 @@ import {
   FOOTER_SUB_MENU_QUERY,
   HEADER_QUERY,
   COLLECTIONS_LIST_HEADER_QUERY,
+  HEADER_MENU_COLLECTIONS_LIST_QUERY,
 } from '~/lib/fragments';
 
 import poppins from "@fontsource/poppins?url";
@@ -108,11 +109,17 @@ export async function loader(args) {
 async function loadCriticalData({context}) {
   const {storefront} = context;
 
-  const [header , collectionsListHeader] = await Promise.all([
+  const [header , headerMenuCollectionsList , collectionsListHeader] = await Promise.all([
     storefront.query(HEADER_QUERY, {
       cache: storefront.CacheLong(),
       variables: {
         headerMenuHandle: 'main-menu', // Adjust to your header menu handle
+      },
+    }),
+    storefront.query(HEADER_MENU_COLLECTIONS_LIST_QUERY, {
+      cache: storefront.CacheLong(),
+      variables: {
+        headerMenuCollectionsListHandle: 'header-nav-collection-list', // Adjust to your header menu handle
       },
     }),
     storefront.query(COLLECTIONS_LIST_HEADER_QUERY),
@@ -120,7 +127,7 @@ async function loadCriticalData({context}) {
     // Add other queries here, so that they are loaded in parallel
   ]);
 
-  return {header , collectionsListHeader};
+  return {header , headerMenuCollectionsList , collectionsListHeader};
 }
 
 /**

@@ -16,9 +16,11 @@ import { SearchResultsPredictive } from './SearchResultsPredictive';
 /**
  * @param {HeaderProps}
  */
-export function Header({header, isLoggedIn, cart, publicStoreDomain , collectionsListHeader}) {
+export function Header({header, isLoggedIn, cart, publicStoreDomain , headerMenuCollectionsList , collectionsListHeader}) {
 
-  console.log(collectionsListHeader.collections.nodes , "header collections list")
+  console.log(collectionsListHeader.collections.nodes , "header collections list");
+
+  console.log(headerMenuCollectionsList , "header menu collections list");
 
   const {shop, menu} = header;
 
@@ -34,10 +36,12 @@ export function Header({header, isLoggedIn, cart, publicStoreDomain , collection
       if (currentLocation.pathname === '/') {
         setSiteLogo(SiteLogoIconWhite);
         document.querySelector(".main_header_top").style.position = "absolute";
+        document.getElementById("header-main-container").setAttribute("data-is-home" , "true");
         // console.log("logo changed.. white")
       } else {
         setSiteLogo(SiteLogoIconBlack);
         document.querySelector(".main_header_top").style.position = "relative";
+        document.getElementById("header-main-container").setAttribute("data-is-home" , "false");
         // console.log("logo changed.. black")
       }
     }
@@ -66,11 +70,23 @@ export function Header({header, isLoggedIn, cart, publicStoreDomain , collection
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY, isScrolled, asideType]);
 
+
+  const announcementCollection = collectionsListHeader.collections.nodes.find((collection) =>
+  collection.metafields?.some(
+    (metafield) =>
+      metafield?.key === "header_announcement_collection" &&
+      metafield.namespace === "custom" &&
+      metafield.value === "true"
+  )
+);
+
+console.log(announcementCollection, "announcement collection data")
+
   return (
     <>
       {/* Announcement Bar  */}
 
-      <div className={`main_header_top text-white w-full fixed_padding_page`} style={{zIndex: "5"}}>
+      <div data-color-change data-is-home id='header-main-container' className={`main_header_top text-white w-full`} style={{zIndex: "5"}}>
         {/* <Suspense fallback={null}>
   <Await resolve={data.collectionsList}>
     {(collections) => (
@@ -78,7 +94,7 @@ export function Header({header, isLoggedIn, cart, publicStoreDomain , collection
     )}
   </Await>
 </Suspense> */}
-        <div className="scrolling_infinite_animation_wrapper">
+        {/* <div className="scrolling_infinite_animation_wrapper">
           <div className=" text-center fixed_padding_page announcebar_border_color scrolling_infinite_animation_strip h-7.5">
             <div className="scrolling_infinite_animation_item">
               <p>Fall collection is out now</p>
@@ -104,11 +120,47 @@ export function Header({header, isLoggedIn, cart, publicStoreDomain , collection
               <a href="#">Shop our fall collection</a>
             </div>
           </div>
+        </div> */}
+
+
+        <div className='header_announcement_wrapper fixed_content_wrapper'>
+
+          <div className='header_announcement_desktop'>
+            <div className='header_announcement_container'>
+              <div className='header_announcement_scale'>
+                <div className='header_announcement_text'>
+                  <p>
+                    {`${announcementCollection?.title} is out now`}
+                    <strong style={{fontWeight: "var(--font-weight-5)"}}>&nbsp;|&nbsp;</strong>
+                  </p>
+                  <Link to={`/collections/${announcementCollection?.handle}`} title='Fall 2025'>
+                  {`shop our ${announcementCollection?.title}`}
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* <div className='header_announcement_mobile'>
+            <div className='header_announcement_container'>
+              <div className='header_announcement_scale'>
+                <div className='header_announcement_text'>
+                  <p>
+                    {`${announcementCollection?.title} is out now`}
+                    <strong style={{fontWeight: "var(--font-weight-5)"}}>&nbsp;|&nbsp;</strong>
+                  </p>
+                  <Link to={`/collections/${announcementCollection?.handle}`} title='Fall 2025'>
+                  {`shop our ${announcementCollection?.title}`}
+                  </Link>
+                </div>
+              </div>
+            </div>
+          </div> */}
         </div>
         {/* Main Header */}
 
         <header
-          className={`h-16 text-white w-full flex items-center justify-between bg-transparent `}
+          className={`h-16 text-white w-full flex items-center justify-between bg-transparent fixed_padding_page`}
         >
           <div className={`container`}>
             {/* Mobile logo 550px and below */}
@@ -220,6 +272,8 @@ export function HeaderMenu({
   primaryDomainUrl,
   viewport,
   publicStoreDomain,
+  headerMenuCollectionsList,
+  collectionsListHeader,
 }) {
   const className = `header-menu-${viewport}`;
   const {close} = useAside();
@@ -496,6 +550,19 @@ export function HeaderMenu({
                     <span className='header-menu-item-text link-hover-effect-nav'>
                     {item.title}
                     </span>
+                    <div className='hidden header_menu_item_dropdown'>
+                      <div className="header_menu_item_dropdown">
+                        <div className="header_menu_item_inner">
+                          <div className="header_menu_dropdown_list">
+                            <Link className='header_menu_dropdown_list_item_main'> 
+                              <span className='header_menu_dropdown_list_item_text'>
+                                
+                              </span>
+                            </Link>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </NavLink>
                 )}
                 {/* </div> */}

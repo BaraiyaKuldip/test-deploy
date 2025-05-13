@@ -246,6 +246,19 @@ export const FOOTER_SUB_MENU_QUERY = `#graphql
 `;
 
 
+export const HEADER_MENU_COLLECTIONS_LIST_QUERY = `#graphql
+  query HeaderMenuCollectionsList(
+    $country: CountryCode
+    $headerMenuCollectionsListHandle: String!
+    $language: LanguageCode
+  ) @inContext(language: $language, country: $country) {
+    menu(handle: $headerMenuCollectionsListHandle) {
+      ...Menu
+    }
+  }
+  ${MENU_FRAGMENT}
+`;
+
 export const COLLECTIONS_LIST_HEADER_QUERY = `#graphql
   query CollectionsListHeader {
     collections(first: 250) {
@@ -261,6 +274,7 @@ export const COLLECTIONS_LIST_HEADER_QUERY = `#graphql
         metafields(identifiers: [
           {namespace: "custom", key: "header_menu_main"},
           {namespace: "custom", key: "header_menu_list"},
+          {namespace: "custom", key: "header_announcement_collection"},
         ]) {
           key
           namespace

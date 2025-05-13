@@ -14,6 +14,8 @@ const FeatureCard = ({ iconSvg, heading, paragraph }) => (
       </div>
     </div>
   </div>
+
+  
 );
 
 const FeatureSectionBottom = () => {
