@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "vite build",
-    "postbuild": "mv dist build || true",
+    "postbuild": "mv dist build || (rmdir /s /q build & rename dist build)",
     "preview": "shopify hydrogen preview --build",
     "lint": "eslint --no-error-on-unmatched-pattern --ext .js,.ts,.jsx,.tsx .",
     "codegen": "shopify hydrogen codegen"
