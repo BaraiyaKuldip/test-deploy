@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "build": "vite build",
-    "postbuild": "mv dist build || (rmdir /s /q build & rename dist build)",
+    "netlify-build": "npm run build && xcopy /E /I /Y dist\\server dist\\functions",
     "preview": "shopify hydrogen preview --build",
     "lint": "eslint --no-error-on-unmatched-pattern --ext .js,.ts,.jsx,.tsx .",
     "codegen": "shopify hydrogen codegen"
