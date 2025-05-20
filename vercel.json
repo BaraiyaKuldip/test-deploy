@@ -2,32 +2,31 @@
   "version": 2,
   "builds": [
     {
-      "src": "build/index.js",
+      "src": "build/server/index.js",
       "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/build/(.*)",
+      "dest": "/build/$1",
       "headers": {
         "Cache-Control": "public, max-age=31536000, immutable"
-      },
-      "dest": "/build/$1"
+      }
     },
     {
       "src": "/assets/(.*)",
+      "dest": "/build/client/$1",
       "headers": {
         "Cache-Control": "public, max-age=31536000, immutable"
-      },
-      "dest": "/build/client/$1"
+      }
     },
     {
       "src": "/(.*)",
-      "dest": "/build/index.js"
+      "dest": "/build/server/index.js"
     }
   ],
   "env": {
-    "NODE_ENV": "production",
-    "ENABLE_VC_BUILD": "true"
+    "NODE_ENV": "production"
   }
 }
