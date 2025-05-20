@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 
 
 const FeatureCard = ({ iconSvg, heading, paragraph }) => (
-  <div className="feature-section-bottom-card">
+  <div className="feature-section-bottom-card grid__item">
     <div className="feature-section-bottom-card-inner">
       <div
         className="feature-section-bottom-icon"
@@ -42,9 +42,9 @@ const FeatureSectionBottom = () => {
   ];
 
   return (
-    <section className="feature-section-bottom">
+    <section style={{"--PT":"0px", "--PB":"40px"}} className="feature-section-bottom fixed_y_padding">
       <div className="feature-section-bottom-container">
-        <div className="feature-section-bottom-grid">
+        <div className="feature-section-bottom-grid grid--slider">
           {features.map((feature, idx) => (
             <FeatureCard key={idx} {...feature} />
           ))}

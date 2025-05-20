@@ -1,26 +1,48 @@
 import {Suspense, useEffect, useId, useState} from 'react';
-import {Await, Link, NavLink, useAsyncValue, useLoaderData} from '@remix-run/react';
+import {
+  Await,
+  Link,
+  NavLink,
+  useAsyncValue,
+  useLoaderData,
+} from '@remix-run/react';
 import {useAnalytics, useOptimisticCart} from '@shopify/hydrogen';
 import {useAside} from '~/components/Aside';
 import {TopSide, useTopSide} from './topside';
-import {ChevronRight, Menu, Search, ShoppingBag, ShoppingCart, User, X} from 'lucide-react';
+import {
+  ChevronRight,
+  Menu,
+  Search,
+  ShoppingBag,
+  ShoppingCart,
+  User,
+  X,
+} from 'lucide-react';
 import SiteLogoIconWhite from '/images/site_logo_mezzo_white.png?url';
 import SiteLogoIconBlack from '/images/site_logo_mezzo_black.png?url';
 import {SearchForm} from './SearchForm';
 import {SearchFormPredictive} from './SearchFormPredictive';
-import { SearchResultsPredictive } from './SearchResultsPredictive';
+import {SearchResultsPredictive} from './SearchResultsPredictive';
 
 // import { P } from 'dist/client/assets/ProductPrice-kwE0Sy2X';
-
 
 /**
  * @param {HeaderProps}
  */
-export function Header({header, isLoggedIn, cart, publicStoreDomain , headerMenuCollectionsList , collectionsListHeader}) {
+export function Header({
+  header,
+  isLoggedIn,
+  cart,
+  publicStoreDomain,
+  headerMenuCollectionsList,
+  collectionsListHeader,
+}) {
+  console.log(
+    collectionsListHeader.collections.nodes,
+    'header collections list',
+  );
 
-  console.log(collectionsListHeader.collections.nodes , "header collections list");
-
-  console.log(headerMenuCollectionsList , "header menu collections list");
+  console.log(headerMenuCollectionsList, 'header menu collections list');
 
   const {shop, menu} = header;
 
@@ -35,13 +57,17 @@ export function Header({header, isLoggedIn, cart, publicStoreDomain , headerMenu
       let currentLocation = window.location;
       if (currentLocation.pathname === '/') {
         setSiteLogo(SiteLogoIconWhite);
-        document.querySelector(".main_header_top").style.position = "absolute";
-        document.getElementById("header-main-container").setAttribute("data-is-home" , "true");
+        document.querySelector('.main_header_top').style.position = 'absolute';
+        document
+          .getElementById('header-main-container')
+          .setAttribute('data-is-home', 'true');
         // console.log("logo changed.. white")
       } else {
         setSiteLogo(SiteLogoIconBlack);
-        document.querySelector(".main_header_top").style.position = "relative";
-        document.getElementById("header-main-container").setAttribute("data-is-home" , "false");
+        document.querySelector('.main_header_top').style.position = 'relative';
+        document
+          .getElementById('header-main-container')
+          .setAttribute('data-is-home', 'false');
         // console.log("logo changed.. black")
       }
     }
@@ -70,23 +96,117 @@ export function Header({header, isLoggedIn, cart, publicStoreDomain , headerMenu
     return () => window.removeEventListener('scroll', handleScroll);
   }, [lastScrollY, isScrolled, asideType]);
 
+  const announcementCollection = collectionsListHeader.collections.nodes.find(
+    (collection) =>
+      collection.metafields?.some(
+        (metafield) =>
+          metafield?.key === 'header_announcement_collection' &&
+          metafield.namespace === 'custom' &&
+          metafield.value === 'true',
+      ),
+  );
 
-  const announcementCollection = collectionsListHeader.collections.nodes.find((collection) =>
-  collection.metafields?.some(
-    (metafield) =>
-      metafield?.key === "header_announcement_collection" &&
-      metafield.namespace === "custom" &&
-      metafield.value === "true"
-  )
-);
+  console.log(announcementCollection, 'announcement collection data');
 
-console.log(announcementCollection, "announcement collection data")
+  function CurrencySelectorHeader() {
+    const [isOpen, setIsOpen] = useState(false);
+    const [selected, setSelected] = useState({
+      country: 'United States',
+      code: 'US',
+      currency: 'USD',
+      symbol: '$',
+    });
+
+    const options = [
+      {country: 'Canada', code: 'CA', currency: 'CAD', symbol: '$'},
+      {country: 'United Kingdom', code: 'GB', currency: 'GBP', symbol: '£'},
+      {country: 'United States', code: 'US', currency: 'USD', symbol: '$'},
+    ];
+
+    const toggleDropdown = () => setIsOpen((prev) => !prev);
+
+    const handleSelect = (option) => {
+      setSelected(option);
+      setIsOpen(false);
+    };
+
+    return (
+      <div className="relative hidden min-[768px]:block">
+        {/* Button to toggle dropdown */}
+        <button
+          onClick={toggleDropdown}
+          className="custom-popout-sel w-fit flex items-center justify-between bg-transparent text-white text-left px-4 py-2 focus:outline-none cursor-pointer"
+          aria-expanded={isOpen}
+        >
+          <span>{`${selected.country} (${selected.code} ${selected.symbol})`}</span>
+
+          <svg
+            style={{
+              marginInlineStart: '.2em',
+              marginBlockStart: '.1em',
+              fontSize: '1.4em',
+              transition: 'transform .3s cubic-bezier(.215,.61,.355,1)',
+            }}
+            xmlns="http://www.w3.org/2000/svg"
+            stroke-linecap="square"
+            stroke-linejoin="arcs"
+            aria-hidden="true"
+            className={`w-[1em] h-[1em] flex items-center ${
+              isOpen ? 'rotate-180' : ''
+            }`}
+            fill="none"
+            stroke="currentColor"
+            strokeMiterlimit={10}
+            strokeWidth={'2px'}
+            viewBox="0 0 24 24"
+          >
+            <path d="m6 9 6 6 6-6"></path>
+          </svg>
+        </button>
+
+        {/* Dropdown list */}
+        {isOpen && (
+          <ul className={`absolute ${selected.country === 'Canada' ? "max-w-[185px]" : ""} top-6 bg-[#f7f5f4] cursor-pointer w-53 mt-1 z-10`}>
+            {options.map((option) => (
+              <li
+                key={option.code}
+                className={`relative px-4 py-2 text-[var(--text-color-42)] whitespace-nowrap cursor-pointer hover:bg-[rgba(66,66,66,0.05)]`}
+                style={{
+                  fontFamily: 'var(--font-family-ms)',
+                  fontStyle: 'var(--font-style-nrml)',
+                  fontWeight: 'var(--font-weight-6)',
+                  textTransform: 'var(--text-transform-up)',
+                  letterSpacing: 'var(--letter-spacing-9)',
+                  fontSize: 'calc(var(--font-2) * var(--font-adjust))',
+                }}
+                onClick={() => handleSelect(option)}
+              >
+                <span
+                  className={`${
+                    selected.code === option.code
+                      ? 'border-b-[1px] border-[#f7f5f4]'
+                      : ''
+                  }`}
+                >{`${option.country} (${option.code} ${option.symbol})`}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    );
+  }
 
   return (
     <>
       {/* Announcement Bar  */}
 
-      <div data-color-change data-is-home id='header-main-container' className={`main_header_top text-white w-full`} style={{zIndex: "5"}}>
+      <div
+        data-color-change
+        data-is-home
+        id="header-main-container"
+        className={`main_header_top text-white w-full`}
+        style={{zIndex: '5'}}
+      >
         {/* <Suspense fallback={null}>
   <Await resolve={data.collectionsList}>
     {(collections) => (
@@ -122,23 +242,28 @@ console.log(announcementCollection, "announcement collection data")
           </div>
         </div> */}
 
-
-        <div className='header_announcement_wrapper fixed_content_wrapper'>
-
-          <div className='header_announcement_desktop'>
-            <div className='header_announcement_container'>
-              <div className='header_announcement_scale'>
-                <div className='header_announcement_text'>
+        <div className="header_announcement_wrapper fixed_content_wrapper">
+          <div className="header_announcement_desktop">
+            <div className="header_announcement_container">
+              <div className="header_announcement_scale">
+                <div className="header_announcement_text">
                   <p>
                     {`${announcementCollection?.title} is out now`}
-                    <strong style={{fontWeight: "var(--font-weight-5)"}}>&nbsp;|&nbsp;</strong>
+                    <strong style={{fontWeight: 'var(--font-weight-5)'}}>
+                      &nbsp;|&nbsp;
+                    </strong>
                   </p>
-                  <Link to={`/collections/${announcementCollection?.handle}`} title='Fall 2025'>
-                  {`shop our ${announcementCollection?.title}`}
+                  <Link
+                    to={`/collections/${announcementCollection?.handle}`}
+                    title="Fall 2025"
+                  >
+                    {`shop our ${announcementCollection?.title}`}
                   </Link>
                 </div>
               </div>
             </div>
+
+            <CurrencySelectorHeader />
           </div>
 
           {/* <div className='header_announcement_mobile'>
@@ -209,7 +334,6 @@ console.log(announcementCollection, "announcement collection data")
                 className={`tracking-wider max-[768px]:hidden`}
               >
                 <h1 className="font-medium">
-                  
                   <img
                     src={siteLogo}
                     alt="Logo"
@@ -280,23 +404,23 @@ export function HeaderMenu({
   const queriesDatalistId = useId();
 
   function myFunction() {
-    if(typeof window !== "undefined"){
-    // Declare variables
-    var input, filter, ul, li, a, i;
-    input = document.getElementById('mySearch');
-    filter = input.value.toUpperCase();
-    ul = document.getElementById('myMenu');
-    li = ul.getElementsByTagName('li');
-    ul.style.display = '';
-    // Loop through all list items, and hide those who don't match the search query
-    for (i = 0; i < li.length; i++) {
-      a = li[i].getElementsByTagName('a')[0];
-      if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
-        li[i].style.display = '';
-      } else {
-        li[i].style.display = 'none';
+    if (typeof window !== 'undefined') {
+      // Declare variables
+      var input, filter, ul, li, a, i;
+      input = document.getElementById('mySearch');
+      filter = input.value.toUpperCase();
+      ul = document.getElementById('myMenu');
+      li = ul.getElementsByTagName('li');
+      ul.style.display = '';
+      // Loop through all list items, and hide those who don't match the search query
+      for (i = 0; i < li.length; i++) {
+        a = li[i].getElementsByTagName('a')[0];
+        if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+          li[i].style.display = '';
+        } else {
+          li[i].style.display = 'none';
+        }
       }
-    }
     }
   }
 
@@ -372,18 +496,17 @@ export function HeaderMenu({
               //   return <div className='bg-white text-center'>Loading...</div>;
               // }
 
-              if (!total ) {
+              if (!total) {
                 return (
-                  
                   <>
-                  {/* {console.log(term.current.length , "term.")} */}
+                    {/* {console.log(term.current.length , "term.")} */}
                     {term.current.length > 0 && (
-                    <SearchResultsPredictive.Empty
-                      term={term}
-                      closeSearch={closeSearch}
-                      goToSearch={goToSearch}
-                    />
-                     )}
+                      <SearchResultsPredictive.Empty
+                        term={term}
+                        closeSearch={closeSearch}
+                        goToSearch={goToSearch}
+                      />
+                    )}
                   </>
                 );
               }
@@ -429,7 +552,7 @@ export function HeaderMenu({
                         term={term}
                       />
                       {term.current && total ? (
-                        <div className='pb-7.5' >
+                        <div className="pb-7.5">
                           <button
                             className="predictive-search-go-btn"
                             onClick={goToSearch}
@@ -497,7 +620,7 @@ export function HeaderMenu({
         </NavLink>
       )} */}
         <div className={`slider_type_menu ${className} `}>
-          {console.log(menu , "hh menu")}
+          {console.log(menu, 'hh menu')}
           {(menu || FALLBACK_HEADER_MENU).items.map((item) => {
             if (!item.url) return null;
 
@@ -547,17 +670,15 @@ export function HeaderMenu({
                     }
                     to={url}
                   >
-                    <span className='header-menu-item-text link-hover-effect-nav'>
-                    {item.title}
+                    <span className="header-menu-item-text link-hover-effect-nav">
+                      {item.title}
                     </span>
-                    <div className='hidden header_menu_item_dropdown'>
+                    <div className="hidden header_menu_item_dropdown">
                       <div className="header_menu_item_dropdown">
                         <div className="header_menu_item_inner">
                           <div className="header_menu_dropdown_list">
-                            <Link className='header_menu_dropdown_list_item_main'> 
-                              <span className='header_menu_dropdown_list_item_text'>
-                                
-                              </span>
+                            <Link className="header_menu_dropdown_list_item_main">
+                              <span className="header_menu_dropdown_list_item_text"></span>
                             </Link>
                           </div>
                         </div>
@@ -615,7 +736,18 @@ function HeaderCtas({isLoggedIn, cart}) {
               {(isLoggedIn) => (isLoggedIn ? 'Account' : 'Sign in')}
             </span>
             {/* <User className="w-5 h-5" /> */}
-            <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="w-5 h-5 lucide-icon-h" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 1.5c-2.575 0-4.49 1.593-4.49 5.747s1.664 4.985 1.954 5.27c.267.358.267.855 0 1.213-.238.245-4.544 1.116-6.115 2.723a4.647 4.647 0 0 0-1.665 2.915c-.069.293-.135 1.14-.181 1.88-.043.67.434 1.252 1.443 1.252h18.118c.491 0 1.477-.573 1.435-1.237-.047-.743-.113-1.6-.183-1.895a4.645 4.645 0 0 0-1.664-2.887c-1.572-1.621-5.878-2.493-6.116-2.724a1.019 1.019 0 0 1 0-1.212c.29-.286 1.955-1.103 1.955-5.27 0-4.168-1.85-5.775-4.49-5.775Z"></path></svg>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              aria-hidden="true"
+              class="w-5 h-5 lucide-icon-h"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M12 1.5c-2.575 0-4.49 1.593-4.49 5.747s1.664 4.985 1.954 5.27c.267.358.267.855 0 1.213-.238.245-4.544 1.116-6.115 2.723a4.647 4.647 0 0 0-1.665 2.915c-.069.293-.135 1.14-.181 1.88-.043.67.434 1.252 1.443 1.252h18.118c.491 0 1.477-.573 1.435-1.237-.047-.743-.113-1.6-.183-1.895a4.645 4.645 0 0 0-1.664-2.887c-1.572-1.621-5.878-2.493-6.116-2.724a1.019 1.019 0 0 1 0-1.212c.29-.286 1.955-1.103 1.955-5.27 0-4.168-1.85-5.775-4.49-5.775Z"
+              ></path>
+            </svg>
           </Await>
         </Suspense>
       </NavLink>
@@ -647,7 +779,18 @@ function SearchToggle() {
     >
       {/* <Search className="w-5 h-5" /> */}
 
-      <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="w-5 h-5 lucide-icon-h" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M18.316 9.825c0 3.368-2.05 6.404-5.194 7.692a8.47 8.47 0 0 1-9.164-1.81A8.265 8.265 0 0 1 2.144 6.63C3.45 3.52 6.519 1.495 9.921 1.5c4.638.007 8.395 3.732 8.395 8.325ZM22.5 22.5l-6.558-6.87L22.5 22.5Z"></path></svg>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+        class="w-5 h-5 lucide-icon-h"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          d="M18.316 9.825c0 3.368-2.05 6.404-5.194 7.692a8.47 8.47 0 0 1-9.164-1.81A8.265 8.265 0 0 1 2.144 6.63C3.45 3.52 6.519 1.495 9.921 1.5c4.638.007 8.395 3.732 8.395 8.325ZM22.5 22.5l-6.558-6.87L22.5 22.5Z"
+        ></path>
+      </svg>
     </button>
   );
 }
@@ -675,8 +818,14 @@ function CartBadge({count}) {
       }}
     >
       {/* <ShoppingCart className="w-5 h-5 lucide-icon-h" />   */}
-      <svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" class="w-5 h-5 lucide-icon-h" viewBox="0 0 24 24"><path d="M16.25 7.8V5.7h4.2l1.05 16.8H2.6L3.65 5.7h4.2a4.2 4.2 0 0 1 8.4 0h-8.4v2.1"></path>
-      <circle class="cart_dot_icon hidden" cx="12" cy="15" r="4"></circle>
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        aria-hidden="true"
+        class="w-5 h-5 lucide-icon-h"
+        viewBox="0 0 24 24"
+      >
+        <path d="M16.25 7.8V5.7h4.2l1.05 16.8H2.6L3.65 5.7h4.2a4.2 4.2 0 0 1 8.4 0h-8.4v2.1"></path>
+        <circle class="cart_dot_icon hidden" cx="12" cy="15" r="4"></circle>
       </svg>
       {/* {count !== null && count > 0 && (
         <span className='absolute top-0 right-6 bg-orange-400 text-black text-[12px] font-medium rounded-full w-3 h-3 flex justify-center items-center'>

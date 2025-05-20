@@ -1,6 +1,6 @@
 import {defer} from '@shopify/remix-oxygen';
 import {Await, NavLink, useLoaderData, Link} from '@remix-run/react';
-import {Suspense} from 'react';
+import {Suspense, useState} from 'react';
 import FooterGirlImage from '/images/girl-image-footer.jpg?url';
 import SiteLogoIcon from '/images/site_logo_mezzo_white.png?url';
 import SiteFooterLogoIcon from '/images/site_footer_logo_mezzo_white.png?url';
@@ -21,6 +21,68 @@ export function Footer({
   header,
   publicStoreDomain,
 }) {
+
+function CurrencySelectorFooter  ()  {
+  const [isOpen, setIsOpen] = useState(false);
+  const [selected, setSelected] = useState({
+    country: "United States",
+    code: "US",
+    currency: "USD",
+    symbol: "$",
+  });
+
+  const options = [
+    { country: "Canada", code: "CA", currency: "CAD", symbol: "$" },
+    { country: "United Kingdom", code: "GB", currency: "GBP", symbol: "£" },
+    { country: "United States", code: "US", currency: "USD", symbol: "$" },
+  ];
+
+  const toggleDropdown = () => setIsOpen((prev) => !prev);
+
+  const handleSelect = (option) => {
+    setSelected(option);
+    setIsOpen(false);
+  };
+
+  return (
+    <div className="relative">
+      {/* Button to toggle dropdown */}
+      <button
+        onClick={toggleDropdown}
+        className="custom-popout-sel w-fit flex items-center justify-between bg-[#1d1d1d] text-white text-left px-4 py-2 focus:outline-none border-[1px] border-[rgba(213,213,213,0.15)] rounded-[3px] cursor-pointer"
+        aria-expanded={isOpen}
+      >
+        <span >{`${selected.country} (${selected.code} ${selected.symbol})`}</span>
+        
+        <svg style={{marginInlineStart: ".2em", marginBlockStart: ".1em", fontSize: "1.4em", transition: "transform .3s cubic-bezier(.215,.61,.355,1)"}} xmlns="http://www.w3.org/2000/svg" stroke-linecap="square" stroke-linejoin="arcs" aria-hidden="true" className={`w-[1em] h-[1em] flex items-center ${isOpen ? "rotate-180" : ""}`} fill='none' stroke='currentColor' strokeMiterlimit={10} strokeWidth={"2px"} viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"></path></svg>
+      </button>
+
+      {/* Dropdown list */}
+      {isOpen && (
+        <ul className="absolute bottom-12 bg-[#1d1d1d] border-[1px] border-[rgba(213,213,213,0.15)] cursor-pointer w-53 mt-1 z-10">
+          {options.map((option) => (
+            <li
+              key={option.code}
+              className={`relative px-4 py-2 hover-effect-fixed cursor-pointer ${
+                selected.code === option.code
+                  ? ""
+                  : "hover:bg-[rgba(223,223,223,0.05)]"
+              }`}
+              onClick={() => handleSelect(option)}
+            >
+              <span className={`${
+                selected.code === option.code
+                  ? "border-b-[1px] border-[rgba(223,223,223,0.15)]"
+                  : ""
+              }`}>{`${option.country} (${option.code} ${option.symbol})`}</span>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+};
+
   return (
     <>
       <Suspense>
@@ -59,12 +121,21 @@ export function Footer({
                         <p>
                           {/* <em>Thank you for joining our mailing list!</em> */}
                         </p>
-                        <div className='footer-input-group'>
+                        <div className="footer-input-group">
                           <label htmlFor=""></label>
-                          <input className='footer-newsletter-mail' type="email" placeholder='your-email@example.com' id='footer-newsletter-mail' autoCorrect="off" />
+                          <input
+                            className="footer-newsletter-mail"
+                            type="email"
+                            placeholder="your-email@example.com"
+                            id="footer-newsletter-mail"
+                            autoCorrect="off"
+                          />
                           <span>
-                            <button className='flex' type='submit'>
-                              <MoveRight strokeWidth={1} className='w-5 h-5 text-[rgba(255,255,255,0.9)]' />
+                            <button className="flex" type="submit">
+                              <MoveRight
+                                strokeWidth={1}
+                                className="w-5 h-5 text-[rgba(255,255,255,0.9)]"
+                              />
                             </button>
                           </span>
                         </div>
@@ -118,12 +189,14 @@ export function Footer({
                       >
                         <svg
                           xmlns="http://www.w3.org/2000/svg"
-                          x="0px"
-                          y="0px"
-                          viewBox="0 0 50 50"
-                          style={{fill: '#FFFFFF'}}
+                          aria-hidden="true"
+                          class="icon-social icon-social-facebook"
+                          viewBox="0 0 30 30"
                         >
-                          <path d="M25,3C12.85,3,3,12.85,3,25c0,11.03,8.125,20.137,18.712,21.728V30.831h-5.443v-5.783h5.443v-3.848 c0-6.371,3.104-9.168,8.399-9.168c2.536,0,3.877,0.188,4.512,0.274v5.048h-3.612c-2.248,0-3.033,2.131-3.033,4.533v3.161h6.588 l-0.894,5.783h-5.694v15.944C38.716,45.318,47,36.137,47,25C47,12.85,37.15,3,25,3z"></path>
+                          <path
+                            d="M30 15.091C30 6.756 23.285 0 15 0S0 6.756 0 15.091C0 22.625 5.484 28.868 12.656 30V19.454H8.848V15.09h3.808v-3.324c0-3.782 2.239-5.872 5.666-5.872 1.64 0 3.358.295 3.358.295v3.714h-1.893c-1.863 0-2.443 1.164-2.443 2.358v2.83h4.16l-.665 4.362h-3.495V30C24.516 28.868 30 22.625 30 15.091z"
+                            fill="currentColor"
+                          ></path>
                         </svg>
                         <span className="sr-only">Facebook</span>
                       </a>
@@ -134,34 +207,37 @@ export function Footer({
                         className="footer-social-icon"
                       >
                         <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          x="0px"
-                          y="0px"
-                          viewBox="0,0,256,256"
+                          viewBox="0 0 24 24"
+                          aria-hidden="true"
+                          class="icon-social icon-social-x"
                           style={{fill: '#FFFFFF'}}
                         >
-                          <g
-                            fill="#ffffff"
-                            fillRule="nonzero"
-                            stroke="none"
-                            strokeWidth="1"
-                            strokeLinecap="butt"
-                            strokeLinejoin="miter"
-                            strokeMiterlimit="10"
-                            strokeDasharray=""
-                            strokedashoffsetfset="0"
-                            fontFamily="none"
-                            fontWeight="none"
-                            fontSize="none"
-                            textAnchor="none"
-                            style={{mixBlendMode: 'normal'}}
-                          >
-                            <g transform="scale(4,4)">
-                              <path d="M61.932,15.439c-2.099,0.93 -4.356,1.55 -6.737,1.843c2.421,-1.437 4.283,-3.729 5.157,-6.437c-2.265,1.328 -4.774,2.303 -7.444,2.817c-2.132,-2.26 -5.173,-3.662 -8.542,-3.662c-6.472,0 -11.717,5.2 -11.717,11.611c0,0.907 0.106,1.791 0.306,2.649c-9.736,-0.489 -18.371,-5.117 -24.148,-12.141c-1.015,1.716 -1.586,3.726 -1.586,5.847c0,4.031 2.064,7.579 5.211,9.67c-1.921,-0.059 -3.729,-0.593 -5.312,-1.45c0,0.035 0,0.087 0,0.136c0,5.633 4.04,10.323 9.395,11.391c-0.979,0.268 -2.013,0.417 -3.079,0.417c-0.757,0 -1.494,-0.086 -2.208,-0.214c1.491,4.603 5.817,7.968 10.942,8.067c-4.01,3.109 -9.06,4.971 -14.552,4.971c-0.949,0 -1.876,-0.054 -2.793,-0.165c5.187,3.285 11.348,5.211 17.961,5.211c21.549,0 33.337,-17.696 33.337,-33.047c0,-0.503 -0.016,-1.004 -0.04,-1.499c2.301,-1.624 4.283,-3.674 5.849,-6.015"></path>
-                            </g>
-                          </g>
+                          <path
+                            fill-rule="nonzero"
+                            d="m13.903 10.435 7.445-8.655h-1.764l-6.465 7.515L7.955 1.78H2l7.808 11.364L2 22.22h1.764l6.828-7.936 5.453 7.936H22zm-2.417 2.81-.791-1.132L4.4 3.109h2.71l5.08 7.266.791 1.132 6.604 9.445h-2.71z"
+                          ></path>
                         </svg>
-                        <span className="sr-only">Twitter</span>
+                        <span className="sr-only">X</span>
+                      </a>
+
+                      <a
+                        href="https://instagram.com/shopify"
+                        target="_blank"
+                        className="footer-social-icon"
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          aria-hidden="true"
+                          class="icon-social icon-social-tiktok"
+                          viewBox="0 0 15 17"
+                        >
+                          <path
+                            fill="currentColor"
+                            fill-rule="nonzero"
+                            d="M10.917 0c.289 2.412 1.674 3.85 4.083 4.004v2.713c-1.396.133-2.619-.311-4.04-1.148v5.075c0 6.447-7.232 8.461-10.14 3.84-1.867-2.973-.723-8.19 5.27-8.4v2.862a8.879 8.879 0 0 0-1.391.331c-1.333.439-2.089 1.26-1.879 2.708.404 2.775 5.641 3.596 5.206-1.825V.005h2.891V0Z"
+                          ></path>
+                        </svg>
+                        <span className="sr-only">TikTok</span>
                       </a>
 
                       <a
@@ -209,36 +285,21 @@ export function Footer({
           </div>
           <section className="sub-footer">
             <div className="sub-footer-wrapper footer-wrapper-full">
-              <div className='sub-footer-div'>
-                <div className='sub-footer-item-select'>
-                  <Select
-                    name="status"
-                    className=" my-2.5 mx-0 px-4 py-2.25 border rounded-sm border-[rgba(223,223,233,0.15)] data-[hover]:shadow data-[hover]:bg-[#1d1d1d]"
-                    aria-label="Country status"
-                  >
-                    <option
-                      className="country-select-option link-hover-effect"
-                      value="united_kingdom"
-                    >
-                      UNITED KINGDOM (GB £)
-                    </option>
-                    <option
-                      className="country-select-option link-hover-effect"
-                      value="united_state"
-                    >
-                      UNITED STATE (US $)
-                    </option>
-                    <option className="country-select-option link-hover-effect" value="canada">
-                      CANADA (CA $)
-                    </option>
-                    <option className="country-select-option link-hover-effect" value="india">
-                      INDIA (INR ₹)
-                    </option>
-                  </Select>
+              <div className="sub-footer-div">
+                <div className="sub-footer-item-select">
+                  
+                  <CurrencySelectorFooter/>
+                  
                 </div>
-                <div className='sub-footer-item-copyright'>
+                <div className="sub-footer-item-copyright flex gap-1.25">
                   <span> © </span>
-                    <a className='link-hover-effect' target='_blank' href="https://meetanshi.com/">MEETANSHI</a>
+                  <Link
+                    target="_blank"
+                    className="hover-effect-fixed relative"
+                    to="https://meetanshi.com/"
+                  >
+                    MEETANSHI
+                  </Link>
                   <span> 2025 </span>
                 </div>
               </div>
@@ -344,14 +405,14 @@ function FooterMenu({menu, subMenu, primaryDomainUrl, publicStoreDomain}) {
                                         key={subItem.id}
                                         className="footer-nav-li"
                                       >
-                                        <a
-                                          href={subItem.url}
+                                        <Link
+                                          to={subItem.url}
                                           target="_blank"
                                           rel="noopener noreferrer "
-                                          className='link-hover-effect'
+                                          className="relative hover-effect-fixed"
                                         >
                                           {subItem.title}
-                                        </a>
+                                        </Link>
                                       </li>
                                     );
                                   }

@@ -2,6 +2,8 @@ import {defer} from '@shopify/remix-oxygen';
 import {Link, useLoaderData} from '@remix-run/react';
 import ContactPageHeroImg from '/images/contact-page-hero-img.jpg?url';
 import FeatureSectionBottom from '~/components/FeatureSectionBottom';
+import {ChevronDownIcon} from 'lucide-react';
+import {useState, useEffect, useRef} from 'react';
 
 /**
  * @type {MetaFunction<typeof loader>}
@@ -78,6 +80,96 @@ export default function Page() {
 }
 
 function ContactPage() {
+  const [isMobile, setIsMobile] = useState(
+    typeof window !== 'undefined' ? window.innerWidth < 768 : false,
+  );
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    // Set initial state in case SSR mismatch
+    handleResize();
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  function HeroSection(){
+
+    return(
+      <div
+        className="film_section_home_image  jjs"
+        style={{
+          '--PT': '0px',
+          '--PB': '0px',
+          '--section_width': '600px',
+          'min-height': 'calc(397px + var(--header_top_height))',
+          zIndex: '1',
+        }}
+      >
+        <div className="fixed_wrapper fixed_y_padding">
+          <div className="film_section_home_inner">
+            <div className="film_section_content_wrapper text_align_justify_center">
+              <div className="film_section_content film_section_home_content_transparent jjs">
+                <div
+                  className="common_text_use text_style_white film_section_home_backdrop"
+                  style={{'--bg': '#000000', '--opacity': '0.1'}}
+                >
+                  <div className="film_section_title common_heading_size_ten">
+                    <p>Contact Us</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div
+              className="image_film_frame h-[500px] aspect-[var(--pc_ratio_mobile)] md:aspect-[var(--pc_ratio)] screen_3_quarters "
+              style={{minHeight: 'calc(397px + var(--header_top_height)'}}
+            >
+              <div className="image_film_pane">
+                <div
+                  className="image_film_scale h-[var(--pc_height_mobile)] md:h-[var(--pc_height)]"
+                  style={{
+                    '--pc_height': '66.7vw',
+                    '--pc_height_mobile': '66.7vw',
+                  }}
+                >
+                  <img
+                    src={
+                      'https://cdn.shopify.com/s/files/1/0668/9144/8501/files/contact-page-hero-img.webp?v=1747133954'
+                    }
+                    alt="Contact Page Hero Image"
+                    width={2000}
+                    height={1333}
+                    loading="eager"
+                    className="block overflow-hidden w-full h-full object-cover  position_bg_mobile"
+                    srcSet={`https://cdn.shopify.com/s/files/1/0668/9144/8501/files/contact-page-hero-img.webp?v=1747133954&width=352 352w, 
+                            https://cdn.shopify.com/s/files/1/0668/9144/8501/files/contact-page-hero-img.webp?v=1747133954&width=400 400w, 
+                            https://cdn.shopify.com/s/files/1/0668/9144/8501/files/contact-page-hero-img.webp?v=1747133954&width=768 768w, 
+                            https://cdn.shopify.com/s/files/1/0668/9144/8501/files/contact-page-hero-img.webp?v=1747133954&width=932 932w, 
+                            https://cdn.shopify.com/s/files/1/0668/9144/8501/files/contact-page-hero-img.webp?v=1747133954&width=1024 1024w, 
+                            https://cdn.shopify.com/s/files/1/0668/9144/8501/files/contact-page-hero-img.webp?v=1747133954&width=1200 1200w, 
+                            https://cdn.shopify.com/s/files/1/0668/9144/8501/files/contact-page-hero-img.webp?v=1747133954&width=1920 1920w, 
+                            https://cdn.shopify.com/s/files/1/0668/9144/8501/files/contact-page-hero-img.webp?v=1747133954&width=3500 3500w`}
+                    sizes="100vw"
+                    fetchpriority="high"
+                    style={{
+                      'object-position': 'var(--main_point, center)',
+                      '--obj_position_mobile': '49.1073% 0.0651%',
+                      '--obj_position_pc': '62.7913% 0.0%',
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   function IconSection() {
     return (
       <div
@@ -189,19 +281,17 @@ function ContactPage() {
 
   function ContactForm() {
     const handleSubmit = (e) => {
-      e.preventDefault();
-      console.log('Form submitted');
+      // e.preventDefault();
+      alert.log('Form submitted');
     };
 
     return (
-      <section className="contact-section">
+      <div style={{"--PT" : "40px" , "--PB" : "80px"}} className=" wrapper--narrow fixed_y_padding">
+        <div className='contact-section'>
         <div className="contact-container">
           <div className="contact-inner">
             <form onSubmit={handleSubmit} className="contact-form">
               <div>
-                {/* <label htmlFor="full-name" className="contact-label">
-                Full Name
-              </label> */}
                 <input
                   type="text"
                   id="full-name"
@@ -213,9 +303,6 @@ function ContactPage() {
               </div>
 
               <div>
-                {/* <label htmlFor="email" className="contact-label">
-                Email
-              </label> */}
                 <input
                   type="email"
                   id="email"
@@ -228,9 +315,6 @@ function ContactPage() {
               </div>
 
               <div>
-                {/* <label htmlFor="message" className="contact-label">
-                Message
-              </label> */}
                 <textarea
                   id="message"
                   name="message"
@@ -240,34 +324,38 @@ function ContactPage() {
                 ></textarea>
               </div>
 
-              <button type="submit" className="contact-button">
+              <button type="submit" className="contact-button btn--neutral btn--large btn--full btn--outline">
                 Send
               </button>
 
               <div className="contact-privacy">
                 <p>
                   This site is protected by hCaptcha and the hCaptcha{' '}
-                  <a href="https://hcaptcha.com/privacy">Privacy Policy</a> and{' '}
-                  <a href="https://hcaptcha.com/terms">Terms of Service</a>{' '}
+                  <Link to="https://hcaptcha.com/privacy">Privacy Policy</Link> and{' '}
+                  <Link to="https://hcaptcha.com/terms">Terms of Service</Link>{' '}
                   apply.
                 </p>
               </div>
             </form>
           </div>
         </div>
-      </section>
+        </div>
+      </div>
     );
   }
 
-  function ContactDesktopSection  ()  {
+  function ContactDesktopSection() {
     const handleSubmit = (e) => {
-      e.preventDefault();
-      console.log('Form submitted');
+      // e.preventDefault();
+      alert('Form submitted');
     };
 
     return (
-      <section className="contact-desktop-wrapper">
-        <div className="contact-desktop-container">
+      <section
+        className="contact-desktop-wrapper"
+        style={{'--PT': '40px', '--PB': '80px'}}
+      >
+        <div className="contact-desktop-container wrapper--narrow fixed_y_padding">
           <div className="contact-desktop-content">
             <form onSubmit={handleSubmit} className="contact-desktop-form">
               <div className="form-group">
@@ -312,15 +400,29 @@ function ContactPage() {
                 ></textarea>
               </div>
 
-              <button type="submit" className="form-button">
+              <button
+                type="submit"
+                className="form-button btn--neutral btn--large btn--full btn--outline"
+              >
                 Send
               </button>
 
               <div className="form-privacy-note">
                 <p>
                   This site is protected by hCaptcha and the hCaptcha{' '}
-                  <a href="https://hcaptcha.com/privacy">Privacy Policy</a> and{' '}
-                  <a href="https://hcaptcha.com/terms">Terms of Service</a>{' '}
+                  <Link
+                    className="hover-effect-fixed"
+                    to="https://hcaptcha.com/privacy"
+                  >
+                    Privacy Policy
+                  </Link>{' '}
+                  and{' '}
+                  <Link
+                    className="hover-effect-fixed"
+                    to="https://hcaptcha.com/terms"
+                  >
+                    Terms of Service
+                  </Link>{' '}
                   apply.
                 </p>
               </div>
@@ -329,121 +431,125 @@ function ContactPage() {
         </div>
       </section>
     );
-  };
+  }
 
-function FlagshipStoreSection  ()  {
-  return (
-    <div className="flagship-wrapper">
-      {/* Text Section */}
-      <div className="flagship-text">
-        <h2 className="flagship-heading">
-          Flagship
-          <span className="flagship-underline"></span>
-        </h2>
-        <div className="flagship-info">
-          <p>
-            123 Curtain Rd
-            <br />
-            London, UK
-          </p>
-          <p className="flagship-hours">
-            Mon - Fri, 10am - 9pm
-            <br />
-            Weekends, 11am - 4pm
-          </p>
+  const faqs = [
+    {
+      id: 'faq-1',
+      question: 'Where do you ship?',
+      answer: 'We ship worldwide, rates available at checkout.',
+    },
+    {
+      id: 'faq-2',
+      question: 'Is there a contact phone number?',
+      answer: 'Call us anytime at 1(800) 555-1234.',
+    },
+    {
+      id: 'faq-3',
+      question: 'What is your return policy?',
+      answer: 'Returns within 30 days receive a full refund.',
+    },
+  ];
+
+  function FAQSection() {
+    const [openId, setOpenId] = useState(null);
+    const refs = useRef({});
+
+    const toggleAccordion = (id) => {
+      setOpenId(openId === id ? null : id);
+    };
+
+    useEffect(() => {
+      faqs.forEach((faq) => {
+        const content = refs.current[faq.id];
+        if (content) {
+          if (openId === faq.id) {
+            content.style.height = content.scrollHeight + 'px';
+          } else {
+            content.style.height = '0px';
+          }
+        }
+      });
+    }, [openId]);
+
+    return (
+      <section className="bg--accent text--neutral py-16">
+        <div className="wrapper--narrow mx-auto px-4">
+          <div className="divide-y divide-[rgba(66,66,66,0.2)] border-t border-b border-[rgba(66,66,66,0.2)]" style={{color: "var(--text-color-42)"}}>
+            {faqs.map((faq) => (
+              <div key={faq.id}>
+                <button
+                  className="w-full flex justify-between items-center text-left font-medium text-lg transition-colors"
+                  onClick={() => toggleAccordion(faq.id)}
+                >
+                  <span className="accordian_title deep_size_5">
+                    {faq.question}
+                  </span>
+                  <ChevronDownIcon
+                    className={`w-5 h-5 transform transition-transform duration-200 ${
+                      openId === faq.id ? 'rotate-180' : ''
+                    }`}
+                  />
+                </button>
+                <div
+                  ref={(el) => (refs.current[faq.id] = el)}
+                  className="overflow-hidden transition-all duration-[550ms] ease-[cubic-bezier(0.215,0.61,0.355,1)]"
+                  style={{
+                    boxSizing: 'border-box',
+                    display: 'block',
+                    height: '0px',
+                  }}
+                >
+                  <div className="pb-5 text-sm text-gray-600">{faq.answer}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  function FlagshipStoreSection() {
+    return (
+      <div className="flagship-wrapper">
+        {/* Text Section */}
+        <div className="flagship-text">
+          <h2 className="flagship-heading">
+            Flagship
+            <span className="flagship-underline"></span>
+          </h2>
+          <div className="flagship-info main_size_4">
+            <p>
+              123 Curtain Rd
+              <br />
+              London, UK
+            </p>
+            <p className="flagship-hours">
+              Mon - Fri, 10am - 9pm
+              <br />
+              Weekends, 11am - 4pm
+            </p>
+          </div>
+        </div>
+
+        {/* Image Section */}
+        <div className="flagship-image">
+          <img
+            src="https://cdn.shopify.com/s/files/1/0668/9144/8501/files/contact-page-flagship-img.webp?v=1747143251"
+            alt="People browsing clothes in store"
+          />
         </div>
       </div>
+    );
+  }
 
-      {/* Image Section */}
-      <div className="flagship-image">
-        <img
-          src="https://cdn.shopify.com/s/files/1/0668/9144/8501/files/contact-page-flagship-img.webp?v=1747143251"
-          alt="People browsing clothes in store"
-        />
-      </div>
-    </div>
-  );
-};
-
+  // Admin URL : https://meetanshi.in/werra/admin
+  // Kuldip : Electronics Username : developer2 Password : admin@123
 
   return (
     <>
-      <div
-        className="film_section_home_image  jjs"
-        style={{
-          '--PT': '0px',
-          '--PB': '0px',
-          '--section_width': '600px',
-          'min-height': 'calc(397px + var(--header_top_height))',
-          zIndex: '1',
-        }}
-      >
-        <div className="fixed_wrapper fixed_y_padding">
-          <div className="film_section_home_inner">
-            <div className="film_section_content_wrapper text_align_justify_center">
-              <div className="film_section_content film_section_home_content_transparent jjs">
-                <div
-                  className="common_text_use text_style_white film_section_home_backdrop"
-                  style={{'--bg': '#000000', '--opacity': '0.1'}}
-                >
-                  <div className="film_section_title common_heading_size_ten">
-                    <p>Contact Us</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              className="image_film_frame h-[500px] aspect-[var(--pc_ratio_mobile)] md:aspect-[var(--pc_ratio)] screen_3_quarters "
-              style={{minHeight: 'calc(397px + var(--header_top_height)'}}
-            >
-              <div className="image_film_pane">
-                <div
-                  className="image_film_scale h-[var(--pc_height_mobile)] md:h-[var(--pc_height)]"
-                  style={{
-                    '--pc_height': '66.7vw',
-                    '--pc_height_mobile': '66.7vw',
-                  }}
-                >
-                  {/* <picture
-                        className="relative block w-full h-full overflow-hidden aspect-[var(--pc_ratio)]"
-                        style={{
-                          '--pc_ratio': '1.5002143163309045',
-                          '--asp_ratio_mobile': '1.5002143163309045',
-                        }}
-                      > */}
-
-                  <img
-                    src={
-                      'https://cdn.shopify.com/s/files/1/0668/9144/8501/files/contact-page-hero-img.webp?v=1747133954'
-                    }
-                    alt="Contact Page Hero Image"
-                    width={2000}
-                    height={1333}
-                    loading="eager"
-                    className="block overflow-hidden w-full h-full object-cover  position_bg_mobile"
-                    srcSet={`https://cdn.shopify.com/s/files/1/0668/9144/8501/files/contact-page-hero-img.webp?v=1747133954&width=352 352w, 
-                            https://cdn.shopify.com/s/files/1/0668/9144/8501/files/contact-page-hero-img.webp?v=1747133954&width=400 400w, 
-                            https://cdn.shopify.com/s/files/1/0668/9144/8501/files/contact-page-hero-img.webp?v=1747133954&width=768 768w, 
-                            https://cdn.shopify.com/s/files/1/0668/9144/8501/files/contact-page-hero-img.webp?v=1747133954&width=932 932w, 
-                            https://cdn.shopify.com/s/files/1/0668/9144/8501/files/contact-page-hero-img.webp?v=1747133954&width=1024 1024w, 
-                            https://cdn.shopify.com/s/files/1/0668/9144/8501/files/contact-page-hero-img.webp?v=1747133954&width=1200 1200w, 
-                            https://cdn.shopify.com/s/files/1/0668/9144/8501/files/contact-page-hero-img.webp?v=1747133954&width=1920 1920w, 
-                            https://cdn.shopify.com/s/files/1/0668/9144/8501/files/contact-page-hero-img.webp?v=1747133954&width=3500 3500w`}
-                    sizes="100vw"
-                    fetchpriority="high"
-                    style={{
-                      'object-position': 'var(--main_point, center)',
-                      '--obj_position_mobile': '49.1073% 0.0651%',
-                      '--obj_position_pc': '62.7913% 0.0%',
-                    }}
-                  />
-                  {/* </picture> */}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      <HeroSection/>
 
       <IconSection />
 
@@ -466,62 +572,50 @@ function FlagshipStoreSection  ()  {
         </div>
       </div>
 
-      {/* <ContactForm /> */}
-      <ContactDesktopSection />
+      {isMobile ? <ContactForm /> : <ContactDesktopSection />}
 
-      {/* <div class="wrapper section-padding">
-        <div class="common_text_use text-center">
-          <div class="standard__heading heading-size-8 ">
-            <p>Come visit all of our locations</p>
-          </div>
-
-          <div class="film_cta_wrapper">
-            <a
-              class="common_cta film_button btn--outline uppercase button_style_neutral btn--large button_style_long"
-              href="/pages/locations"
-            >
-              View Directions
-            </a>
+      <div
+        className="wrapper section-padding"
+        style={{
+          '--PT': '80px',
+          '--PB': '0px',
+          '--FLEX-POSITION': 'center',
+          '--CONTENT-WIDTH': '500px',
+          backgroundColor: '#f7f5f4',
+        }}
+      >
+        <div className="text__standard text-center">
+          <div className="standard__heading heading-size-8">
+            <p>Frequently Asked Questions</p>
           </div>
         </div>
-      </div> */}
+        <FAQSection />  
+      </div>
 
-      {/* <div className="wrapper section-padding" style={{"--PT": "80px",
-      "--PB": "0px",
-      "--FLEX-POSITION": "center",
-      "--CONTENT-WIDTH": "500px" , background: "#f7f5f4"}}>
-          <div className="text__standard text-center">
-            <div className="standard__heading heading-size-8">
-              <p>Frequently Asked Questions</p>
-            </div>
-          </div>
-        </div> */}
-
-<FlagshipStoreSection/>
-
+      <FlagshipStoreSection />
 
       <div
         class="text--neutral palette--light bg--accent"
-        
-        style={{"--PT": "80px","--PB": "80px","--FLEX-POSITION": "center","--CONTENT-WIDTH":" 2000px"}}
+        style={{
+          '--PT': '80px',
+          '--PB': '80px',
+          '--FLEX-POSITION': 'center',
+          '--CONTENT-WIDTH': ' 2000px',
+        }}
       >
-        <div class="wrapper section-padding">
-          <div class="text__standard text-center">
-            <div
-              class="standard__heading heading-size-8 "
-              
-            >
+        <div class="fixed_content_wrapper fixed_y_padding">
+          <div class="common_text_use text-center" style={{color: "var(--text-color-42)"}}>
+            <div class="standard__heading heading-size-8 ">
               <p>Come visit all of our locations</p>
             </div>
 
             <div class="hero__cta__wrapper">
-              <a
-                class="standard__cta hero__btn btn--outline uppercase btn--neutral btn--large btn--long "
-                href="/pages/locations"
-                
+              <Link
+                class="common_cta hero__btn btn--outline uppercase btn--neutral btn--large btn--long "
+                to="/pages/locations"
               >
                 View Directions
-              </a>
+              </Link>
             </div>
           </div>
         </div>
@@ -552,3 +646,7 @@ const PAGE_QUERY = `#graphql
 /** @typedef {import('@shopify/remix-oxygen').LoaderFunctionArgs} LoaderFunctionArgs */
 /** @template T @typedef {import('@remix-run/react').MetaFunction<T>} MetaFunction */
 /** @typedef {import('@shopify/remix-oxygen').SerializeFrom<typeof loader>} LoaderReturnData */
+
+
+
+

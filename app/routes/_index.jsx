@@ -74,7 +74,7 @@ async function loadCriticalData({context}) {
     theLookCollectionResults,
     wayfarerCollectionResults,
     topCollectionsResults,
-    heroImageHome
+    heroImageHome,
   ] = await Promise.all([
     context.storefront.query(FEATURED_COLLECTION_QUERY),
     context.storefront.query(CURATED_COLLECTION_QUERY),
@@ -90,7 +90,7 @@ async function loadCriticalData({context}) {
     TheLookCollection: theLookCollectionResults.collections.nodes,
     WayfarerCollection: wayfarerCollectionResults.collections.nodes,
     TopCollections: topCollectionsResults.collections.nodes,
-    heroImageHome: heroImageHome.node
+    heroImageHome: heroImageHome.node,
   };
 }
 
@@ -121,7 +121,6 @@ function loadDeferredData({context}) {
   };
 }
 
-
 export default function Homepage() {
   /** @type {LoaderReturnData} */
   const data = useLoaderData();
@@ -130,8 +129,7 @@ export default function Homepage() {
   }
   return (
     <div className="home">
-    
-      <HeroSectionHome heroImageHome={data.heroImageHome}/>
+      <HeroSectionHome heroImageHome={data.heroImageHome} />
       <FeaturedCollection collection={data.featuredCollection} />
       {/* {console.log(data.featuredCollection, "data.featuredCollection")} */}
       <CuratedCollection collection={data.curatedCollection} />
@@ -159,10 +157,7 @@ export default function Homepage() {
 }
 
 function HeroSectionHome({heroImageHome}) {
-  
-
   // console.log(HeroSectionImage ,"heroo image data")
-
 
   const dta = (
     <div
@@ -211,7 +206,13 @@ function HeroSectionHome({heroImageHome}) {
     <>
       <div
         className="film_section_home_image  jjs"
-        style={{'--PT': '0px', '--PB': '0px', '--section_width': '600px', 'min-height': 'calc(397px + var(--header_top_height))','zIndex' : '1'}}
+        style={{
+          '--PT': '0px',
+          '--PB': '0px',
+          '--section_width': '600px',
+          'min-height': 'calc(397px + var(--header_top_height))',
+          zIndex: '1',
+        }}
       >
         <div className="fixed_wrapper fixed_y_padding">
           <div className="film_section_home_inner">
@@ -244,7 +245,10 @@ function HeroSectionHome({heroImageHome}) {
                 </div>
               </div>
             </div>
-            <div className="image_film_frame aspect-[var(--pc_ratio_mobile)] md:aspect-[var(--pc_ratio)] screen_3_quarters " style={{'minHeight': 'calc(397px + var(--header_top_height)'}}>
+            <div
+              className="image_film_frame aspect-[var(--pc_ratio_mobile)] md:aspect-[var(--pc_ratio)] screen_3_quarters "
+              style={{minHeight: 'calc(397px + var(--header_top_height)'}}
+            >
               <div className="image_film_pane">
                 <div
                   className="image_film_scale h-[var(--pc_height_mobile)] md:h-[var(--pc_height)]"
@@ -276,7 +280,7 @@ function HeroSectionHome({heroImageHome}) {
                     />
                     <img
                       src={heroImageHome.image.url}
-                      alt='Hero Image'
+                      alt="Hero Image"
                       width={2000}
                       height={1333}
                       loading="eager"
@@ -289,7 +293,6 @@ function HeroSectionHome({heroImageHome}) {
                         https://cdn.shopify.com/s/files/1/0668/9144/8501/files/home-section-hero-img.webp?v=1746702766&width=1200 1200w, 
                         https://cdn.shopify.com/s/files/1/0668/9144/8501/files/home-section-hero-img.webp?v=1746702766&width=1920 1920w, 
                         https://cdn.shopify.com/s/files/1/0668/9144/8501/files/home-section-hero-img.webp?v=1746702766&width=3500 3500w`}
-                        
                       sizes="100vw"
                       fetchpriority="high"
                       style={{
@@ -673,6 +676,8 @@ function CuratedCollection({collection}) {
     });
   }, [collection]);
 
+  console.log(collection, 'ccss');
+
   return (
     <>
       <div className="custom-collection overflow-hidden">
@@ -688,7 +693,7 @@ function CuratedCollection({collection}) {
                     }`}
                   >
                     <div className="custom-collection-hero-content">
-                      <div className="custom-collection-hero-text">
+                      <div className={`custom-collection-hero-text ${collectionIndex + 1 === 1 ? "cc-custom-max-width" : ""}`}>
                         <div>
                           <p className="custom-collection-kicker">
                             {collection.title}
@@ -696,7 +701,10 @@ function CuratedCollection({collection}) {
                           <h2 className="custom-collection-title">
                             {collection.description}
                           </h2>
-                          <Link to="#" className="custom-collection-btn">
+                          <Link
+                            to={`collections/${collection.handle}`}
+                            className="custom-collection-btn"
+                          >
                             {collectionIndex === 1
                               ? 'Fringe Lookbook'
                               : 'View The Lookbook'}
@@ -706,7 +714,8 @@ function CuratedCollection({collection}) {
 
                       <div className="custom-collection-overlay"></div>
 
-                      <div className="custom-collection-image-frame">
+                      <div
+                       className={`custom-collection-image-frame `}>
                         <div className="custom-collection-image-pane">
                           <div className="custom-collection-image-scale">
                             <div className="custom-collection-image-wrapper relative block w-full h-full overflow-hidden aspect-[--pc_ratio]">
@@ -719,7 +728,7 @@ function CuratedCollection({collection}) {
                                 width="1546"
                                 height="2001"
                                 loading="lazy"
-                                className="block overflow-hidden w-full h-full object-cover transition-opacity duration-300 ease-linear"
+                                className={`block overflow-hidden w-full h-full object-cover transition-opacity duration-300 ease-linear`}
                                 sizes="100vw"
                                 fetchpriority="auto"
                                 style={{objectPosition: '61.1181% 25.4625%'}}
@@ -1049,8 +1058,11 @@ function TheLookCollection({products, collection}) {
   return (
     <div className="flex flex-col md:flex-row min-h-[715px] bg-[#f7f7f7]">
       {/* Product/Slider Section */}
-      <div className="w-full md:w-1/2 order-2 md:order-1 min-h-[713px] h-auto relative">
-        <div className="min-h-[713px] text-[#333] flex h-full px-4 items-center bg-[#f7f7f7]">
+      <div
+        style={{'--PT': '80px', '--PB': '120px'}}
+        className="w-full md:w-1/2 order-2 md:order-1 slider-height-fix fixed_y_padding h-auto relative"
+      >
+        <div className="slider-height-fix text-[#333] flex h-full px-4 items-center bg-[#f7f7f7]">
           <div className="w-full">
             <div className="mx-auto max-w-full text-center">
               <div className="flex w-full text-center flex-col items-center gap-4">
@@ -1117,7 +1129,7 @@ function TheLookCollection({products, collection}) {
       </div>
 
       {/* Hotspots Section */}
-      <div className="w-full md:w-1/2 order-1 md:order-2 relative min-h-[713px]">
+      <div className="w-full md:w-1/2 order-1 md:order-2 relative slider-height-fix">
         <img
           src={collection?.image?.url || '/api/placeholder/400/320'}
           alt="Look showcase"
@@ -1172,9 +1184,12 @@ function WayfarerCollection({products, collection}) {
   return (
     <div className="flex flex-col md:flex-row min-h-[715px] bg-[#f7f7f7]">
       {/* Slider Section */}
-      <div className="w-full md:w-1/2 order-2 md:order-2 min-h-[713px] h-auto relative">
+      <div
+        style={{'--PT': '80px', '--PB': '120px'}}
+        className="fixed_y_padding   w-full md:w-1/2 order-2 md:order-2 slider-height-fix h-auto relative"
+      >
         <div
-          className="min-h-[713px] text-[var(--text-color-42)] flex h-full ps-[var(--outer)] pe-[var(--outer)] items-center bg-[var(--bg)]"
+          className="slider-height-fix text-[var(--text-color-42)] flex h-full ps-[var(--outer)] pe-[var(--outer)] items-center bg-[var(--bg)]"
           style={{'--bg': '#f7f7f7'}}
         >
           <div className="w-full">
@@ -1190,14 +1205,22 @@ function WayfarerCollection({products, collection}) {
               </div>
 
               {/* <CustomSwiperSlider products={products}/> */}
-              <CustomSwiperSlider147 products={products} />
+              {/* <CustomSwiperSlider147 products={products} /> */}
+              
+
+              <CustomSlickSlider
+                products={products}
+                // hotspots={hotspots}
+                // collectionImage="/api/placeholder/800/1000"
+                usePrefix="demo-with-hotspots"
+              />
             </div>
           </div>
         </div>
       </div>
       {/* Image Section - Full width on mobile, half on desktop */}
       {/* Image Section with Text Overlay */}
-      <div className="w-full md:w-1/2 order-1 md:order-1 relative min-h-[713px]">
+      <div className="w-full md:w-1/2 order-1 md:order-1 relative slider-height-fix">
         <div className="relative h-full w-full">
           <img
             src={collection?.image?.url || ''}
@@ -1358,7 +1381,8 @@ function NewsletterComponent() {
               <div className="newsletter-content">
                 <h2 className="newsletter-heading">Always In The Know</h2>
                 <p className="newsletter-description">
-                  Join our newsletter to get special offers, free giveaways, and once-in-a-lifetime deals.
+                  Join our newsletter to get special offers, free giveaways, and
+                  once-in-a-lifetime deals.
                 </p>
                 <div className="newsletter-input-holder">
                   <form className="newsletter-form" onSubmit={handleSubmit}>
@@ -1426,8 +1450,6 @@ function NewsletterComponent() {
     </div>
   );
 }
-
-
 
 const HERO_IMAGE_HOME_QUERY = `#graphql
     query HeroImageHome {
@@ -1677,7 +1699,7 @@ const FEATURED_COLLECTION_QUERY = `#graphql
   }
   query FeaturedCollection($country: CountryCode, $language: LanguageCode)
     @inContext(country: $country, language: $language) {
-    collections(first: 250, query: "title:'boot' OR title:'Perfumes' OR title:'Veggies' OR title:'test2' OR title:'test1' OR title:'Empty collection' OR title:'mens chinos'" , sortKey: TITLE) {
+    collections(first: 250, query: "title:'boot' OR title:'Perfumes' OR title:'Veggies' OR title:'test2' OR title:'test1'" , sortKey: TITLE) {
       nodes {
         ...FeaturedCollection
       }
@@ -2404,7 +2426,7 @@ const WAYFARER_COLLECTION = `#graphql
     }
     handle
     description
-    products(first: 3, sortKey: CREATED,){
+    products(first: 3, sortKey: CREATED, reverse:true){
         nodes{
           id
           title
