@@ -8,7 +8,9 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   plugins: [
     tailwindcss(),
-    hydrogen(),
+    hydrogen({
+      buildDirectory: 'build', // Force output to /build instead of /dist
+    }),
     oxygen(),
     remix({
       presets: [hydrogen.preset()],
