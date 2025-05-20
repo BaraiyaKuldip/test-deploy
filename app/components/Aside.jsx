@@ -8,6 +8,7 @@ import {createContext, useContext, useEffect, useState} from 'react';
 //   close: () => void;
 // }
 
+
 /**
  * A side bar component with Overlay
  * @example
